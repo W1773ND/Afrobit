@@ -1,0 +1,319 @@
+{% extends "core/app_base_admin.html" %}
+{% load i18n humanize static admin_list %}
+
+{% block page_title %}
+<title> {% trans "Home" %} - {{ service.project_name }} </title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link href="{% static 'ikwen/css/admin-home.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>{% trans "Home" %}</li>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content" style="">
+        <div class="container-fluid stage">
+            <div id="stage" style="margin: auto">
+                {% include 'core/snippets/pending_weblet_invoice.html' %}
+                <div style="margin-bottom: 3vh;">
+                    <div class="text-center">
+                        {% if user.photo.name %}
+                            <img class="img-circle img-thumbnail" src="{{ settings.IKWEN_MEDIA_URL }}{{ user.photo.small_name }}" style="margin-top: 1vh;width:100px;height:100px">
+                        {% else %}
+                            <img class="img-circle img-thumbnail" src="{% static 'ikwen/img/login-avatar.jpg' %}" style="margin-top: 1vh;">
+                        {% endif %}
+                        <img class="img-circle img-thumbnail" src="{{ set }}" style="margin-top: 1vh;">
+                        <h2 class="welcome-title">{% trans "Welcome " %} {{ user.first_name }}</h2>
+                        <h5 class="col-xs-12 welcome-subtitle"> {% trans "Manage your website with ease..." %}</h5>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title" style="padding-bottom: 3vh;">{% trans "Website preview" %}</h4>
+                    <div class="col-md-8 col-md-offset-1 col-sm-12">
+                        {% url 'welcome' as welcome_url %}
+                        <p class="section-about" style="padding-bottom: 1vh !important;">{% blocktrans %}
+                            Your visitors will see <a href="{{ welcome_url }}">this welcome page</a> when they visit your website.
+                            If you want them to see your offers and products, simply turn the switch to "on".<br>
+                            Make sure you add your own products and configure everything correctly before you go live.<br>
+                        {% endblocktrans %}
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div class="col-md-2" style="padding-bottom: 3vh !important; ">
+                            <input id="check-ecommerce-active" type="checkbox" data-toggle="toggle" data-onstyle="success"
+                                   data-offstyle="danger" data-style="slow" data-width="80" data-height="10"
+                                    {% if config.is_ecommerce_active %}checked{% endif %}>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="text-center">
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh">{% trans "Go to public Website" %}</a>
+                    </div>
+                </div>
+
+                {% comment %}<div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Customers contacts and community" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img style="max-width: 250px;" src="{% static 'kakocase/img/best_buddy_list_exploitation.png' %}">
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <p class="section-about">{% blocktrans %}
+                                Register your customers contacts here. Our system will automatically invite them to create an account on your website and also
+                                invite their friends to do so. You will rapidly have thousands of users to whom you can offer your products and services.
+                                For better qualification of your database, create profiles first and group them.
+                            {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'revival:profiletag_list' %}" class="btn btn-outline-primary" role="button" style="margin:1vh 1vh 1vh 0;">{% trans "Create profile" %}</a>
+                        <a href="{% url 'ikwen:community' %}" class="btn btn-outline-primary" role="button" style="margin: 1vh 1vh 1vh 0;">{% trans "Add contact" %}</a>
+                    </div>
+                </div>{% endcomment %}
+{#                <div class="clearfix"></div>#}
+                {% comment %}<div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Mails and SMS campaigns" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/inbound_marketing.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                Send individual or mass mails and SMS campaigns. The recipient receives it with the name of your company as sender.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'echo:mailcampaign_list' %}" class="btn btn-outline-primary" role="button" style="margin:1vh 1vh 1vh 0;">{% trans "Start Email campaign" %}</a>
+                        <a href="{% url 'echo:sms_campaign' %}" class="btn btn-outline-primary" role="button" style="margin: 1vh 1vh 1vh 0;">{% trans "Start SMS campaign" %}</a>
+                    </div>
+                </div>{% endcomment %}
+{#                <div class="clearfix"></div>#}
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Products and categories" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/Product-and-categorie.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                Add photos, description, cost and stock for products/services you want to sell online. People can pay online.
+                                The categories will appear in the menu bar of the website if you want to. It is highly suggested to use the same image size for all your products.<br>
+                                Highly recommended are:
+                                {% endblocktrans %}
+                            </p>
+                            <ul style="color: #5a5a5a; list-style-type: square; padding-bottom: 3vh;">
+                                <li>600px x 700px {% trans "for portrait size photos" %}. </li>
+                                <li>700px and 600px {% trans "for landscape photos" %}. </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{{ new_service.url }}{% url 'kako:product_list' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Add a product" %}</a>
+                    </div>
+                </div>
+{#                <div class="clearfix"></div>#}
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Smart categories" %}</h4>
+                    <div class="row-card-section" style="display: flex; align-items: center">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/Smart-categorie.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                Smart categories let you group certain products under an attractive commercial name. Eg: “Top products”, “Arrivals”, etc.
+                                Once created you can populate a Smart category with products from different categories or a list of categories.
+                                Smart categories automatically appear on website homepage to help user preview your products.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'marketing:smart_category_list' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Add a smart category" %}</a>
+                    </div>
+                </div>
+{#                <div class="clearfix"></div>#}
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Delivery options" %}</h4>
+                    <div class="row-card-section" style="display: flex; align-items: center">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/Delivery-illustration.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                You need to set delivery options before the Checkout button can appear on the card page. For every delivery option created,
+                                you can configure the cost, the minimum purchase to make this option available and the area of coverage for the option.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'kakocase:deliveryoption_list' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Create delivery options" %}</a>
+                    </div>
+                </div>
+{#                <div class="clearfix"></div>#}
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Homepage slideshow" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/Slideshow.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                    Create and manipulate big images that slide on the homepage.<br/>
+                                    <strong>Use images of 1920 x 800px.</strong>
+                                    Smaller images will result in incorrect display on FullHD screens.
+                                    Once created. You can drag an drop to organize their order of appearance on the website.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'marketing:banner_list' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Add slide" %}</a>
+                    </div>
+                </div>
+{#                <div class="clearfix"></div>#}
+                {% comment %}<div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Website appearance and logo" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/website-appearance.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                Choose your preferred template and configure logo that appear in the top left corner of the website.
+                                You can configure how dense products are displayed. Compact, Cozy or comfortable.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'theming:theme_list' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Configure appearance" %}</a>
+                    </div>
+                </div>{% endcomment %}
+{#                <div class="clearfix"></div>#}
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Website configurations and branding" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/website-configuration.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                Configure useful information of your website like company name, description, invitation message, mail signature, etc.
+                                Upload a square-size symbol that will serve as favicon and smartphone launcher.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'ikwen:configuration' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Configure your website" %}</a>
+                    </div>
+                </div>
+{#                <div class="clearfix"></div>#}
+                {% comment %}<div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Customer retention program" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/customer-retention-programm.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                Create coupons that your customers and fans will collect in heap of 100 to get the actual gift indicated.
+                                You can configure how much of each coupons they get for joining your community, referring to a friend or buying from you, online or onsite.
+                                Use very beautiful images of 600x800px. Our system will automatically send some free coupons to your members by email to keep them engaged.
+                                Once you configure Join and referral Reward, your contacts will be invited to join and refer their friends.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{% url 'rewarding:configuration' %}" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Create coupons" %}</a>
+                    </div>
+                </div>{% endcomment %}
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Promotions" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/promotion.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                You can create a promotion on a product, a category or on all products on the website.
+                                You simply choose the category a product and set the sales rate.
+                                It’s also possible to create coupon codes that you can send to people for them to use when checking out.
+                                A coupon code gives the user a discount that you configure upon creation.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'sales:promotion_list' %}" class="btn btn-outline-primary" role="button" style="margin:1vh 1vh 1vh 0;">{% trans "Launch promotion" %}</a>
+                        <a href="{% url 'sales:promocode_list' %}" class="btn btn-outline-primary" role="button" style="margin: 1vh 1vh 1vh 0;">{% trans "Create Promo Code" %}</a>
+                    </div>
+                </div>
+                {% include 'core/snippets/admin_home_change_domain.html' %}
+                <div class="card-section subtle-shade">
+                    <h4 class="card-section-title">{% trans "Help & Support" %}</h4>
+                    <div class="row-card-section">
+                        <div class="col-md-4 col-md-offset-1 card-img">
+                            <img  style="max-width: 250px;" src="{% static 'kakocase/img/help-and-support.png' %}">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="section-about">
+                                {% blocktrans %}
+                                If you are still having issues getting all this to run, we offer multiple support options.
+                                You have free and full access to our online documentation and FAQ.
+                                You will find detailed instructions on how to do just about anything. Our blog covers practical business cases.
+                                If you rather need custom support with a consultant dedicated to your job.
+                                    We offer affordable support covering technical, marketing and infographics. Choose option that best suits your need.
+                                {% endblocktrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="{{ service_url }}" class="btn btn-outline-primary" role="button" style="margin:1vh 1vh 1vh 0;">{% trans "Technical support" %}</a>
+                        <a href="{{ service_url }}" class="btn btn-outline-primary" role="button" style="margin: 1vh 1vh 1vh 0;">{% trans "Infographics" %}</a>
+                        <a href="{{ service_url }}" class="btn btn-outline-primary" role="button" style="margin: 1vh 1vh 1vh 0;">{% trans "Marketing support" %}</a>
+                    </div>
+                </div>
+{#                <div class="clearfix"></div>#}
+{#                <div class="landscape-optimisation" style="display:none;"></div>#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    {% include 'core/snippets/sort_and_actions.html' %}
+    <script type="text/javascript">
+        (function() {
+            $('div#admin-nav .home').addClass('active');
+            $('#check-ecommerce-active').change(function() {
+                $.getJSON('', {'action': 'toggle_ecommerce_active'})
+            })
+        })()
+    </script>
+{% endblock %}

@@ -1,0 +1,473 @@
+{% extends 'shopping/optimum/base.html' %}
+{% load i18n static user_agents humanize media_from_provider currency cache %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="abstract" content="{{ product.name }} - {{ service.project_name }}"/>
+    <meta name="description" content="{{ product.description }}"/>
+    <meta property="og:title" content="{{ product.name }} - {{ service.project_name }}"/>
+    <meta property="og:description" content="{{ product.description }}"/>
+    <meta property="og:image" content="{{ product.image|from_provider:product.provider }}"/>
+    <meta property="og:site_name" content="{{ service.domain|upper }}" />
+{% endblock %}
+
+{% block page_title %}
+    <title>{{ product.name }} - {{ service.project_name }}</title>
+{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        .my-cart-b {max-width: 90%; min-width:inherit}
+    </style>
+
+{% endblock %}
+
+{% block head_js %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'kakocase/css/product-detail.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'ikwen/swiper/css/swiper.min.css' %}" type="text/css" media="screen" />
+{% endblock %}
+
+{% block header %}
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <script>window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+
+      t._e = [];
+      t.ready = function(f) {
+        t._e.push(f);
+      };
+
+      return t;
+    }(document, "script", "twitter-wjs"));</script>
+
+    <div id="top-notice-ctnr" style="display: none">
+        <span class="floating-notice has-shade" style="float: none; position: static"> Error goes here </span>
+    </div>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    {% cache 300 product_detail_content product.category.slug product.slug %}
+    <div class="content">
+        <div class="single-wl3">
+            <div class="container">
+                <div class="single-grids row">
+                    <div class="col-sm-6  col-md-7  col-lg-8 single-grid">
+                        <div class="single-top">
+                            <div class="single-left">
+                                <div class="swiper-container gallery-top">
+                                    <div class="swiper-wrapper">
+                                        {% for photo in product.photos %}
+                                            <div class="swiper-slide">
+                                                <img src="{{ photo.image|from_provider:product.provider }}"
+                                                     class="img-responsive">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Add Arrows -->
+{#                                    <div class="swiper-button-next swiper-button-white"></div>#}
+{#                                    <div class="swiper-button-prev swiper-button-white"></div>#}
+
+                                </div>
+                                <p class="toggle-fullscreen hidden-xs  hidden-sm">
+                                    <i class="fa fa-search-plus hidden-xs" style="color: #0c54a2"></i>
+                                    <a href="javascript:;" style="color: #0c54a2">
+                                        {% trans "Full screen" %}
+                                    </a>
+                                </p>
+                                <div class="swiper-container gallery-thumbs hidden-xs  hidden-sm">
+                                    <div class="swiper-wrapper">
+                                        {% for photo in product.photos %}
+                                            <div class="swiper-slide"
+                                                 style="background-image: url({{ photo.image|from_provider:product.provider }})">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-sm-6 col-md-5 col-lg-4 mobile-cntr">
+                        <div class="single-right simpleCart_shelfItem">
+                            {% url 'shopping:product_detail' product.category.slug product.slug as product_url %}
+                            <span class="hidden item_id">{{ product.id }}</span>
+                            <span class="hidden item_image">{{ product.image|from_provider:product.provider }}</span>
+                            <span class="hidden item_url">{{ product_url }}</span>
+                            <div class="details">
+                                <h4 class="item_name">{{ product.name }}</h4>
+{#                                <div class="block">#}
+{#                                    <div class="starbox small ghosting"{% if product.get_rating %} data-average="{{ product.get_rating }}"{% endif %}> </div>#}
+    {#                                </div>#}
+                                {% if product.summary %}
+                                    <div class="summary">{{ product.summary|safe }}</div>
+                                {% endif %}
+                                {% if config.show_prices %}
+                                    <p class="price item-price-verbose">{{ CURRENCY.symbol }} {{ product.retail_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</p>
+                                    <span class="hidden item_price">{{ product.retail_price|currency:CURRENCY.code }}</span>
+                                    <span class="hidden item_packing_price">{{ product.packing_price|currency:CURRENCY.code }}</span>
+                                    {% if deal_list %}
+                                    <div class="product-deals">
+                                        <div class="row">
+                                            {% for deal in deal_list %}
+                                            <div class="deal col-sm-4" data-bank-name="{{ deal.bank.config.company_name }}"
+                                                 data-term-cost="{{ deal.term_cost }}" data-frequency="{{ deal.frequency }}"
+                                                 data-bank-url="{{ deal.bank.config.website_url }}"
+                                                 data-create-account-url="{{ deal.bank.config.create_account_url }}"
+                                                 data-toggle="modal" data-target="#modal-deal-details">
+                                                <span class="bank-logo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ deal.bank.config.logo.name }})"></span>
+                                                <span class="term-cost">{{ deal.term_cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</span>
+                                                <sup>/{{ deal.frequency }}</sup>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
+                                {% if product.stock > 0 %}
+                                    <span class="hidden item_stock">{{ product.stock }}</span>
+                                    {% if product.unit_of_measurement %}
+                                        <div>
+                                            <span>{% trans "Avail." %}: </span>
+                                            <span class="text-muted">{{ product.stock }} {{ product.unit_of_measurement }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% with size_list=product.get_size_list %}
+                                        {% if size_list|length > 1 %}
+                                            <p class="alert alert-info">
+                                                {% blocktrans %}Select your desired size and quantity, then click
+                                                    <strong>Add to Cart</strong>{% endblocktrans %}
+                                            </p>
+                                        {% endif %}
+                                        {% if config.allow_shopping and config.show_prices %}
+                                            {% include 'shopping/snippets/product_size_qty.html' %}
+                                            <button data-text="Add To Cart"
+                                                    class="my-cart-b item_add">{% trans "Add To Cart" %}
+                                                <div class="mask"></div>
+                                            </button>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    <p class="alert alert-danger">{% trans 'SOLD OUT' %}</p>
+                                {% endif %}
+                                <div class="social-icon">
+                                    <div class="fb-share-button" data-href="{{ service.url }}{{ product_url }}" data-layout="button" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php">{% trans "Share" %}</a></div>
+                                    <a class="twitter-share-button" href="https://twitter.com/intent/tweet?url={{ service.url }}{{ product_url }}" data-size="small">Tweet</a>
+                                    <div class="g-plus" data-action="share" data-href="{{ service.url }}{{ product_url }}" data-annotation="bubble" ></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="tab-wl3" style="margin-top: 3em">
+                            <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                                <ul id="bottom-tabs" class="nav nav-tabs left-tab" role="tablist"
+                                    style="margin-bottom: 1em">
+                                    <li role="presentation" class="active">
+                                        <a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">
+                                            {% trans "Description" %}
+                                        </a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#reviews" role="tab" id="reviews-tab" data-toggle="tab" aria-controls="reviews">
+                                            {% trans "Reviews" %} (<span class="count">{{ review_count }}</span>)
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div id="myTabContent" class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+                                        <div style="color: #666">
+                                            {% if product.description %}
+                                                <p>{{ product.description|safe }}</p>
+                                            {% else %}
+                                                <p>{% trans "No description available" %}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="reviews" aria-labelledby="reviews-tab">
+                                        <div>
+                                            <div class="reviews-bottom" style="overflow: hidden">
+{#                                                <div id="stars-rating" style="float: left">#}
+{#                                                    <span style="float: left">{% trans "Your Rating" %}:</span>#}
+{#                                                    <div class="block" style="float: left; padding-left: .5em">#}
+{#                                                        <div class="starbox autoupdate changeable ghosting"><div class="positioner"><div class="stars"><div class="ghost" style="width: 42.5px; display: none;"></div><div class="colorbar" style="width: 42.5px;"></div><div class="star_holder"><div class="star star-0"></div><div class="star star-1"></div><div class="star star-2"></div><div class="star star-3"></div><div class="star star-4"></div></div></div></div></div>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+                                                <form id="submit-review" onsubmit="return false">
+                                                    <div class="form-group comment">
+                                                        <textarea placeholder="{% trans "Add a public review" %} ..." class="comment"></textarea>
+                                                    </div>
+                                                    {% if user.is_anonymous %}
+                                                        <div class="row">
+                                                            <div class="form-group col-md-6 row-grid">
+                                                                <label>{% trans "Name" %} <sup>*</sup></label>
+                                                                <input type="text" placeholder="{% trans "Name" %}" class="name" required="">
+                                                            </div>
+                                                            <div class="form-group col-md-6 row-grid">
+                                                                <label>Email <sup>*</sup></label>
+                                                                <input type="email" placeholder="Email" class="email" required="">
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                        <p class="text-muted" style="padding: 1em 0">
+                                                            {% trans "Your email address will not be published. Required fields are marked" %} *
+                                                        </p>
+                                                    {% endif %}
+                                                    <input type="submit" value="{% trans "SEND" %}">
+                                                </form>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <ul class="review-list">
+                                                {% for review in review_list %}
+                                                    <li>
+                                                        <div class="reviews-left">
+                                                            <div class="img">
+                                                                {% if review.member and review.member.photo.name %}
+                                                                <img src="{{ settings.IKWEN_MEDIA_URL }}{{ review.member.photo.small_name }}" class="img-responsive">
+                                                                {% else %}
+                                                                <img src="{% static 'ikwen/img/member-avatar.jpg' %}" class="img-responsive">
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="reviews-right">
+                                                            <h3 class="name">{% if review.member %}{{ review.member.first_name }}{% else %}{{ review.name }}{% endif %}</h3>
+                                                            <p class="comment">{{ review.comment }}</p>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                    </li>
+                                                {% empty %}
+                                                    <li class="no-review">
+                                                        <p class="text-muted">{% trans "No review yet. Be the first to review" %}</p>
+                                                    </li>
+                                                {% endfor %}
+                                                <li class="tpl" style="display: none">
+                                                    <div class="reviews-left">
+                                                        <div class="img">
+                                                            <img class="img-responsive">
+                                                        </div>
+                                                    </div>
+                                                    <div class="reviews-right">
+                                                        <h3 class="name"></h3>
+                                                        <p class="comment"></p>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="custom" aria-labelledby="custom-tab">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <div id="suggestions" class="col-md-3 single-grid1">
+                                    <h3>{% trans "Suggestions" %}</h3>
+                                    <div class="row">
+                                        {% for product in suggestion_list  %}
+                                        {% url 'shopping:product_detail' product.category.slug product.slug as product_url %}
+                                        <div class="col-sm-6 suggestion">
+                                            <div class="recent-left">
+                                                <a href="{{ product_url }}">
+                                                    <img class="img-responsive " src="{{ product.image.small_url|from_provider:product.provider }}" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="recent-right">
+                                                <h6 class="best2">
+                                                    <a href="{{ product_url }}">
+                                                    {{ product.name }}
+                                                    </a>
+                                                </h6>
+                                                {% if config.show_prices %}
+                                                    <span class=" price-in1">{{ CURRENCY.symbol }} {{ product.retail_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="clearfix"> </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade gallery-enlarge" id="modal-slider" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-body">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            {% for photo in product.photos %}
+                                <div class="swiper-slide text-center">
+                                    <img src="{{ photo.image|from_provider:product.provider }}" class="img-responsive">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <!-- Add Arrows -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-deal-details" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="bank-logo"></div>
+                    <div class="bank-notice">{% blocktrans with symbol=CURRENCY.symbol %}
+                        Thanks to <a href="#" target="_blank" class="bank-name"></a>,
+                        you can get this product paying only <span class="text-muted">{{ symbol }}</span>
+                        <strong><span class="term-cost"></span><sup class="frequency"></sup></strong>{% endblocktrans %}
+                    </div>
+                    <div class="open-bank-account">{% blocktrans %}
+                        <span class="">Don't have an account with <span class="bank-name"></span> ?</span>
+                        <a class="btn btn-sm btn-success cta create-account-url"
+                           target="_blank" href="#">Open your account now</a>
+                    {% endblocktrans %}</div>
+                </div>
+{#                <div style="clear: both">#}
+{#                    <button data-text="Add To Cart"#}
+{#                            class="my-cart-b item_add pull-right">{% trans "Add To Cart" %}</button>#}
+{#                </div>#}
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    {% endcache %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="{% static 'ikwen/swiper/js/swiper.jquery.js' %}"></script>
+    {% if not request|is_mobile %}
+        <script defer src="{% static 'kakocase/js/imagezoom.js' %}"></script>
+    {% endif %}
+    <script>
+        $(function() {
+            var galleryTop = new Swiper('.gallery-top', {
+{#                nextButton: '.swiper-button-next',#}
+{#                prevButton: '.swiper-button-prev',#}
+{#                spaceBetween: 10,// If we need pagination#}
+                centeredSlides: true,
+                slidesPerView: 1,
+                pagination: {
+                el: '.swiper-pagination',
+                },
+            });
+            var galleryThumbs = new Swiper('.gallery-thumbs', {
+                spaceBetween: 10,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                touchRatio: 0.2,
+                slideToClickedSlide: true
+            });
+            galleryTop.params.control = galleryThumbs;
+            galleryThumbs.params.control = galleryTop;
+            var galleryEnlarge;
+            $('#modal-slider').on('shown.bs.modal', function() {
+                if (galleryEnlarge) return;
+                galleryEnlarge = new Swiper('.gallery-enlarge .swiper-container', {
+                    nextButton: '.swiper-button-next',
+                    prevButton: '.swiper-button-prev',
+                    spaceBetween: 10
+                });
+            });
+            $('body').on('click', ".toggle-fullscreen a", function () {
+                $('#modal-slider').modal('show');
+            }).on('click', '.deal', function() {
+                var bankName = $(this).data('bank-name'),
+                    bankUrl = $(this).data('bank-url'),
+                    createAccountUrl = $(this).data('create-account-url'),
+                    termCost = $(this).data('term-cost'),
+                    frequency = $(this).data('frequency'),
+                    bankLogo = $(this).find('.bank-logo').css('background-image');
+                $('#modal-deal-details .bank-name').text(bankName).prop('href', bankUrl);
+                $('#modal-deal-details .create-account-url').prop('href', createAccountUrl);
+                $('#modal-deal-details .term-cost').text(termCost.formatMoney());
+                $('#modal-deal-details .frequency').text('/' + frequency);
+                $('#modal-deal-details .bank-logo').css('background-image', bankLogo);
+            });
+            var item = simpleCart.find({'id': '{{ product.id }}'})[0];
+            if (item) $('.simpleCart_shelfItem .item_quantity').text(item.quantity());
+
+            $('#submit-review').submit(function () {
+                var comment = $('textarea.comment').val(),
+                    name = $('form#submit-review .name').val(),
+                    email = $('form#submit-review .email').val();
+
+                if (!comment) {
+                    $('.form-group.comment').addClass('has-error');
+                    ikwen.showFloatingNotice("{% trans "Please write a small comment." %}", '', 3);
+                    return false
+                }
+                {% if user.is_anonymous %}
+                    var check = true,
+                        memberPhoto = '{% static 'ikwen/img/member-avatar.jpg' %}';
+                    $('form#submit-review .required').each(function() {
+                        if (!$(this).val()) {
+                            $(this).parents('.form-group').addClass('has-error');
+                            check = false;
+                        }
+                    });
+                    if (!check) {
+                        ikwen.showFloatingNotice("{% trans "Please input name and email." %}", '', 6);
+                        return false;
+                    }
+                    if (!email.isValidEmail()) {
+                        $('form#submit-review .email').parents('.form-group').addClass('has-error');
+                        ikwen.showFloatingNotice("{% trans "Please input valid email." %}", '', 6);
+                        return false;
+                    }
+                {% else %}
+                    name = "{{ user.first_name }}";
+                    {% if user.photo.name %}
+                        var memberPhoto = '{{ settings.IKWEN_MEDIA_URL }}{{ user.photo.small_name }}';
+                    {% else %}
+                        var memberPhoto = '{% static 'ikwen/img/member-avatar.jpg' %}';
+                    {% endif %}
+                {% endif %}
+                $.getJSON("{% url 'shopping:review_product' product.id %}", {comment: comment, name: name, email: email});
+                $('.reviews-bottom').animate({height: 0}, 'normal', 'linear', function() {
+                    $(this).remove()
+                });
+                $('.review-list .no-review').remove();
+                var $tpl = $('.review-list li.tpl').clone().removeClass('tpl');
+                $tpl.find('img').attr('src', memberPhoto);
+                $tpl.find('.comment').text(comment);
+                $tpl.find('.name').text(name);
+                $tpl.prependTo('.review-list').show();
+                var reviewsCount = parseInt($('#reviews-tab .count').text());
+                $('#reviews-tab .count').text(reviewsCount+1);
+                return false
+            })
+        })
+    </script>
+    {{ config.scripts|safe }}
+{% endblock %}

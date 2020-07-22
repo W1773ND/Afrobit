@@ -1,0 +1,687 @@
+{% load i18n static auth_tokens media_from_provider cache %}
+<!--
+Author: W1773ND
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE HTML>
+<html lang="{{ lang }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% block meta %}
+            {% include 'core/snippets/color_and_icons.html' %}
+        {% endblock %}
+        <meta name="copyright" content="ikwen." >
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="{% url 'home' %}" />
+        <meta property="og:image" content="{% static 'afrobit/img/afrobit-logo-transparent.png' %}" />
+        <meta property="og:title" content="{% trans "Afrobit" %}"/>
+        <meta property="og:description" content="{% trans "Let's rock your destiny" %}">
+        <meta property="description" content="{% trans "Let's rock your destiny" %}" />
+		{% block page_title %}{% endblock %}
+		{% block head_style %}
+            <link rel="stylesheet" href="{% static 'kakocase/css/bootstrap.css' %}" />
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+            <link rel="stylesheet" href="{% static 'kakocase/swiper/css/swiper.min.css' %}">
+            <link rel="stylesheet" href="{% static 'kakocase/css/optimum.css' %}" type="text/css" media="all" />
+            {% if request.session.theme %}
+                {% with theme=request.session.theme %}
+                    <link rel='stylesheet' href="{% static 'kakocase/themes/' %}{{ theme.template_slug }}/{{ theme.slug }}.css" />
+                {% endwith %}
+                <style>
+                    .apply-theme-band {
+                        background-color: rgba(0, 0, 0, 0.6); bottom: 0; color: #FFFFFF; height: 15vh;
+                        padding: 10px 0; position: fixed; width: 100%;
+                    }
+                    .apply-theme-band p {margin-bottom: 10px; text-align: center}
+                    @media (min-width: 768px) {
+                        .apply-theme-band {height: 12vh}
+                        .apply-theme-band p {font-size: 15px; text-align: left}
+                    }
+                </style>
+            {% elif config.theme %}
+                {% with theme=config.theme %}
+                    <link rel='stylesheet' href="{% static 'kakocase/themes/' %}{{ theme.template.slug }}/{{ theme.slug }}.css" />
+                {% endwith %}
+            {% else %}
+                <link href="https://fonts.googleapis.com/css?family=Cagliostro" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic,300" rel="stylesheet">
+            {% endif %}
+            <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
+
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.07.22.15.27" type="text/css" media="all" />
+            <style>
+                .navbar {background: #FFF; position: fixed}
+                .top-right {float: right}
+                .cart-box {float: left; top: -5px}
+                .cart-box.user { top: 0!important; }
+                #auth .fa {font-size: 32px; margin-top: 10px}
+                #auth .fa.fa-user {font-size: 30px; margin-top: 7px; margin-left: 40px;}
+                #auth.top-right ul  {float: left; margin: 6px 0 0 0}
+                #auth.top-right .label-danger {margin: 13px -10px;}
+                .nav-container {padding: 8px 0}
+                .site-summary {background: #FFF; height: 500px; margin-top: 50px; position: absolute;transition : all 0.9s ease-in;-moz-transition: all 0.9s ease-in;-webkit-transition: all 0.9s ease-in; overflow: hidden;  width: 100%; z-index: 2;}
+                .site-summary.scrolling {margin-top: -550px;}
+                .edge-swipe-overlay {z-index: 9999}
+                .navbar-default .navbar-toggle .icon-bar {background-color: #fff;}
+                .navbar-default .navbar-toggle {border: none}
+                .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {background-color: transparent}
+                .cart.box_1 a.empty-cart.danger {color: #f41416}
+
+                @media (max-width: 768px) {
+                    .navbar {background: transparent;border-bottom: none}
+                }
+            </style>
+		{% endblock %}
+        {% block head_js %}
+            <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+            <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+            <!--[if lt IE 9]>
+              <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+              <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+            <![endif]-->
+        {% endblock %}
+        <script src="{% static 'kakocase/js/jquery.min.js' %}"></script>
+        <script src="{% static 'kakocase/js/main.js' %}"></script>
+    </head>
+    <body>
+        <div id="top-notice-ctnr" style="display: none">
+            <span class="floating-notice has-shade" style="float: none; position: static"> </span>
+        </div>
+        {% block header %}
+            {% cache template_cache_duration header user.username %}
+                <nav class="navbar navbar-default navbar-fixed-top header hidden-xs hidden-sm">
+                    <div class="container-fluid header">
+                        <div class="logo-nav  col-sm-2">
+                            <div class="logo-nav-left">
+                                {% url 'shopping:home' as home_url %}
+                                <h1>
+                                    <a href="{{ home_url }}" class="hidden-xs">
+                                        <div class="company-logo-container">
+                                            <img src="{% static 'afrobit/img/afrobit--logo--noir.png'  %}" alt="Logo {{ service.project_name }}"/>
+                                        </div>
+                                    {% if config.slogan %}<div class="slogan" title="{{ config.slogan }}"><span style="float: left; width: 500%">{{ config.slogan }}</span></div>{% endif %}
+                                    </a>
+                                    <a class="visible-xs">
+                                        <span>{{ service.project_name }}</span>
+                                    </a>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="navigator col-sm-7">
+                            <ul class="nav navbar-nav">
+                                <!-- Mega Menu -->
+                                {% for smart_category in smart_categories_level2 %}
+                                    <li class="dropdown level2 horizontal">
+                                        <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% for smart_category in smart_categories_level1 %}
+                                    <li class="dropdown horizontal">
+                                        <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% for category in menu_categories %}
+                                    <li class="dropdown horizontal">
+                                        <a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a>
+                                    </li>
+                                {% endfor %}
+                                <li class="dropdown categories-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'See more ...' %} <span class="fa fa-sort-down pull-right"></span></a>
+                                    <ul class="dropdown-menu categories-menu">
+                                        {% for smart_category in smart_categories_level2 %}
+                                        <li class="dropdown vertical">
+                                            <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        {% endfor %}
+                                        {% for smart_category in smart_categories_level1 %}
+                                            <li class="dropdown vertical">
+                                                <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                        {% endfor %}
+                                        {% for category in menu_categories %}
+                                            <li class="dropdown vertical">
+                                                <a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="auth" class="top-right">
+                            {% if user.is_authenticated %}
+                                <ul>
+                                    <li id="user-menu" class="dropdown"> <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i> </a>
+                                        <ul class="user-menu dropdown-menu" style="left: -100%" aria-labelledby="user-menu">
+                                            <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
+                                            <li role="separator" class="divider" style="margin-bottom: 0; width: 100%"></li>
+                                            {% if user.is_staff %}
+                                                <li><a href="{% url 'ikwen:staff_router' %}">Admin</a></li>
+                                            {% endif %}
+                                            <li>{% url "ikwen:account_setup" as account_setup_url %}
+                                                <a href="{{ account_setup_url }}">{% trans "Account setup" %}</a>
+                                            </li>
+                                            <li><a href="{% url "ikwen:logout" %}">{% trans "Logout" %}</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            {% else %}
+                                <ul class="anonymous">
+                                    <a class="btn button1" href="{% url 'ikwen:sign_in' %}">{% trans "Connexion" %}</a>
+                                </ul>
+                            {% endif %}
+                            <div class="dropdown cart-box {% if user.is_authenticated %}user{% endif %}">
+                                <div class="cart box_1">
+                                    <div class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <a href="{% url 'shopping:cart' %}"><i class="kkc-cart fa fa-shopping-bag"></i><span class="label label-danger simpleCart_quantity"></span></a>
+                                    </div>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="left: -450%; margin-top: 11px">
+                                        <li style="font-weight: 700;padding: 0 4px;width: 100%;text-align: center;margin-top: 20px;"> <h5><div class="total"><span class="simpleCart_total"></span></div></h5></li>
+                                        <li role="separator" class="divider" style="margin-bottom: 0; width: 100%"></li>
+                                        <li><a href="javascript:;" class="empty-cart danger" data-toggle="modal" data-target="#confirm-empty-cart"><span style="font-weight: 400">{% trans "Empty Cart" %}</span></a></li>
+                                        <li class="cart-option"><a href="{% url 'shopping:cart' %}" class="confirm-checkout">{% trans "Checkout" %}</a></li>
+{#                                        <div class="cart-details">#}
+{#                                            <a href="{% url 'shopping:cart' %}"><h5><div class="total"><span class="simpleCart_total"></span></div></h5></a>#}
+{#                                            <a href="javascript:;" class="empty-cart danger" data-toggle="modal" data-target="#confirm-empty-cart"><span style="font-weight: 400">{% trans "Empty Cart" %}</span></a>#}
+{#                                        </div>#}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </nav>
+                <nav class="navbar navbar-default navbar-fixed-top header visible-xs visible-sm">
+                <div class="header-xs visible-xs">
+                        <div class="container-fluid">
+                            <div class="pull-left">
+                                <button type="button" class="navbar-toggle menu-button">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <h3 class="app-name">
+                                    <a href="{% url 'shopping:home' %}">{{ service.project_name }}</a>
+                                </h3>
+                            </div>
+                            <div class="pull-right">
+                                {% if user.is_authenticated %}
+                                    <div class="action dropdown" style="float: right; width: 20px">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" id="user-menu" aria-haspopup="true"
+                                           aria-expanded="true">
+                                            <i style="cursor: pointer; font-size: 25px; padding-top: 4px;" class="fas fa-user"></i>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="user-menu" style="left: -130px">
+                                            <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
+                                            <li role="separator" class="divider"></li>
+                                            {% if user.is_staff %}
+                                                <li>
+                                                    <a href="{% url 'ikwen:staff_router' %}">Admin</a>
+                                                </li>
+                                            {% endif %}
+                                            <li>{% url "ikwen:account_setup" as account_setup_url %}
+                                                <a href="{{ account_setup_url|ikwenize }}">{% trans "Account setup" %}</a>
+                                            </li>
+                                            <li><a href="{% url "ikwen:logout" %}">{% trans "Logout" %}</a></li>
+                                        </ul>
+                                    </div>
+                                {% else %}
+                                    <a class="action" href="{% url 'ikwen:sign_in' %}">
+                                        <i class="glyphicon glyphicon-user"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div id="cd-search" class="cd-search">
+                                <form action="{% url 'shopping:search' as search_url %}">
+                                    <input name="q" type="search" placeholder="{% trans "Search" %} ...">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+            {% endcache %}
+        {% endblock %}
+        {% block banner %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block footer %}
+
+            {% cache template_cache_duration footer %}
+            <div class="footer-w3l hidden-xs">
+                <div class="container">
+                    <div class="footer-grids">
+                        <div class="col-sm-6 col-md-3 footer-grid">
+                            <h4>{{ service.project_name }}</h4>
+                            <ul>
+                                <li><a href="{% url 'shopping:home' %}">{% trans "Home" %}</a></li>
+                                {% if config.allow_shopping and config.show_prices %}
+                                    <li><a href="{% url 'shopping:cart' %}">{% trans "Checkout" %}</a></li>
+                                {% endif %}
+                                {% if agreement_page %}
+                                    <li><a href="{% url 'flatpage' agreement_page.url %}">{{ agreement_page.title }}</a></li>
+                                {% endif %}
+                                {% if about_page %}
+                                    <li><a href="{% url 'flatpage' about_page.url %}">{{ about_page.title }}</a></li>
+                                {% endif %}
+                                {% if flatpage_list %}
+                                    {% for flatpage in flatpage_list %}
+                                        <li><a href="{% url 'flatpage' flatpage.url %}">{{ flatpage.title }}</a></li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li><a href="{% url 'ikwen:sign_in' %}">{% trans "Login" %}</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 col-md-3 footer-grid hidden-sm">
+                            <h4>{% trans "Quick access" %}</h4>
+                            <ul>
+                                {% for category in quick_access_categories %}
+                                    <li>
+                                        {% url 'shopping:product_list' category.slug as product_list_url %}
+                                        <a href="{{ product_list_url }}">{{ category.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 col-md-3 footer-grid hidden-sm">
+                            <h4>{% trans "About" %}</h4>
+                            <p>{{ config.description|truncatewords:25 }}</p>
+                            <div class="social-icon">
+                                {% if config.facebook_link %}
+                                    <a href="{{ config.facebook_link }}" target="_blank"><i class="fa fa-facebook-official"></i></a>
+                                {% endif %}
+                                {% if config.instagram_link %}<a href="{{ config.instagram_link }}" target="_blank"><i
+                                        class="fa fa-instagram"></i></a>{% endif %}
+                                {% if config.twitter_link %}<a href="{{ config.twitter_link }}" target="_blank"><i
+                                        class="fa fa-twitter-square"></i></a>{% endif %}
+                                {% if config.google_plus_link %}
+                                    <a href="{{ config.google_plus_link }}" target="_blank"><i
+                                            class="fa fa-google-plus-square"></i></a>{% endif %}
+                                {% if config.linkedin_link %}<a href="{{ config.linkedin_link }}" target="_blank"><i
+                                        class="fa fa-linkedin-square"></i></a>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3 footer-grid foot">
+                            <h4>{% trans "Contacts" %}</h4>
+                            <ul>
+                                <li><i class="fa fa-map-marker" aria-hidden="true" style="font-size: 20px"></i><a href="#">{{ config.address }}</a></li>
+                                {% if config.contact_phone %}
+                                <li><i class="fa fa-phone" aria-hidden="true" style="font-size: 20px"></i><a href="#">{{ config.contact_phone }}</a></li>
+                                {% endif %}
+                                <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="mailto:{{ config.contact_email }}">{{ config.contact_email }}</a></li>
+                            </ul>
+                        </div>
+                    <div class="clearfix"> </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden-xs">
+                {% include 'shopping/snippets/language_switcher.html' %}
+                {% if config.can_manage_currencies %}
+                    {% include 'shopping/snippets/currency_switcher.html' %}
+                {% endif %}
+            </div>
+            <div class="clearfix"></div>
+            <div class="copy-section">
+                <div class="container">
+                    <div class="copy-left">
+                        <p>&copy; {{ year }} <a href="{{ service.url}}" style="text-decoration: none"><strong>Afrobit</strong></a>.
+                            <span>{% trans "All rights reserved" %}</span>
+                            - <a href="{{ settings.LEGAL_MENTIONS_URL }}" style="text-decoration: none">{% trans "Legal mentions" %}</a>
+                        </p>
+                    </div>
+{#                    <div class="copy-right">#}
+{#                        <img src="{% static 'kakocase/img/card.png' %}" alt=""/>#}
+{#                    </div>#}
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            {% endcache %}
+        {% endblock %}
+        {% if request.session.theme %}
+        <div class="apply-theme-band">
+            <div class="container-fluid">
+                <div class="col-sm-9">
+                   <p class="hidden-xs">{% trans 'If you like this theme, click Apply to use it.' %}</p>
+                   <p class="visible-xs">{% trans 'Do you like this theme ?' %}</p>
+                </div>
+                <div class="col-sm-3 col-lg-2 col-xs-12">
+                   <a class="btn button1 btn-block" href="{% url 'theming:theme_list' %}?apply=yes">{% trans "Apply" %}</a>
+                </div>
+           </div>
+        </div>
+        {% endif %}
+        {% include 'shopping/snippets/edge_panel.html' %}
+        {% include 'shopping/snippets/modal_confirm_empty_cart.html' %}
+        {% include 'shopping/snippets/modal_added_to_cart.html' %}
+        {% include 'shopping/snippets/modal_successful_registration.html' %}
+{#        {% include 'shopping/snippets/modal_news_letter.html' %}#}
+        {% include 'shopping/snippets/modal_delivery_location_warning.html' %}
+        <div class="edge-swipe-overlay"></div>
+
+        <script src="{% static 'kakocase/js/bootstrap-3.1.1.min.js' %}"></script>
+        <script src="{% static 'kakocase/js/simpleCart.min.js' %}"></script>
+        <script src="{% static 'kakocase/swiper/js/swiper.min.js' %}"></script>
+        <script src="{% static 'ikwen/hammerjs/hammer.min.js' %}"></script>
+        <script src="{% static 'ikwen/hammerjs/jquery.hammer.js' %}"></script>
+        <script src="{% static 'ikwen/js/ikwen-util.js' %}?v=18.5.21"></script>
+        <script type="text/javascript">
+            (function () {
+                {% if request.GET.successfulRegistration %}
+                    $('#modal-successful-registration').modal('show');
+                {% endif %}
+
+                /* CART STUFFS */
+                {% if settings.DECIMAL_SEPARATOR != '.' or settings.THOUSAND_SEPARATOR != ',' %}
+                    $('#checkout-min, .item_price, .item_packing_price').each(function() {
+                        var val = $(this).text().replace('{{ CURRENCY.symbol }}', '');
+                        val = val.trim().replace('{{ settings.THOUSAND_SEPARATOR }}', '#')
+                            .replace('{{ settings.DECIMAL_SEPARATOR }}', '.')
+                            .replace('#', ',');
+                        $(this).text(val)
+                    });
+                    $('.item-size-selector option').each(function() {
+                        var val = $(this).data('retail_price_verbose'),
+                            packing = $(this).data('packing_price');
+                        if (val) {
+                            val = val.trim().replace('{{ settings.THOUSAND_SEPARATOR }}', '#')
+                                .replace('{{ settings.DECIMAL_SEPARATOR }}', '.')
+                                .replace('#', ',');
+                            $(this).attr('data-retail_price', val);
+                        }
+                        if (packing) {
+                            packing = packing.trim().replace('{{ settings.THOUSAND_SEPARATOR }}', '#')
+                                .replace('{{ settings.DECIMAL_SEPARATOR }}', '.')
+                                .replace('#', ',');
+                            $(this).attr('data-packing_price', packing);
+                        }
+                    });
+                {% endif %}
+                simpleCart.currency({
+                    code: "{{ CURRENCY.code }}",
+                    symbol: "{{ CURRENCY.symbol }} ",
+                    accuracy: {{ CURRENCY.precision }}
+                });
+                simpleCart.bind('beforeAdd', function (item) {
+                    if (!item.get('size')) {
+                        $('.size-list').addClass('alert-danger');
+                        ikwen.showFloatingNotice("<strong>{% trans "Please select a size." %}</strong>", "", 3);
+                        return false
+                    } else {
+                        $('.size-list').removeClass('alert-danger');
+                    }
+                });
+                simpleCart.bind('afterAdd', function (item) {
+                    $('div#added-to-cart .name').text(item.get('name'));
+                    var size = item.get('size');
+                    if (size !== '-------')
+                        $('div#added-to-cart .size').text('(' + size + ')');
+                    else
+                        $('div#added-to-cart .size').text('');
+                    $('#added-to-cart').modal('show');
+                });
+
+                $('body').on('click', '.value-plus1', function () {
+                    var max = $(this).data('max');
+                    var divUpd = $(this).parent().find('.value1'), newVal = parseInt(divUpd.text(), 10) + 1;
+                    if (newVal > max) {
+                        ikwen.showFloatingNotice("{% trans "Available stock limit reached." %}", "", 3);
+                        return;
+                    }
+                    divUpd.text(newVal);
+                }).on('click', '.value-minus1', function () {
+                    var divUpd = $(this).parent().find('.value1'), newVal = parseInt(divUpd.text(), 10) - 1;
+                    if (newVal >= 1) divUpd.text(newVal);
+                }).on('change', '.size-list .item-size-selector', function () {
+                    var id =$('option:selected',this).data('id'),
+                        price =$('option:selected',this).data('retail_price'),
+                        packagingPrice =$('option:selected',this).data('packaging_price'),
+                        priceVerbose =$('option:selected',this).data('retail_price_verbose'),
+                        stock =$('option:selected',this).data('stock'),
+                        size = $(this).val(),
+                        max = stock,
+                        item = simpleCart.find({'id': id})[0],
+                        currency = simpleCart.currency().symbol;
+                    $(this).parents('.size-list').find('.item_size').text(size);
+                    $(this).parents('.simpleCart_shelfItem').find('.item_id').text(id);
+                    $(this).parents('.simpleCart_shelfItem').find('.item-price-verbose').html(currency + ' ' + priceVerbose);
+                    $(this).parents('.simpleCart_shelfItem').find('.item_price').text(price);
+                    $(this).parents('.simpleCart_shelfItem').find('.item_packaging_price').text(packagingPrice);
+                    $(this).parents('.simpleCart_shelfItem').find('.item_stock').text(stock);
+                    if (item) max = stock - item.quantity();
+                    if (max === 0) $('.simpleCart_shelfItem .value1').text(0);
+                    else $('.simpleCart_shelfItem .value1').text(1);
+                    $(this).parents('.simpleCart_shelfItem').find('.value-plus1').data('max', max)
+                }).on('change', '.currency-switcher select', function() {
+                    simpleCart.empty();
+                    $(this).parents('.currency-switcher').submit()
+                });
+                $('#content').on('click', '.product-tile button.my-cart-b:not(.sold-out)', function () {
+                    var id = $(this).data('id'),
+                        image = $(this).data('image'),
+                        name = $(this).data('name'),
+                        description = $(this).data('description'),
+                        stock = $(this).data('stock'),
+                        max = stock,
+                        url = $(this).parents('.product-about').find('h6 a').attr('href'),
+                        $sizeRadios = $(this).parents('.product-about').find('.size-radios'),
+                        $price = $(this).parents('.product-about').find('.product-price'),
+                        item = simpleCart.find({'id': id})[0];
+                    $('div#product-modal-preview .item_id').text(id);
+                    $('div#product-modal-preview .item_image').text(image);
+                    $('div#product-modal-preview .item_name').text(name);
+                    $('div#product-modal-preview .item_url').text(url);
+                    $('div#product-modal-preview .item_stock').text(stock);
+                    $('div#product-modal-preview .target').attr('href', url);
+                    $('div#product-modal-preview .description').html(description);
+                    $('div#product-modal-preview .product-about .product-price').html($price.html());
+                    $('div#product-modal-preview img').attr('src', image);
+                    $('div#product-modal-preview .size-radios').html($sizeRadios.html());
+                    if ($sizeRadios.length === 0) {
+                        $('div#product-modal-preview .size-list').hide();
+                        $('div#product-modal-preview .item_size').text('-------');
+                        $('div#product-modal-preview .size-hint').hide();
+                    } else {
+                        $('div#product-modal-preview .size-list').show();
+                        if ($sizeRadios.find('.choose-size').length === 1) {
+                            var onlySize = $sizeRadios.find('.item-size-selector').val();
+                            $('div#product-modal-preview .item_size').text(onlySize);
+                            $('div#product-modal-preview .size-hint').hide();
+                        } else {
+                            $('div#product-modal-preview .item_size').text('');
+                            $('div#product-modal-preview .size-hint').show();
+                        }
+                    }
+                    if (item) max = stock - item.quantity();
+                    if (max === 0) $('div#product-modal-preview .value1').text(0);
+                    else $('div#product-modal-preview .value1').text(1);
+                    $('div#product-modal-preview .value-plus1').data('max', max);
+                });
+                $('div#product-modal-preview').on('click', '.my-cart-b', function () {
+                    if ($('div#product-modal-preview .item-size-selector').children('option').length > 1) {
+                        if ($('div#product-modal-preview .item-size-selector').val() == '') {
+                            $('.size-list').addClass('alert-danger');
+                            ikwen.showFloatingNotice("<strong>{% trans "Please select a size." %}</strong>", "", 3);
+                            return false
+                        }
+                    }
+                    $('div#product-modal-preview').modal('hide')
+                });
+
+
+                $("#hide-email-modal").click(function(){
+                    reInitTopComponent();
+                    var showEmailModal = $(this).val();
+                    localStorage.removeItem('showEmailModal');
+                    if (showEmailModal === 'on'){
+                        localStorage.setItem('showEmailModal', true)
+                    }
+                    if ($(window).width() < 992) {
+                        $('.edge-panel-left').addClass('has-shade').appendTo('.edge-swipe-overlay')
+                    }
+                    $( window ).resize(ikwen.debouncer(function (e) {
+                        var winWidth = $(window).width();
+                        if (winWidth < 768) {
+                            if (!$('#navbar-search').is(':visible')) {
+                                $('#navbar-search').prependTo('body');
+                                $('#navbar-search input').focus();
+                            }
+                            $('.edge-panel-right').addClass('has-shade').appendTo('.edge-swipe-overlay');
+                        } else if (winWidth >= 768) {
+                            $('#navbar-search').insertBefore('#site-menu');
+                            $('.edge-panel-right').removeClass('has-shade').appendTo('.edge-panel-right-container').show();
+                        }
+                        if (winWidth >= 992) {
+                            $('.edge-panel-left').removeClass('has-shade').appendTo('.edge-panel-left-container').show();
+                        } else {
+                            $('.edge-panel-left').addClass('has-shade').appendTo('.edge-swipe-overlay');
+                        }
+                    }));
+                });
+                {% comment %}if (("{{ is_in_newsletter }}") === 'False') {
+                    if(!localStorage.getItem('showEmailModal')){
+                        setTimeout(function() {
+                            $('#news-letter').modal();
+                        }, 4000);
+                    }
+                }{% endcomment %}
+                if ($(window).width() < 992) {
+                    $('.edge-panel-left').addClass('has-shade').appendTo('.edge-swipe-overlay')
+                }
+                $( window ).resize(ikwen.debouncer(function (e) {
+                    var winWidth = $(window).width();
+                    if (winWidth < 768) {
+                        if (!$('#navbar-search').is(':visible')) {
+                            $('#navbar-search').prependTo('body');
+                            $('#navbar-search input').focus();
+                        }
+                        $('.edge-panel-right').addClass('has-shade').appendTo('.edge-swipe-overlay');
+                    } else if (winWidth >= 768) {
+                        $('#navbar-search').insertBefore('#site-menu');
+                        $('.edge-panel-right').removeClass('has-shade').appendTo('.edge-panel-right-container').show();
+                    }
+                    if (winWidth >= 992) {
+                        $('.edge-panel-left').removeClass('has-shade').appendTo('.edge-panel-left-container').show();
+                    } else {
+                        $('.edge-panel-left').addClass('has-shade').appendTo('.edge-swipe-overlay');
+                    }
+                }));
+                var menuCount = $(".nav.navbar-nav li.horizontal").length,
+                    subMenuCount = $(".categories-menu li.vertical").length;
+                if (subMenuCount >= menuCount) $(".dropdown.categories-menu").hide();
+                var ulWidth = $(".navbar-nav").width() + 20;
+                $(".nav-container .navbar-nav").css({float: 'none', margin: 'auto', width: ulWidth});
+                $('body').on('click', '.toggle-cd-search .open', function () {
+                    $(this).hide();
+                    $('.toggle-cd-search .close2').show();
+                    $('.cd-search').addClass('reveal').show();
+                    $('.cd-search input').focus()
+                }).on('click', '.toggle-cd-search .close2', function () {
+                    $(this).hide();
+                    $('.toggle-cd-search .open').show();
+                    $('.cd-search').removeClass('reveal').show();
+                    $('.cd-search input').focus()
+                }).on('click', '#toggle-menu-xs-appearance', function () {
+                    reInitTopComponent();
+                    $('.nav-xs').toggleClass('appear')
+                });
+
+
+                function reInitTopComponent() {
+                    $('.header-xs .nav-xs').removeClass('appear');
+                    $('.header-xs .cd-search-trigger').removeClass('search-is-visible');
+                    $('.header-xs .cd-search').removeClass('is-visible');
+                    $('.header-xs .action.dropdown').removeClass('open')
+                }
+                $('body').on('click', '.cd-search-trigger', function () {
+                    if ($('.nav-xs').hasClass('appear')){
+                        $('.nav-xs').removeClass('appear')
+                    }
+                    $('.cd-search input').focus();
+                    $(".button-hover-handler").removeClass('active');
+
+                }).on('click', '#user-menu', function () {
+                    if ($('.nav-xs').hasClass('appear')){
+                        $('.nav-xs').removeClass('appear')
+                    }
+                    if ($('.cd-search-trigger').hasClass('search-is-visible')){
+                        $('.cd-search-trigger').removeClass('search-is-visible')
+                    }
+                    if ($('.cd-search').hasClass('is-visible')){
+                        $('.cd-search').removeClass('is-visible')
+                    }
+
+                });
+                var winWidth = $(window).width();
+                if (winWidth < 768) {
+
+                }
+                $("a.action").click(function () {
+                    if($(this).parent('.button-hover-handler').hasClass('active')){
+                         $(this).parent('.button-hover-handler').removeClass('active');
+                    }else{
+                        $(".button-hover-handler").removeClass('active');
+                        $(this).parent('.button-hover-handler').addClass('active');
+                    }
+                });
+                $("i.fa-user").click(function () {
+                    $(".button-hover-handler").removeClass('active');
+                    $(this).parent('.button-hover-handler').addClass('active');
+                });
+
+                function ran_col() { //function name
+                    var color = '#'; // hexadecimal starting symbol
+                    var letters = ['004800','780015','752201','011899','8F0193','3F0008','00193D','0E1900','21003D']; //Set your colors here
+                    color += letters[Math.floor(Math.random() * letters.length)];
+                    $('#no-logo').css('background', color)
+                }
+                ran_col();
+                var lastScrollTop = 0;
+                $(window).scroll( () => {
+                    let scrollTop = $(window).scrollTop();
+                    let docHeight = $(document).height();
+                    let winHeight = $(window).height();
+                    let scrollPercent = (scrollTop) / (docHeight - winHeight);
+                    let scrollPercentRounded = Math.round(scrollPercent*100);
+                    if (scrollPercentRounded >= 12) {
+                        $('.back-to-top').removeClass('hiding').addClass('showing');
+                        $('.site-summary').addClass('scrolling')
+                    } else {
+                        $('.back-to-top').removeClass('showing').addClass('hiding');
+                        $('.site-summary').removeClass('scrolling')
+                    }
+                });
+
+                $('.js-scrollTo').on('click', function() {
+                    let page = $(this).attr('href');
+                    let speed = 750;
+                    $('html, body').animate( { scrollTop: $(page).offset().top }, speed );
+                    return false;
+                });
+
+
+            })()
+		</script>
+        <script>
+            var mySwiper = new Swiper ('.xs-swiper-container', {
+                // Optional parameters
+                direction: 'horizontal',
+                loop: false,
+                spaceBetween: 10,
+                slidePosition: 0,
+                freeMode: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+            })
+        </script>
+        {% block js %}{% endblock %}
+    </body>
+</html>

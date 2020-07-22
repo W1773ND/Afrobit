@@ -1,0 +1,142 @@
+{% load i18n staticfiles humanize auth_tokens currency %}
+{% url 'shopping:checkout' as checkout_url %}
+<div{% if delivery_options|length > 1 %} class="multiple-delivery-options"{% endif %}>
+    <div id="items-summary" class="co subtle-shade" data-total="{{ items_cost }}">
+        <h4><span class="count">{{ items_count }}</span> {% trans "item(s), totaling" %}:</h4>
+        {% if promo_code %}
+            <del>
+            <p class="price" style="color: #979797">
+                <span>{{ CURRENCY.symbol }}</span>
+                <span class="total">{{ initial_items_cost|floatformat:CURRENCY.precision|intcomma }}</span>
+            </p></del>
+            <span class="promo-code-rate">{{ promo_code.code }}: -{{ promo_code.rate }}%</span>
+            <p class="price">
+                <span>{{ CURRENCY.symbol }}</span>
+                <span class="total">{{ items_cost|floatformat:CURRENCY.precision|intcomma }}</span>
+            </p>
+        {% else %}
+            <p class="price">
+                <span>{{ CURRENCY.symbol }}</span>
+                <span class="total">{{ items_cost|floatformat:CURRENCY.precision|intcomma }}</span>
+            </p>
+            <div id="promo-code">
+                <div class="">
+                    <div class="input-group promo">
+                        <input type="text" class="form-control" placeholder="{% trans 'Promo code' %}">
+                        <span class="input-group-btn">
+                            <button class="btn btn-secondary apply-promo-code" type="button">{% trans 'Apply' %}</button>
+                        </span>
+                    </div>
+                    <div class="invalid-code">{% trans "Invalid promotion code" %}</div>
+                </div>
+                <a class="promo-code" href="javascript:;" {% if delivery_options|length == 1 %} style="margin-bottom: 10px" {% endif %}>{% trans 'Promo code' %} ?</a>
+            </div>
+        {% endif %}
+        {% if items_cost >= config.checkout_min %}
+            {% if delivery_options|length == 1 %}
+                <div class="actions">
+                    <div class="delivery-option active" style="margin-bottom: .5em" data-id="{{ delivery_options.0.id }}"
+                         data-type="{{ delivery_options.0.type }}" data-cost="{{ delivery_options.0.cost|currency:CURRENCY.code }}"
+                         data-packing-cost="{{ delivery_options.0.packing_cost|currency:CURRENCY.code }}">
+                        <div class="img">
+                            {% if delivery_options.0.icon.name %}
+                                <img src="{{ delivery_options.0.icon.url }}" class="img-responsive"/>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <p>
+                                <span class="name">{{ delivery_options.0.name }}</span>
+                                {% if delivery_options.0.cost > 0 %}
+                                    <span class="cost">{{ CURRENCY.symbol }} <span class="val">{{ delivery_options.0.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</span></span>
+                                {% else %}
+                                    <span class="cost">{% trans "Free" context "Free delivery" %}</span>
+                                {% endif %}
+                            </p>
+                            <p class="short-description">{{ delivery_options.0.short_description }}</p>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="#" id="checkout" class="start-checkout" data-slug="{{ main_payment_mean.slug }}">
+                            <i class="glyphicon glyphicon-lock" style="border: none; color: #fff" aria-hidden="true"></i> {% trans "Checkout" %}
+                        </a>
+                    {% else %}
+                        <a href="javascript:;" id="checkout" data-toggle="modal"
+                           data-target="#suggest-login" data-slug="{{ main_payment_mean.slug }}">
+                            <i class="glyphicon glyphicon-lock" style="border: none; color: #fff" aria-hidden="true"></i> {% trans "Checkout" %}
+                        </a>
+                    {% endif %}
+                    <img src="{{ settings.IKWEN_MEDIA_URL }}{{ main_payment_mean.watermark.name }}" class="processor img-responsive"/>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if items_cost >= config.checkout_min %}
+        {% if delivery_options|length > 1 %}
+            <div class="actions">
+                <div id="delivery" class="co subtle-shade">
+                    <h4>{% trans "Pick-up / Delivery" %}</h4>
+                    <p class="alert alert-info" style="font-size: 12px; margin: 1.5em 0 0">{% trans "Please, click an option below" %}</p>
+                    <ul style="padding: 1em 0 0 0">
+                        {% for option in delivery_options %}
+                            <li class="delivery-option{% if option == delivery_option %} active{% endif %}"
+                                data-id="{{ option.id }}" data-type="{{ option.type }}" data-cost="{{ option.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision }}"
+                                data-packing-cost="{{ option.packing_cost|currency:CURRENCY.code }}">
+                                <div class="img">
+                                    {% if option.icon.name %}
+                                        <img src="{{ option.icon.url }}" class="img-responsive"/>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <p>
+                                        <span class="name">{{ option.name }}</span>
+                                        {% if option.cost > 0 %}
+                                            <span class="cost">{{ CURRENCY.symbol }}
+                                                <span class="val">{{ option.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</span></span>
+                                        {% else %}
+                                            <span class="cost">{% trans "Free" context "Free delivery"%}</span>
+                                        {% endif %}
+                                    </p>
+                                    <p class="short-description">
+                                        <em>{{ option.short_description }}</em>
+                                    </p>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <p class="price">
+                        <span class="currency">{% if delivery_option %}{{ CURRENCY.symbol }}{% else %}&nbsp;{% endif %}</span>
+                        <span class="val">
+                            {% if delivery_option.cost %}
+                            {{ delivery_option.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+                <div class="co total subtle-shade">
+                    <h4>{% trans "Total" %}:</h4>
+                    <p class="price">
+                        <span>{{ CURRENCY.symbol }}</span>
+                        <span class="val">{{ total_cost|floatformat:CURRENCY.precision|intcomma }}</span>
+                    </p>
+                    {% if items_cost >= config.checkout_min %}
+                        {% if user.is_authenticated %}
+                            <a id="checkout" class="start-checkout" href="{{ checkout_url }}" data-slug="{{ main_payment_mean.slug }}">
+                                <i class="glyphicon glyphicon-lock" aria-hidden="true" style="border: none; color: #fff"></i>
+                                {% trans "Checkout" %}
+                            </a>
+                        {% else %}
+                        <a href="javascript:;" id="checkout" class="start-checkout"
+                           data-toggle="modal" data-target="#suggest-login"
+                           data-slug="{{ main_payment_mean.slug }}"{% if main_payment_mean.is_cashflex %} data-is_cashflex="true"{% endif %}>
+                            <i class="glyphicon glyphicon-lock" aria-hidden="true" style="border: none; color: #fff"></i>
+                            {% trans "Checkout" %}
+                        </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>

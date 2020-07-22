@@ -1,0 +1,274 @@
+{% extends "core/base_admin.html" %}
+{% load i18n humanize staticfiles cache auth_tokens %}
+
+{% block new_menu %}
+    <ul class="dropdown-menu" style="width: 100%">
+        <li><a href="{% url 'kako:change_product' %}">{% trans "Product" %}</a></li>
+        <li><a href="{% url 'kako:change_category' %}">{% trans "Category" %}</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{% url 'marketing:change_smart_object' 'banner' %}">{% trans "Banner" %}</a></li>
+        <li><a href="{% url 'marketing:change_smart_object' 'smartcategory' %}">{% trans "Smart Category" %}</a></li>
+    </ul>
+{% endblock %}
+
+{% block admin_nav %}
+    {% cache 600 sidebar user.username %}
+    <div id="admin-nav" class="edge-panel-left">
+        <div class="wrapper">
+            <div class="stage">
+                <div class="menu">
+                    {% if perms.trade.ik_view_dashboard %}
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="home">
+                                <a href="{% url 'admin_home' %}">{% trans "Home" %}</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                    {% if perms.commarketing.ik_manage_marketing %}
+                        <div class="divider"></div>
+                        <ul class="nav nav-pills nav-stacked">
+                            {% if perms.trade.ik_view_dashboard %}
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li role="presentation" class="dashboard">
+                                        <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                            {% if module_blog.is_active %}
+                                <li role="presentation" class="marketing">
+                                    <a href="javascript:;" data-toggle="collapse" data-target="#blog"
+                                       aria-expanded="true" style="padding-right: 0;"> {% trans "Blog" %}
+                                        <i class="fa fa-fw fa-caret-down"></i>
+                                    </a>
+                                    <ul id="blog" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                                        style="padding-left: 15px">
+                                        <li class="blog-categories">{% url 'blog:list_category' as category_list_url %}
+                                            <a href="{{ category_list_url }}">{% trans "Blog categories" %}</a>
+                                        </li>
+                                        <li class="posts">
+                                            <a href="{% url 'blog:list_post' %}">{% trans "Posts" %}</a>
+                                        </li>
+                                        <li class="comments">
+                                            <a href="{% url 'blog:list_comment' %}">{% trans "Comments" %}</a>
+
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+
+                    {% if perms.trade.ik_manage_order or perms.trade.ik_manage_drivy or perms.trade.ik_manage_package %}
+                        <div class="divider"></div>
+                        <ul class="nav nav-pills nav-stacked">
+                            {% if not settings.IS_DELIVERY_COMPANY and perms.trade.ik_manage_order %}
+                                <li role="presentation" class="orders">
+                                    {% url 'trade:order_list' as order_list_url %}
+                                    <a href="{{ order_list_url }}">{% trans "Orders" %}</a>
+                                </li>
+                            {% endif %}
+                            {# The session.manapackages value is set in kakocase.views.set_session_data #}
+                            <li role="presentation" class="drivy">
+                                <a href="{% url 'trade:order_list' 'drivy' %}">{% trans "Drivy" %}</a>
+                            </li>
+                            {# The session.manapackages value is set in kakocase.views.set_session_data #}
+                            {% if request.session.manage_packages and perms.trade.ik_manage_package %}
+                                <li role="presentation" class="packages">
+                                    {% url 'trade:package_list' as package_list_url %}
+                                    <a href="{{ package_list_url }}">{% trans "Packages" %}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                    {% if not settings.IS_DELIVERY_COMPANY %}
+                        {% if perms.kako.ik_manage_product or perms.commarketing.ik_manage_marketing or perms.echo.ik_manage_messaging or perms.revival.ik_manage_profiles or perms.rewarding.ik_manage_rewarding %}
+                        <div class="divider"></div>
+                        <ul class="nav nav-pills nav-stacked">
+                            {% if perms.kako.ik_manage_product %}
+                                <li role="presentation" class="kako">
+                                    <a href="javascript:;" data-toggle="collapse" data-target="#kako" aria-expanded="true">
+                                        Kako <i class="fa fa-fw fa-caret-down"></i>
+                                    </a>
+                                    <ul id="kako" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                                        style="padding-left: 15px">
+                                        <li role="presentation"
+                                            class="categories">{% url 'kako:category_list' as category_list_url %}
+                                            <a href="{{ category_list_url }}">{% trans "Categories" %}</a>
+                                        </li>
+                                        <li role="presentation"
+                                            class="products">{% url 'kako:product_list' as product_list_url %}
+                                            <a href="{{ product_list_url }}">{% trans "Products" %}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if settings.IS_PROVIDER and perms.commarketing.ik_manage_marketing %}
+                                <li role="presentation" class="homepage">
+                                    <a href="javascript:;" data-toggle="collapse" data-target="#homepage"
+                                       aria-expanded="true" style="padding-right: 0;">
+                                        {% trans "Homepage" %}
+                                        <i class="fa fa-fw fa-caret-down"></i>
+                                    </a>
+                                    <ul id="homepage" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                                        style="padding-left: 15px">
+                                        <li class="smart-categories">{% url 'marketing:smart_category_list' as smart_category_list_url %}
+                                            <a href="{{ smart_category_list_url }}">{% trans "Smart categories" %}</a>
+                                        </li>
+                                        <li class="banners">{% url 'marketing:banner_list' as banner_list_url %}
+                                            <a href="{{ banner_list_url }}">{% trans "Banners" %}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li role="presentation" class="marketing">
+                                    <a href="javascript:;" data-toggle="collapse" data-target="#marketing"
+                                       aria-expanded="true" style="padding-right: 0;">
+                                        {% trans "Com & Marketing" %}
+                                        <i class="fa fa-fw fa-caret-down"></i>
+                                    </a>
+                                    <ul id="marketing" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                                        style="padding-left: 15px">
+                                        <li class="promotion">{% url 'sales:promotion_list' as promotion_list_url %}
+                                            <a href="{{ promotion_list_url }}">{% trans "Promotions" %}</a>
+                                        </li>
+                                        <li class="discount">{% url 'sales:promocode_list' as promo_code_list_url %}
+                                            <a href="{{ promo_code_list_url }}">{% trans "Promo Codes" %}</a>
+                                        </li>
+                                        <li class="emails">{% url 'sales:email_list' as email_list_url %}
+                                            <a href="{{ email_list_url }}">{% trans "Emails" %}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% url 'trade:partner_list' as partner_list_url %}
+                            {% if settings.IS_PROVIDER %}
+                            {% if perms.accesscontrol.sudo %}
+                                <li role="presentation" class="delivery-options">
+                                    {% url 'kakocase:delivery_options' as delivery_options_url %}
+                                    <a href="{{ delivery_options_url }}">{% trans "Delivery Options" %}</a>
+                                </li>
+                            {% endif %}
+                            {% comment %}{% if perms.rewarding.ik_manage_rewarding %}
+                                <li role="presentation" class="continuous-rewarding">
+                                    {% url 'rewarding:configuration' as rewarding_configuration_url %}
+                                    <a href="{{ rewarding_configuration_url }}" title="Continuous Rewarding">
+                                        {% trans "Continuous Rewarding" %}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if perms.daraja.ik_manage_daraja %}
+                                <li role="presentation" class="kako">
+                                    <a href="javascript:;" data-toggle="collapse" data-target="#daraja" aria-expanded="true">
+                                        Daraja <i class="fa fa-fw fa-caret-down"></i>
+                                        <span class="label label-danger" style="text-transform: capitalize">New</span>
+                                    </a>
+                                    <ul id="daraja" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                                        style="padding-left: 15px">
+                                        <li role="presentation" class="daras">
+                                            {% url 'daraja:dara_list' as dara_list_url %}
+                                            <a href="{{ dara_list_url }}" title="Daras">
+                                                {% trans "Daras" %}
+                                            </a>
+                                        </li>
+                                        <li role="presentation"
+                                            class="dara-requests">{% url 'daraja:dara_request_list' as dara_request_list_url %}
+                                            <a href="{{ dara_request_list_url }}">{% trans "Requests" context 'Daras requests' %}</a>
+                                        </li>
+                                        <li role="presentation"
+                                            class="daraja-configuration">{% url 'daraja:configuration' as configuration_url %}
+                                            <a href="{{ configuration_url }}">{% trans "Configuration" %}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if perms.revival.ik_manage_profiles %}
+                                <li role="presentation" class="profile-tags">
+                                    {% url 'revival:profiletag_list' as profiletag_list_url %}
+                                    <a href="{{ profiletag_list_url }}">{% trans "Profiles" %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.echo.ik_manage_messaging %}
+                                <li role="presentation" class="messaging-campaign">
+                                    <a href="javascript:;" data-toggle="collapse" data-target="#messaging-campaigns"
+                                       aria-expanded="true" style="padding-right: 0;">
+                                        {% trans "Messaging Campaigns" %}
+                                        <i class="fa fa-fw fa-caret-down"></i>
+                                    </a>
+                                    <ul id="messaging-campaigns" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                                        style="padding-left: 15px">
+                                         <li class="push-campaigns">{% url 'echo:pushcampaign_list' as push_campaign_url %}
+                                            <a href="{{ push_campaign_url }}">
+                                                {% trans "Push" %}
+                                                <span class="label label-danger" style="text-transform: capitalize">New</span>
+                                            </a>
+                                        </li>
+                                        <li class="mail-campaigns">{% url 'echo:mailcampaign_list' as mail_campaign_url %}
+                                            <a href="{{ mail_campaign_url }}"> {% trans "Mail" %}</a>
+                                        </li>
+                                        <li class="sms-campaigns">{% url 'echo:sms_campaign' as sms_campaign_url %}
+                                            <a href="{{ sms_campaign_url }}">{% trans "SMS" %}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}{% endcomment %}
+                        </ul>
+                        {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    <div class="divider"></div>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li role="presentation" class="email-log">
+                            <a href="{% url 'ikwen:sent_email_log' %}">{% trans "Email Log" %}</a>
+                        </li>
+                    </ul>
+                    {% if perms.accesscontrol.sudo %}
+                        <div class="divider"></div>
+                        <ul class="nav nav-pills nav-stacked">
+                            {% if settings.IS_PROVIDER %}
+                                <li role="presentation" class="flatpages">
+                                    {% url 'ikwen:flatpage_list' as flatpage_list_url %}
+                                    <a href="{{ flatpage_list_url }}">{% trans "Pages" %}</a>
+                                </li>
+                                {% comment %}<li role="presentation" class="theming">
+                                    <a href="{% url 'theming:theme_list' %}">{% trans "Theming" %}</a>
+                                </li>{% endcomment %}
+                            {% endif %}
+                            <li role="presentation" class="community">
+                                {% url 'ikwen:community' as community_url %}
+                                <a href="{{ community_url }}">{% trans "Community" %}</a>
+                            </li>
+                        </ul>
+                        <div class="divider"></div>
+                        <ul class="nav nav-pills nav-stacked">
+                            {% comment %}{% if app_modules %}
+                            <li role="presentation" class="modules">
+                                <a href="{% url 'ikwen:module_list' %}">
+                                    {% trans "Modules" %}
+                                </a>
+                            </li>
+                            {% endif %}{% endcomment %}
+                            {% if settings.IS_PROVIDER and config.is_pro_version %}
+                                <li role="presentation" class="payment-means">
+                                    <a href="{% url 'billing:payment_mean_list' %}">{% trans "Payment means" %}</a>
+                                </li>
+                            {% endif %}
+                            <li role="presentation" class="configuration">
+                                {% url 'ikwen:configuration' as configuration_url %}
+                                <a href="{{ configuration_url }}">{% trans "Configuration" %}</a>
+                            </li>
+                            {% comment %}<li role="presentation" class="invoices">
+                                {% url 'billing:invoice_list' as invoice_list_url %}
+                                <a href="{{ invoice_list_url|ikwenize }}" target="_blank">{% trans 'Invoices' %}</a>
+                            </li>{% endcomment %}
+                            <li role="presentation" class="service-info">
+                                {% url 'ikwen:service_detail' service.id as service_detail_url%}
+                                <a href="{{ service_detail_url }}">{% trans "Info & Billing" %}</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    {% endcache %}
+{% endblock %}

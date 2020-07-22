@@ -1,0 +1,109 @@
+{% extends 'shopping/optimum/base.html' %}
+{% load i18n static humanize user_agents auth_tokens media_from_provider currency cache %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="abstract" content="{{ service.project_name }} - {{ config.slogan }}" />
+    <meta name="description" content="{{ config.description }}" />
+    <meta property="og:title" content="{{ service.project_name }}" />
+    <meta property="og:image" content="{% get_media_prefix %}{{ config.logo.name }}" />
+    <meta property="og:description" content="{{ config.description }}" />
+    <meta property="og:url" content="{{ service.url }}" />
+    <meta property="og:site_name" content="{{ service.domain|upper }}" />
+{% endblock %}
+
+{% block page_title %}
+    <title>{{ service.project_name }} - Home</title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        .core-slider_item .slide {
+            background: center no-repeat;
+            background-size: cover;
+            width: 100%
+        }
+        .nav-container {margin-top:0}
+        .nav-container img {margin: auto; width: 60%}
+
+        @media (max-width: 400px) {
+            .core-slider_item .cta {
+                position: absolute;
+                margin-top: -150px
+            }
+        }
+
+        @media (max-width: 768px) {
+            .site-summary {margin-top: 0}
+            .nav-container {margin-top: 0}
+            .nav-container img { margin-top: 68px; width: 80%}
+            .core-slider_item .slide { height: 500px}
+        }
+
+        @media (min-width: 768px) {
+
+        }
+        .core-slider_list .button1 {display: block; margin: auto; text-align: center; width: 225px}
+    </style>
+{% endblock %}
+{% block content %}
+    <div id="top"></div>
+    {% if user.is_staff %}
+        {% include 'shopping/optimum/snippets/home_content.html' %}
+    {% else %}
+        {% cache 300 home_content %}
+            {% include 'shopping/optimum/snippets/home_content.html' %}
+        {% endcache %}
+    {% endif %}
+    <a class="js-scrollTo back-to-top hiding" href="#top" style="text-decoration: none; color: #3F3F3F">
+        <i class="fa fa-chevron-circle-up"></i>
+    </a>
+    {% include 'shopping/snippets/modal_preview.html' %}
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script>
+        (() => {
+            let mySwiper = new Swiper ('.swiper-container', {
+                direction: 'horizontal',
+                loop: true,
+                autoplay: 4000
+            });
+
+            $('.swiper-container').on('mouseenter', () =>{
+                mySwiper.stopAutoplay();
+            }).on('mouseleave', () =>{
+                mySwiper.startAutoplay();
+            })
+        })()
+    </script>
+    <script>
+        (function() {
+            $('section.product-agile:first').css('background', '#ffffff');
+            $('section.product-agile:not(:first)').each(function(i) {
+                {#if ((i%2) !== 1) $(this).css('background', '#1d1d1d');#}
+                if ((i%2) !== 1) $(this).addClass('black-section');
+            });
+            $(".modal-dialog .save").click(function () {
+                var email = $('input#email').val()
+                if (!email) return false
+                var endpoint = "{% url 'sales:save_email' %}";
+                var params = {format: 'json', email: email};
+                $('body, button').css('cursor','wait');
+                $.getJSON(endpoint, params, function(data) {
+                    $('body, button').css('cursor','default');
+                    if (data.error){
+
+                    } else {
+                        $('.save-block').hide()
+                        $('.success-panel').show()
+                        $('.input-block').hide()
+                        ('input#email').val('')
+                    }
+                });
+            })
+        })()
+    </script>
+    {{ config.scripts|safe }}
+{% endblock %}

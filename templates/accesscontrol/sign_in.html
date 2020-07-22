@@ -1,0 +1,86 @@
+{% extends "core/base_bs.html" %}
+{% load i18n static auth_tokens %}
+
+{% block page_title %}<title>{{ service.project_name }} - {% trans "Sign in" %} </title>{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'ikwen/css/sign-in.css' %}" />
+    <link rel='stylesheet' href="{% static 'shoplink/css/sign-in.css' %}" />
+    <style>
+    .button1 { background: #1d1d1d;color: #f4d126 !important;font-weight: 700;}
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="form container">
+        {% if login_form.errors %}
+            <p class="failure" style="font-size: 1em; padding: 9px">{{ error_message }}</p>
+        {% elif request.GET.msg %}
+            <p class="failure" style="font-size: 1em; padding: 9px">{{ request.GET.msg }}</p>
+        {% elif request.GET.successfulPasswordReset %}
+            <p class="success" style="font-size: 1em; padding: 9px">{% trans "Your password was successfully reset, login now." %}</p>
+        {% endif %}
+        {% if messages %}
+            {% for msg in messages %}<p class="msg-tag {{ msg.tags }}" style="font-size: 1em; padding: 9px">{{ msg }}</p>{% endfor %}
+        {% endif %}
+        <div id="login" class="form-wrapper stage subtle-shade" style="background-color: #fff">
+            <h3 style="text-align: center">
+                <div style="margin-bottom: .3em; text-align: center">
+                    <img src="{% static 'afrobit/img/afrobit-logo-transparent.png' %}" alt="Logo {{ service.project_name }}"
+                             style="width: 150px"/>
+                </div>
+            </h3>
+            <form action="{% url 'ikwen:sign_in' %}?{{ request.META.QUERY_STRING }}" method="post">{% csrf_token %}
+                <div class="form-group" style="margin-top: .4em">
+                    <label for="lg-username">{% trans "Username or email" %}</label>
+                    <input id="lg-username" class="form-control input-md username" type="text" name="username" autofocus
+                           value="{{ request.GET.username }}{{ request.GET.phone }}" /> {#Only username or phone will be output depending on what is available#}
+                </div>
+                <div class="form-group">
+                    <label for="lg-password">{% trans "Password" %}</label>
+                    <input id="lg-password" class="form-control input-md password" type="password" name="password" />
+                </div>
+                <div class="form-group">
+                    {% if settings.IS_UMBRELLA %}
+                        <button class="btn button1 btn-block btn-md"> {% trans "Submit" %} </button>
+                    {% else %}
+                        <button class="btn button1 btn-block btn-md">
+                            {% blocktrans %}<strong>LOGIN</strong>{% endblocktrans %}
+                        </button>
+                    {% endif %}
+                    {% url 'ikwen:forgotten_password' as forgotten_password_url %}
+                    <a style="float: left; margin-top: 7px" href="{{ forgotten_password_url|ikwenize }}">{% trans "Forgotten password ?" %}</a>
+                </div>
+            </form>
+            <div style="clear: both; padding-top: 15px; text-align: center">
+                {% trans "No account yet ?" %}
+                <a id="show-register"
+                   href="{% url 'ikwen:register' %}?{{ request.META.QUERY_STRING }}">{% trans "Register" %}</a>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}
+{% block footer %}
+    <div class="footer-copyright" style="color: #1d1d1d; padding: 3px 0; text-align: center;">
+        &copy; {{ year }} <a class="company-name" href="{% url 'home' %}" style="color: #1d1d1d"><strong>{{ config.company_name }}</strong></a>.
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        {% get_current_language as LANGUAGE_CODE %}
+        (function() {
+            $('#lg-username').keyup(function(e) {
+                if (e.key === ' ') {
+                    var username = $(this).val().trim().toLowerCase();
+                    $(this).val(username);
+                }
+            }).blur(function() {
+                var username = $(this).val().replace(/ /g, '').toLowerCase();
+                $(this).val(username);
+            });
+        })()
+    </script>
+    {{ config.scripts|safe }}
+{% endblock %}

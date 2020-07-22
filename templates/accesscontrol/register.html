@@ -1,0 +1,274 @@
+{% extends "core/base_bs.html" %}
+{% load i18n staticfiles auth_tokens %}
+
+{% block page_title %}<title>{{ service.project_name }} - {% trans "Register" %} </title>{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'econnect/css/register.css' %}" />
+    <style>
+    .button1 { background: #1d1d1d;color: #f4d126 !important;font-weight: 700;}
+    </style>
+{% endblock %}
+{% block header_brand %}
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="form container">
+        {% if messages %}
+            {% for msg in messages %}<p class="msg-tag {{ msg.tags }}" style="font-size: 1em; padding: 9px">{{ msg }}</p>{% endfor %}
+        {% endif %}
+        {% if register_form.errors %}
+            {{ register_form.errors }}
+        {% endif %}
+        <div id="register" class="row">
+            <div class="col-sm-3 col-md-4 brand">
+                    <img src="{% static 'afrobit/img/afrobit-logo-transparent.png' %}" alt="Logo {{ service.project_name }}"/>
+                <p class="text-muted hidden-xs" style="margin-top: 1em">{{ config.slogan }}</p>
+            </div>
+            <div class="col-sm-9 col-md-8">
+                <h2 class="title">{% trans "Register" %}</h2>
+                <form action="{% url 'ikwen:register' %}?{{ request.META.QUERY_STRING }}" method="post"
+                      class="form-horizontal">
+                    {% csrf_token %}
+                    <div class="form-group row username">
+                        <label for="rg-username" class="col-sm-5 col-md-4">{% trans "Email" %}</label>
+                        <div class="col-sm-6 col-md-6">
+                            <input id="rg-username" class="form-control input-md username" type="text" name="username" autofocus />
+                            {{ register_form.username.errors }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="rg-password" class="col-sm-5 col-md-4">{% trans "Choose a password" %}</label>
+                        <div class="col-sm-6 col-md-6">
+                            <input id="rg-password" class="form-control input-md password" type="password"
+                                   name="password"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="rg-password2" class="col-sm-5 col-md-4">{% trans "Confirm password" %}</label>
+                        <div class="col-sm-6 col-md-6">
+                            <input id="rg-password2" class="form-control input-md confirm-password" type="password"
+                                   name="password2"/>
+                        </div>
+                    </div>
+                    <div class="form-group row email" style="height: 0; margin-bottom: 0; overflow: hidden">
+                        <label for="rg-email" class="col-sm-5 col-md-4">{% trans "E-mail" %}</label>
+                        <div class="col-sm-6 col-md-6">
+                            <input id="rg-email" class="form-control input-md email" type="text" name="email"/>
+                            {{ register_form.email.errors }}
+                        </div>
+                    </div>
+                    <div class="form-group row phone">
+                        <label for="rg-phone" class="col-sm-5 col-md-4">
+                            {% trans "Phone number" %}
+{#                            <span style="font-weight: normal">({% trans "Optional" %})</span>#}
+                        </label>
+                        <div class="col-sm-6 col-md-6">
+                            <input id="rg-phone" class="form-control input-md phone" type="text" name="phone" value=""/>
+                            {{ register_form.phone.errors }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="rg-first-name" class="col-sm-5 col-md-4">{% trans "First name" %} </label>
+                        <div class="col-sm-6 col-md-6">
+                            <input id="rg-first-name" class="form-control input-md name" type="text" name="first_name"/>
+                            {{ register_form.name.errors }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="rg-last-name" class="col-sm-5 col-md-4">{% trans "Last name" %} </label>
+                        <div class="col-sm-6 col-md-6">
+                            <input id="rg-last-name" class="form-control input-md name" type="text" name="last_name"/>
+                            {{ register_form.name.errors }}
+                        </div>
+                    </div>
+                    <div class="form-group row gender">
+                        <label class="col-sm-5 col-md-4">{% trans "Your are ..." %}</label>
+                        <div class="checkbox col-sm-3">
+                            <label>
+                                <input type="radio" name="gender" value="Female" /> {% trans "A woman" %}
+                            </label>
+                        </div>
+                        <div class="checkbox col-sm-3">
+                            <label>
+                                <input type="radio" name="gender" value="Male" /> {% trans "A man" %}
+                            </label>
+                        </div>
+                    </div>
+                    {% if settings.REGISTER_WITH_DOB %}
+                        {% include "accesscontrol/snippets/dob_widget.html" %}
+                    {% endif %}
+                    <div class="form-group row">
+                        {% if settings.IS_IKWEN %}
+                            <p id="terms-warning" class="col-sm-11 col-md-10">
+                                {% trans "By creating an account you agree our " %} <a
+                                    href="{% url 'ikwen:terms_and_conditions' %}">{% trans "Terms & Conditions" %}</a>
+                            </p>
+                        {% else %}
+                            <p id="terms-warning" class="col-sm-11 col-md-10">
+                            {% url 'ikwen:terms_and_conditions' as ikwen_eula_url %}
+                                {% trans "You are about to create an account managed by" %} <a
+                                    href="{{ settings.IKWEN_BASE_URL }}"
+                                    style="color: #999; text-decoration: underline"><strong>ikwen</strong></a>,
+                                {% trans "on" %} {{ service.project_name }}.
+                                {% trans "By doing so you accept" %} <a
+                                    href="{{ ikwen_eula_url|ikwenize }}"><strong>ikwen</strong> {% trans "Terms & Conditions" %}
+                            </a>, {% trans "as well as" %}
+                                <a href="{{ settings.AGREEMENT_URL }}">{{ service.project_name }} {% trans "Terms & Conditions" %}.</a>
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="form-group row">
+                        <div class="checkbox" style="padding-left: 15px">
+                            <label>
+                                <input id="accept-terms" type="checkbox" checked/> {% trans "Yes, I read and accept." %}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group submit row">
+                        <div class="col-sm-4 col-md-3 col-sm-offset-7 col-md-offset-7">
+                            <button class="btn button1 btn-block btn-md"> {% trans "Submit" %} </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}
+{% block footer %}
+    <div class="footer-copyright" style="color: #1d1d1d; padding: 3px 0; text-align: center;">
+        &copy; {{ year }} <a class="company-name" href="{% url 'home' %}" style="color: #1d1d1d"><strong>{{ config.company_name }}</strong></a>.
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        {% get_current_language as LANGUAGE_CODE %}
+        (function () {
+            $('#rg-username').keyup(function(e) {
+                if (e.key === ' ') {
+                    var username = $(this).val().trim();
+                    $(this).val(username);
+                }
+            }).blur(function () {
+                var username = $(this).val().trim(),
+                    $formGroup = $('.form-group.email'),
+                    $email = $('#rg-email');
+                username = username.replace(/ /g, '').toLowerCase();
+                $(this).val(username);
+                if (!testUsername(username)) return;
+                if (username.isValidEmail()) {
+                    $formGroup.css('overflow', 'hidden').animate({height: 0, marginBottom: 0}, 'normal', 'linear', function() {
+                        $email.removeClass('required').val(username).attr('type', 'hidden');
+                    });
+                    return;
+                }
+                var h = $('.form-group.username').height() + 5;
+                $formGroup.animate({height: h + 'px', marginBottom: '15px'}, 'normal', 'linear', function () {
+                    $formGroup.css('overflow', 'unset');
+                    $email.addClass('required').val('').attr('type', 'text');
+                })
+            }).focus();
+            $('#rg-email').blur(testEmail);
+            $('#rg-phone').blur(testPhone);
+            $('#accept-terms').click(function() {
+                if ($(this).prop('checked')) {
+                    $('.form-group.submit .btn').removeProp('disabled').removeClass('default')
+                } else $('.form-group.submit .btn').prop('disabled', true).addClass('default')
+            });
+            function testUsername(uname) {
+                $('.errorlist.username').remove();
+                var $username = $('#rg-username'),
+                    username = $username.val();
+                if (uname) username = uname;
+                if (username.indexOf('@') > 0) {
+                    if (username.isValidEmail()) return true;
+                    $('<ul class="errorlist username"><li>' + "{% trans "Please, enter valid email" %}" + '</li></ul>')
+                            .insertAfter('#rg-username');
+                    return false
+                }
+                if (username.length >= 3 && /[a-z]{1}/.test(username.substr(0, 1))) return true;
+                $('<ul class="errorlist username">' +
+                    '<li>' + "{% trans "Please use at least 3 characters." %}" + '</li>' +
+                    '<li>' + "{% trans "Start with a letter." %}" + '</li>' +
+                    '<ul>').insertAfter('#rg-username');
+                $username.focus();
+                return false;
+            }
+            function testEmail() {
+                $('.errorlist.email').remove();
+                var $email = $('#rg-email'),
+                    email = $email.val().replace(/ /g, '').toLowerCase();
+                $email.val(email);
+                if (email.isValidEmail()) return true;
+                $('<ul class="errorlist email"><li>' + "{% trans "Please, enter valid email" %}" + '</li><ul>')
+                        .insertAfter('#rg-email');
+                $email.focus();
+                return false;
+            }
+            function testPhone() {
+                $('.errorlist.phone').remove();
+                var $phone = $('#rg-phone'),
+                    phone = $phone.val().replace(/ /g, '');
+                $phone.val(phone);
+                if (phone && phone.substr(0, 2) !== '00' && /\d{9,}/.test(phone)) return true;
+                $('<ul class="errorlist phone">' +
+                    '<li>' + "{% trans "Please use digits only." %}" + '</li>' +
+                    '<li>' + "{% trans "Prepend country code if you are not in Cameroon." %}" + '</li>' +
+                    '<li>' + "{% trans "DO NOT prepend 00." %}" + '</li>' +
+                    '<ul>').insertAfter('#rg-phone');
+                $phone.focus();
+                return false;
+            }
+            function testPassword() {
+                $('.errorlist.password').remove();
+                var $pwd1 = $('#rg-password'),
+                    pwd1 = $pwd1.val(),
+                    pwd2 = $('#rg-password2').val();
+                if (pwd1 !== pwd2) {
+                    $('<ul class="errorlist password">' +
+                        '<li>' + "{% trans "Passwords mismatch! Please check." %}" + '</li>' +
+                        '<ul>').insertAfter('#rg-password');
+                    $pwd1.focus();
+                    return false
+                }
+                if (pwd1.length < 6) {
+                    $('<ul class="errorlist password">' +
+                        '<li>' + "{% trans "Password too short. Use at least 6 characters." %}" + '</li>' +
+                        '<ul>').insertAfter('#rg-password');
+                    $pwd1.focus();
+                    return false
+                }
+                return true;
+            }
+            function checkDOB() {
+                $('.errorlist.dob').remove();
+                var day = parseInt($('#day').val()),
+                    month = parseInt($('#month').val()),
+                    year = parseInt($('#year').val()),
+                    d = new Date(year + '/' + month + '/' + day);
+                if (d.getDate() === day && d.getMonth() === (month - 1) && d.getFullYear() === year) return true;
+                $('<p class="errorlist dob">' + "{% trans "Invalid date. Please check." %}" + '</p>').appendTo('#dob');
+                return false;
+            }
+
+            $('div#register form').submit(function () {
+                if (!$('#accept-terms').prop('checked')) return false;
+                if (!testPassword()) return false;
+                if ($('#rg-email').hasClass('required')) {
+                    if (!testEmail()) return false;
+                }
+                if ($('#rg-phone').hasClass('required') || $('#rg-phone').val()) {
+                    if (!testPhone()) return false;
+                }
+                {% if settings.REGISTER_WITH_DOB %}
+                    return checkDOB();
+                {% endif %}
+            });
+            $('#dob').removeClass('col-sm-7 col-md-8').addClass('col-sm-6 col-md-6')
+            $('.why-dob').addClass('col-sm-11 col-md-10')
+        })()
+    </script>
+    {{ config.scripts|safe }}
+{% endblock %}

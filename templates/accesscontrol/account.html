@@ -1,0 +1,247 @@
+{% extends 'core/base_bs.html' %}
+{% load i18n humanize staticfiles %}
+
+{% block page_title %}
+<title> {{ service.project_name }} - {% trans "Account Setup" %} </title>
+{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <style type="text/css">
+        body {background: #f6f6f6}
+        #content {padding-top: 80px; min-height: 450px}
+        .navbar-brand > img { height: 5vh !important; margin-top: -2vh; }
+        nav#sub .account {border-bottom: 2px solid #BB4824; color: #300c00; font-weight: bold}
+        #content section {box-shadow: 1px 1px 4px rgba(0, 0, 0, .1); background: #fff; line-height: 1.4; margin: 15px 0 5px; padding: 15px}
+        section header {border-bottom: solid 1px #DBE6FF; font-size: 24px; font-weight: normal; width: 100%}
+        section header .icon {float: right}
+        section .detail {margin-top: 15px}
+        section .detail .unset {color: #555C77; font-style: italic; font-weight: normal}
+        section .detail a {font-size: 13px}
+        section label {font-size: 16px; font-weight: normal}
+        section.plan label {width: 240px}
+        section .action-edit {color: #00f; cursor: pointer; font-size: 15px}
+        section .multi-lines {float: left; font-size: 15px}
+        .edit {margin-top: 10px}
+        .edit.password > div {padding: 0 15px}
+        .edit.password .input-ctnr {margin-top: 10px}
+        .edit .buttons {float: right}
+        .edit input {width: 240px}
+        .edit button {padding: 3px 12px 4px; width: 78px}
+        .edit button.default {margin-left: 5px}
+        .update-result {position: absolute; width: 500px}
+        .update-result .message {margin: -15px auto 0; width: 360px}
+        section form label {font-size: 14px; font-weight: normal; margin-right: 15px; text-align: right; width: 180px}
+        @media (min-width: 768px) {
+            #navbar { background: none; }
+        }
+
+
+        @media (max-width: 991px) {
+            #content {padding-top: 70px}
+            .content-title {margin-top: 0}
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="container" style="padding-top: 20vh">
+        <h4 class="content-title" style="padding: 0 15px">{% trans "Account Setup" %}</h4>
+        <div id="stage">
+            <div class="col-md-6 card-xs">
+                <section class="identity">
+                    <div class="update-result">
+                        <p class="message" style="display: none"></p>
+                    </div>
+                    <header>
+                        <span> {% trans "About you" context 'Account Setup identity' %} </span>
+                        <span class="icon" style="background-position: -177px 0"></span>
+                    </header>
+                    <div class="row detail">
+                        {% if request.user.first_name %}
+                            <label class="col-sm-9 col-md-10 name">{{ request.user.get_full_name }}</label>
+                            <span class="col-sm-3 col-md-2 action-edit"> {% trans 'Change' %} </span>
+                        {% else %}
+                            <label class="col-sm-9 col-md-10 name unset"> &lt; {% trans "Name not set" %} &gt; </label>
+                            <span class="col-sm-3 col-md-2 action-edit"> {% trans "Set now" %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="row edit name hidden">
+                        <div class="col-sm-7 col-md-7">
+                            <input type="text" class="form-control input-sm name" placeholder="{% trans "Full name" %}">
+                        </div>
+                        <div class="col-sm-5 col-md-5 row">
+                            <div class="col-sm-5 col-md-5 col-sm-offset-2 col-md-offset-2">
+                                <button data-field="name" class="btn btn-primary btn-sm btn-block"> OK </button>
+                            </div>
+                            <div class="col-sm-5 col-md-5">
+                                <button class="btn btn-default btn-sm btn-block">{% trans "Cancel" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row detail">
+                        {% if request.user.phone %}
+                            <label class="col-sm-9 col-md-10 phone">{{ request.user.phone }}</label>
+                            <span class="col-sm-3 col-md-2 action-edit"> {% trans 'Change' %} </span>
+                        {% else %}
+                            <label class="col-sm-9 col-md-10 phone unset"> &lt; {% trans "Phone not set" %} &gt; </label>
+                            <span class="col-sm-3 col-md-2 action-edit"> {% trans "Set now" %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="row edit phone hidden">
+                        <div class="col-sm-7 col-md-7">
+                            <div class="input-ctnr"> <input type="text" class="form-control input-sm phone" value="" placeholder="{% trans "Phone" %}"> </div>
+                        </div>
+                        <div class="col-sm-5 col-md-5 row">
+                            <div class="col-sm-5 col-md-5 col-sm-offset-2 col-md-offset-2">
+                                <button data-field="phone" class="btn btn-primary btn-sm btn-block"> OK </button>
+                            </div>
+                            <div class="col-sm-5 col-md-5">
+                                <button class="btn btn-default btn-sm btn-block">{% trans "Cancel" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row detail">
+                        {% if request.user.email %}
+                            <label class="col-sm-9 col-md-10 email">{{ request.user.email }}</label>
+                            <span class="col-sm-3 col-md-2 action-edit"> {% trans 'Change' %} </span>
+                        {% else %}
+                            <label class="col-sm-9 col-md-10 email unset"> &lt; {% trans "Email not set" %} &gt; </label>
+                            <span class="col-sm-3 col-md-2 action-edit"> {% trans "Set now" %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="row edit email hidden">
+                        <div class="col-sm-7 col-md-7">
+                            <div class="input-ctnr"> <input type="text" class="form-control input-sm email" placeholder="Email"> </div>
+                        </div>
+                        <div class="col-sm-5 col-md-5 row">
+                            <div class="col-sm-5 col-md-5 col-sm-offset-2 col-md-offset-2">
+                                <button data-field="email" class="btn btn-primary btn-sm btn-block"> OK </button>
+                            </div>
+                            <div class="col-sm-5 col-md-5">
+                                <button class="btn btn-default btn-sm btn-block">{% trans "Cancel" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                {# TODO: Manage phone verification #}
+    {#                {% if not request.user.phone_verified %}#}
+    {#                    <div style="float: left; margin-top: 15px; text-align: justify; width: 100%">Votre numero de téléphone n'a pas encore verifié et validé; cliquez sur <strong>Verifier</strong> et entrez votre numero de téléphone pour le verifier </div>#}
+    {#                <div style="border: 1px solid #CC0000; float: left; margin: 15px 0px 0px -8px;padding: 10px 10px 20px;width: 458px;">#}
+    {#                    <div class="detail">#}
+    {#                        <label>Numéro de téléphone non verifié</label>#}
+    {#                        <span class="action-edit"> {% trans "Verifier" %}</span>#}
+    {#                    </div>#}
+    {##}
+    {#                    <div class="edit verify-phone hidden">#}
+    {#                        <div class="input-ctnr"> <input type="text" class="verify-phone" value=""> </div>#}
+    {#                        <div class="buttons">#}
+    {#                            <button data-field="verify-phone" class="confirm"> Verifier </button>#}
+    {#                            <button class="default">{% trans "Cancel" %}</button>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                {% endif %}#}
+                    <div class="clearfix"></div>
+                </section>
+            </div>
+            <div class="col-md-6 card-xs">
+                <section class="security">
+                    <div class="update-result">
+                        <p class="message" style="display: none"></p>
+                    </div>
+                    <header>
+                        <span> {% trans "Security" %} </span>
+                        <span class="icon" style="background-position: -210px -31px"></span>
+                    </header>
+                    <div class="row detail">
+                        <label class="col-xs-12 username">Username: {{ request.user }} </label>
+                    </div>
+                    <div class="row detail">
+                        <label class="col-sm-9 col-md-10 phone">{% trans "Password" %}</label>
+                        <span class="col-sm-3 col-md-2 action-edit"> {% trans 'Change' %} </span>
+                    </div>
+                    <div class="row edit password hidden">
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control input-sm" placeholder="{% trans 'Current password' %}">
+                        </div>
+                        <div class="form-group"> <input type="password" name="password1" class="form-control input-sm" placeholder="{% trans 'New password' %}"> </div>
+                        <div class="form-group"> <input type="password" name="password2" class="form-control input-sm" placeholder="{% trans 'Confirm new password' %}"> </div>
+                        <div class="col-sm-5 col-md-5 row">
+                            <div class="col-sm-5 col-md-5">
+                                <button data-field="email" class="btn btn-primary btn-sm btn-block confirm"> OK </button>
+                            </div>
+                            <div class="col-sm-5 col-md-5">
+                                <button class="btn btn-default btn-sm btn-block">{% trans "Cancel" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </section>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('div#top menu li.account a').addClass('current');
+            $('.action-edit').click(function() {
+                $(this).parent().toggleClass('hidden');
+                $(this).parent().next().toggleClass('hidden')
+            });
+            $('.edit button.btn-default').click(function() {
+                $(this).parents('.edit').toggleClass('hidden');
+                $(this).parents('.edit').prev().toggleClass('hidden')
+            });
+            $('.identity .edit button.btn-primary').click(function() {
+                var _$button = $(this),
+                    field = $(this).data('field'),
+                    inputType = $(this).data('input-type'),
+                    value;
+                if (inputType == 'select')
+                    value = $('.identity select.' + field).val();
+                else
+                    value = $('.identity input.' + field).val();
+                $('body, button, .button').css('cursor', 'wait');
+                $.getJSON('{% url 'ikwen:update_info' %}?' + field + '=' + value, null, function(response) {
+                    $('body, button, .button').css('cursor', 'default');
+                    if (response.error)
+                        _$button.parents('.identity').find('.update-result .message').removeClass('success').addClass('failure').text(response.error)
+                                .fadeIn().delay(3000).fadeOut();
+                    else {
+                        _$button.parents('.identity').find('.update-result .message').removeClass('failure').addClass('success').text(response.message)
+                                .fadeIn().delay(3000).fadeOut();
+                        _$button.parents('.edit').toggleClass('hidden');
+                        var _$detail = _$button.parents('.edit').prev();
+                        _$detail.toggleClass('hidden');
+                        _$detail.find('.' + field).removeClass('unset').attr('style', '').text(value);
+                        _$detail.find('.action-edit').text('Change')
+                    }
+                })
+            });
+            $('.security .edit button.confirm').click(function() {
+                var _$button = $(this);
+                var params = {
+                    password: $('.security [name=password]').val(),
+                    password1: $('.security [name=password1]').val(),
+                    password2: $('.security [name=password2]').val()
+                };
+                $('body, button, .button').css('cursor', 'wait');
+                $.getJSON('{% url 'ikwen:update_password' %}', params, function(response) {
+                    $('body, button, .button').css('cursor', 'default');
+                    if (response.error)
+                        _$button.parents('.security').find('.update-result .message').removeClass('success').addClass('failure').text(response.error)
+                                .fadeIn().delay(3000).fadeOut();
+                    else {
+                        _$button.parents('.security').find('.update-result .message').removeClass('failure').addClass('success').text(response.message)
+                                .fadeIn().delay(3000).fadeOut();
+                        _$button.parents('.edit').toggleClass('hidden');
+                        var _$detail = _$button.parents('.edit').prev();
+                        _$detail.toggleClass('hidden')
+                    }
+                })
+            });
+        })()
+    </script>
+{% endblock %}

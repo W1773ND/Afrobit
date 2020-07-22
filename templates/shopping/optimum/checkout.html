@@ -1,0 +1,245 @@
+{% extends 'shopping/optimum/base.html' %}
+{% load i18n static humanize user_agents auth_tokens media_from_provider currency %}
+
+{% block page_title %}
+    <title>{% trans "Checkout" %} - {{ service.project_name }}</title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link href="{% static 'kakocase/css/checkout.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="checkout-content">
+        <h2 class="checkout-header">{% trans "Checkout" %}</h2>
+        <div class="container subtle-shade stage">
+            <div class="row">
+                <form id="do-checkout" method="post" class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+                    {% csrf_token %}
+                    <input type="hidden" id="entries" name="entries" />
+                    <input type="hidden" id="previous-address-index" name="previous_address_index" />
+                    <input type="hidden" name="anonymous_buyer_id" value="{{ request.GET.anonymous_buyer_id }}" />
+                    <input type="hidden" name="delivery_option_id" value="{{ request.GET.delivery_option_id }}" />
+                    <input type="hidden" name="buy_packing" value="{{ request.GET.buy_packing }}" />
+                    <input type="hidden" name="sticker_id" value="{{ request.GET.sticker_id }}" />
+                    <input type="hidden" name="coupon_id" value="{{ request.GET.coupon_id }}" />
+                    {% if pick_up_in_store %}
+                        <div class="alert alert-info">
+                            <h2>{{ delivery_option.name }}</h2>
+                            <p class="text-muted">{{ delivery_option.short_description }}</p>
+                        </div>
+                    {% endif %}
+                    {% if previous_addresses %}
+                        <div id="previous-addresses">
+                            <h3 class="alert alert-info" style="font-size: 1.3em">{% trans "Click on a previous address below to use it." %}</h3>
+                            <ul class="collapse in" style="padding: 1em 0 0 0">
+                                {% for address in previous_addresses %}
+                                    <li class="previous-address{% if previous_addresses|length == 1 %} selected{% endif %}" data-index="{{ forloop.counter0 }}">
+                                        <div>
+                                            <div class="col-sm-8">
+                                                <p>{{ address.details }}</p>
+                                                <p class="country-city">
+                                                    {{ address.city }}, {{ address.country }}
+                                                </p>
+                                                <p class="details">
+                                                    {{ address.email }}
+                                                </p>
+                                                <p class="details">
+                                                    <em>{{ address.phone }}</em>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                            {% if payment_mean_list|length == 1 %}
+                                                <button class="submit-checkout" type="button" style="border: none; background: none; border-radius: 3px"
+                                                    data-action-url="{% url payment_mean_list.0.action_url_name %}?mean={{ payment_mean_list.0.slug }}">
+                                                    <img src="{{ payment_mean_list.0.button_img_url }}" alt="{{ payment_mean_list.0.name }} Checkout" class="payment-btn-img">
+                                                </button>
+                                            {% else %}
+                                                <button type="button" class="btn btn-warning cta" style="width: 180px"
+                                                        data-toggle="modal" data-target="#payment-methods">
+                                                    {% trans "Pay" %}
+                                                </button>
+                                            {% endif %}
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <p style="float: left; margin: 2em 0 1em">{% blocktrans %}
+                            No thanks, I want to
+                            <button class="btn btn-default new-address" type="button" data-toggle="collapse"
+                                    data-target="#new-address" aria-expanded="false" aria-controls="new-address">
+                                Input new address
+                            </button>
+                        {% endblocktrans %}</p>
+                    {% endif %}
+
+                    <div id="new-address"{% if previous_addresses %} class="collapse"{% endif %}>
+                        {% if not pick_up_in_store %}
+                            <p class="alert alert-info location-attempt">{% blocktrans %}
+                                Please hold on a second while <strong>we are trying to locate you.</strong> {% endblocktrans  %}
+                            </p>
+                            <p class="alert alert-warning failed-to-locate" style="display: none">{% blocktrans %}
+                                Sorry, we couldn't locate you. <strong>Please enter your location manually.</strong> {% endblocktrans  %}
+                            </p>
+                        {% endif %}
+                        <div>
+                            {% if not pick_up_in_store %}
+                                {% include 'core/snippets/spinner.html' %}
+                                {% if previous_addresses %}
+                                    <h3>{% trans "Please, give us your address" %}</h3>
+                                {% else %}
+                                    <h3>{% trans "New delivery address" %}</h3>
+                                {% endif %}
+                            {% endif %}
+                            <div>
+                                {% if not pick_up_in_store %}
+                                    <div class="form-group row">
+                                        <label for="country" class="col-sm-4 col-md-3">{% trans "Country" %}</label>
+                                        <div class="col-sm-7 col-md-7">
+                                            <select id="country" class="form-control required" name="country_iso2">
+                                                {% for country in countries %}
+                                                <option class="entry" value="{{ country.iso2 }}">{% trans country.name %}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="city" class="col-sm-4 col-md-3">{% trans "City" %}</label>
+                                        <div class="col-sm-7 col-md-7">
+                                            <input id="city" class="form-control required" type="text" name="city" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="details" class="col-sm-4 col-md-3">{% trans "Address" %}</label>
+                                        <div class="col-sm-7 col-md-7">
+                                            <input id="details" class="form-control required" type="text" name="details" />
+                                        </div>
+                                    </div>
+                                    {% if config.is_pro_version %}
+                                        <div class="form-group row">
+                                            <label for="postal-code"
+                                                   class="col-sm-4 col-md-3">{% trans "Postal Code" %}</label>
+                                            <div class="col-sm-7 col-md-7">
+                                                <input id="postal-code" class="form-control required" type="text"
+                                                       name="postal_code"/>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                <div class="form-group row">
+                                    <label for="phone" class="col-sm-4 col-md-3">{% trans "Phone" %}</label>
+                                    <div class="col-sm-7 col-md-7">
+                                        <input id="phone" class="form-control required" type="text" name="phone" value="{{ user.phone }}" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="email" class="col-sm-4 col-md-3">Email</label>
+                                    <div class="col-sm-7 col-md-7">
+                                        <input id="email" class="form-control required" type="text" name="email" value="{{ user.email }}"/>
+                                    </div>
+                                </div>
+                                {% if user.is_anonymous %}
+                                    <div class="form-group row">
+                                        <label for="name" class="col-sm-4 col-md-3">{% trans "Your name" %}</label>
+                                        <div class="col-sm-7 col-md-7">
+                                            <input id="name" class="form-control required" type="text" name="name"/>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <input id="name" type="hidden" name="name" value="{{ user.full_name }}"/>
+                                {% endif %}
+                                <div class="form-group row">
+                                    <div class="col-sm-5 col-md-4 col-sm-offset-5 col-md-offset-6">
+                                        {% if payment_mean_list|length == 1 %}
+                                            <button class="submit-checkout" type="button" style="border: none; background: none; border-radius: 3px"
+                                                    data-action-url="{% url payment_mean_list.0.action_url_name %}?mean={{ payment_mean_list.0.slug }}">
+                                                <img src="{{ payment_mean_list.0.button_img_url }}" alt="{{ payment_mean_list.0.name }} Checkout" class="payment-btn-img">
+                                            </button>
+                                        {% else %}
+                                            <a class="btn button1 cta" style="width: 180px"
+                                                    data-toggle="modal" data-target="#payment-methods">
+                                                {% trans "Pay" %}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% with payment_cancel_default='yes' %}
+        {% include 'billing/snippets/modal_payment_options.html' %}
+    {% endwith %}
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script>
+        (function() {
+            $('body').on('click', '.previous-address', function() {
+                $('#previous-address-index').val($(this).index());
+                $('.previous-address').removeClass('selected');
+                $('#new-address.in').collapse('hide');
+                $(this).toggleClass('selected');
+            }).on('click', 'button.new-address', function() {
+                $('#previous-address-index').val('');
+                $('.previous-address').removeClass('selected');
+                $('div#previous-addresses ul.in').collapse('hide');
+                $('div#new-address .spinner').hide();
+                $('div#previous-addresses h3').text("{% trans "Click here to view previous addresses." %}");
+            }).on('click', '#previous-addresses h3', function() {
+                $('div#previous-addresses ul:not(.in)').collapse('show');
+                $('#new-address.in').collapse('hide');
+                $('div#previous-addresses h3').text("{% trans "Click on a previous address below to use it." %}");
+                if ($('.previous-address').length == 1) $('.previous-address').addClass('selected');
+                else $('.previous-address').removeClass('selected');
+            });
+
+            var entries = [];
+            simpleCart.load();
+            simpleCart.each(function(item) {
+                entries.push(item.id() + ':' + item.quantity());
+            });
+            $('#entries').val(entries.join(','));
+            $('div#new-address .spinner').fadeIn();
+            $.getJSON('{% url 'ikwen:get_location_by_ip' %}', function(resp) {
+                $('div#new-address .spinner').fadeOut();
+                $('div#new-address .location-attempt').hide();
+                if (resp.error) {
+                    $('div#new-address .failed-to-locate').show();
+                    return;
+                }
+                $('#country').val(resp.country.iso2);
+                $('#city').val(resp.city)
+            });
+
+            $('#do-checkout').submit(function () {
+                var previousAddressIndex = $('.previous-address.selected').data('index');
+                if (previousAddressIndex >= 0) {
+                    $('#previous-address-index').val(previousAddressIndex);
+                    return true;
+                }
+                var check = true;
+                $('form#do-checkout .required').each(function() {
+                    if (!$(this).val()) {
+                        $(this).parents('.form-group').addClass('has-error');
+                        check = false;
+                    }
+                });
+                if (!check) ikwen.showFloatingNotice("{% trans "Missing information. Please check." %}", '', 6);
+                return check;
+            });
+            $('.submit-checkout, .payment-method').click(function() {
+                var actionURL = $(this).data('action-url');
+                $('form#do-checkout').prop('action', actionURL).submit()
+            });
+        })()
+    </script>
+{% endblock %}

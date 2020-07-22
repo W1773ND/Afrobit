@@ -1,0 +1,45 @@
+{% load i18n %}
+<div class="dob">
+    <div class="form-group row">
+        <label for="dob" class="col-sm-5 col-md-4">{% trans "Date of birth" %}</label>
+        <div id="dob" class="col-sm-7 col-md-8">
+            <div class="row">
+                <div class="col-xs-4">
+                    <label for="day" class="sr-only">{% trans "Day" %}</label>
+                    <select id="day" class="form-control input-md" name="day">
+                        <option>{% trans "Day" %}</option>
+                        {% for day in range_1_31 %}
+                            <option{% if not dob_error and day == request.POST.day %} selected="selected"{% endif %}>
+                                {{ day }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-xs-4">
+                    <label for="month" class="sr-only">{% trans "Month" %}</label>
+                    <select id="month" class="form-control input-md" name="month">
+                        <option>{% trans "Month" %}</option>
+                        {% for month in range_1_12 %}
+                            <option{% if not dob_error and month == request.POST.month %} selected="selected"{% endif %}>
+                                {{ month }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-xs-4">
+                    <label for="year" class="sr-only">{% trans "Year" %}</label>
+                    <select id="year" class="form-control input-md" name="year">
+                        <option>{% trans "Year" %}</option>
+                        {% for year in year_list %}
+                            <option{% if not dob_error and year == request.POST.year %} selected="selected"{% endif %}>
+                                {{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="why-dob">
+        <a href="#" title="{% trans "Those information help us filter your content so that you see only what is relevant to you." %}">
+            {% trans "Why we ask those information ?" %}
+        </a>
+    </p>
+</div>
