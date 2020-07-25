@@ -18,6 +18,7 @@
                 <form id="do-checkout" method="post" class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
                     {% csrf_token %}
                     <input type="hidden" id="entries" name="entries" />
+                    <input type="hidden" id="music-items" name="music_items" />
                     <input type="hidden" id="previous-address-index" name="previous_address_index" />
                     <input type="hidden" name="anonymous_buyer_id" value="{{ request.GET.anonymous_buyer_id }}" />
                     <input type="hidden" name="delivery_option_id" value="{{ request.GET.delivery_option_id }}" />
@@ -202,12 +203,15 @@
                 else $('.previous-address').removeClass('selected');
             });
 
-            var entries = [];
+            let entries = [],
+                musicItems = [];
             simpleCart.load();
             simpleCart.each(function(item) {
-                entries.push(item.id() + ':' + item.quantity());
+                if (item.get('type') === 'music') musicItems.push(item.id());
+                else entries.push(item.id() + ':' + item.quantity());
             });
             $('#entries').val(entries.join(','));
+            $('#music-items').val(musicItems.join(','));
             $('div#new-address .spinner').fadeIn();
             $.getJSON('{% url 'ikwen:get_location_by_ip' %}', function(resp) {
                 $('div#new-address .spinner').fadeOut();

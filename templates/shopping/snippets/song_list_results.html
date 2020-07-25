@@ -1,0 +1,133 @@
+{% load i18n staticfiles humanize auth_tokens media_from_provider currency %}
+<style>
+    .item-image {
+        height: 250px!important;
+        width: 100%;
+        -webkit-background-size: cover!important;
+        background-size: cover!important;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+</style>
+<div>
+    <div id="tile-view">
+    {% for row in product_list_as_matrix %}
+        <div class="product-row">
+            {% for product in row %}
+                {% url 'shopping:product_detail' product.artist.slug product.slug as product_url %}
+                    {% if config.theme.display == 'Comfortable' or config.theme.display == 'Cozy' %}
+                        <div class="col-md-6 arrival-grid simpleCart_shelfItem">
+                    {% else %}
+                        <div class="col-md-4 arrival-grid simpleCart_shelfItem">
+                    {% endif %}
+                    <div class="product-tile">
+                        <div  class="product-img">
+                            <figure>
+                                <a href="{{ product_url }}">
+                                    {% for photo in product.photos %}
+                                        <div class="grid-img">
+                                            <div  style="background-image: url({{ photo.image|from_provider:product.provider }});" class="item-image"></div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="grid-img">
+                                        <div  style="background-image: url({{ photo.image|from_provider:product.provider }})" class="item-image"></div>
+                                    </div>
+                                </a>
+                            </figure>
+                        </div>
+                        {% if product.stock == 0 %}
+                            <div class="ribben2">
+                                <p>{% trans "SOLD OUT" %}</p>
+                            </div>
+                        {% else %}
+                            {% if product.badge_text %}
+                                <div class="ribben">
+                                    <p>{{ product.badge_text }}</p>
+                                </div>
+                            {% endif %}
+                            {% if config.auto_manage_sales and product.on_sale %}
+                                <div class="ribben1">
+                                    <p>{% trans "SALE" context 'Sale on a product' %}</p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+{#                        <div class="block">#}
+{#                            <div class="starbox small ghosting"{% if product.get_rating %} data-average="{{ product.get_rating }}"{% endif %}> </div>#}
+{#                        </div>#}
+                        <div class="product-about">
+                            <h6><a href="{{ product_url }}">{{ product.name }}</a></h6>
+                            {% if config.show_prices %}
+                                <p class="product-price">
+                                    {% if config.auto_manage_sales and product.on_sale and product.previous_price %}
+                                        <del>{{ CURRENCY.symbol }} {{ product.previous_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</del>
+                                    {% endif %}
+                                    <em class="item-price-verbose">{{ CURRENCY.symbol }} {{ product.retail_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</em>
+                                    <span class="hidden item_price">{{ product.retail_price|currency:CURRENCY.code }}</span>
+                                    <span class="hidden item_packing_price">{{ product.packing_price|currency:CURRENCY.code }}</span>
+                                </p>
+                            {% endif %}
+                            <div class="availability">
+                                {% if product.unit_of_measurement %}
+                                    <span>{% trans "Avail." %}: </span>
+                                    <span class="text-muted">{{ product.stock }} {{ product.unit_of_measurement }}</span>
+                                {% else %}
+                                    <span>&nbsp;</span>
+                                {% endif %}
+                            </div>
+                            {% if product.min_order > 1 %}
+                                <p class="min-order">{% trans "Min. order" %}: {{ product.min_order }}</p>
+                            {% else %}
+                                <p class="min-order">&nbsp;</p>
+                            {% endif %}
+                            {% if config.allow_shopping and config.show_prices %}
+                                <button class="my-cart-b" data-text="{% trans "Add To Cart" %}"
+                                         data-stock="{{ product.stock }}"
+                                        data-id="{{ product.id }}" data-image="{{ product.image|from_provider:product.provider }}" data-min-order="{{ product.min_order }}" data-name="{{ product.name }}"
+                                        data-description="{{ product.description }}" data-url="{{ product_url }}">{% trans "Add To Cart" %}
+                                    <div class="mask"></div>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="clearfix"></div>
+        </div>
+    {% endfor %}
+    </div>
+    {% if products_page.paginator.num_pages > 1 %}
+    <ul class="pagination">
+        <li class="disabled"><a href="javascript:;" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+        {% for page in products_page.paginator.page_range %}
+            <li class="{% if page == products_page.number %}active{% endif %}" data-val="{{ page }}">
+                <a href="javascript:;">
+                    {{ page }} {% if page == products_page.number %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+            </li>
+        {% endfor %}
+        <li><a href="javascript:;" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+    </ul>
+    {% endif %}
+</div>
+
+<script src="{% static 'ikwen/swiper/js/swiper.min.js' %}"></script>
+
+<!-- Initialize Swiper -->
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        coverflowEffect: {
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+        },
+    });
+</script>

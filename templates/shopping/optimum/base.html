@@ -54,26 +54,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
             <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.07.22.15.27" type="text/css" media="all" />
             <style>
-                .navbar {background: #FFF; position: fixed}
-                .top-right {float: right}
-                .cart-box {float: left; top: -5px}
-                .cart-box.user { top: 0!important; }
-                #auth .fa {font-size: 32px; margin-top: 10px}
-                #auth .fa.fa-user {font-size: 30px; margin-top: 7px; margin-left: 40px;}
-                #auth.top-right ul  {float: left; margin: 6px 0 0 0}
-                #auth.top-right .label-danger {margin: 13px -10px;}
-                .nav-container {padding: 8px 0}
-                .site-summary {background: #FFF; height: 500px; margin-top: 50px; position: absolute;transition : all 0.9s ease-in;-moz-transition: all 0.9s ease-in;-webkit-transition: all 0.9s ease-in; overflow: hidden;  width: 100%; z-index: 2;}
-                .site-summary.scrolling {margin-top: -550px;}
-                .edge-swipe-overlay {z-index: 9999}
-                .navbar-default .navbar-toggle .icon-bar {background-color: #fff;}
-                .navbar-default .navbar-toggle {border: none}
-                .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {background-color: transparent}
-                .cart.box_1 a.empty-cart.danger {color: #f41416}
-
-                @media (max-width: 768px) {
-                    .navbar {background: transparent;border-bottom: none}
-                }
             </style>
 		{% endblock %}
         {% block head_js %}
@@ -101,7 +81,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 <h1>
                                     <a href="{{ home_url }}" class="hidden-xs">
                                         <div class="company-logo-container">
-                                            <img src="{% static 'afrobit/img/afrobit--logo--noir.png'  %}" alt="Logo {{ service.project_name }}"/>
+                                            <img src="{% static 'afrobit/img/afrobit--logo-noir_196x100.png'  %}" alt="Logo {{ service.project_name }}"/>
                                         </div>
                                     {% if config.slogan %}<div class="slogan" title="{{ config.slogan }}"><span style="float: left; width: 500%">{{ config.slogan }}</span></div>{% endif %}
                                     </a>
@@ -154,11 +134,38 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 </li>
                             </ul>
                         </div>
-                        <div id="auth" class="top-right">
+                        <div id="auth" class="nav navbar-nav navbar-right top-right{% if user.is_anonymous %} anonymous{% endif %}">
+                            <div class="dropdown cart-box">
+                                <div class="cart box_1">
+                                    <div class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <a href="{% url 'shopping:cart' %}"><i class="kkc-cart fa fa-shopping-bag"></i><span class="label label-danger simpleCart_quantity"></span></a>
+                                    </div>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="margin-top: 11px; min-width: 240px">
+                                        <li style="padding: 5px 15px" >
+                                            <div class="pull-left">
+                                                <span class="pull-left text-muted" style="font-size: 12px"></span>
+                                                <span class="simpleCart_total pull-left" style="font-size: 21px"></span>
+                                            </div>
+                                            <i class="pull-right text-danger fa fa-trash" data-toggle="modal" data-target="#confirm-empty-cart"
+                                               style="cursor: pointer; font-size: 18px" title="{% trans "Empty Cart" %}"></i>
+                                        </li>
+                                        <li class="cart-option" style="clear: both;padding-top: 35px">
+                                            <a href="{% url 'shopping:cart' %}" class="btn btn-block confirm-checkout">{% trans "Checkout" %}</a>
+                                        </li>
+{#                                        <div class="cart-details">#}
+{#                                            <a href="{% url 'shopping:cart' %}"><h5><div class="total"><span class="simpleCart_total"></span></div></h5></a>#}
+{#                                            <a href="javascript:;" class="empty-cart danger" data-toggle="modal" data-target="#confirm-empty-cart"><span style="font-weight: 400">{% trans "Empty Cart" %}</span></a>#}
+{#                                        </div>#}
+                                    </ul>
+                                </div>
+                            </div>
                             {% if user.is_authenticated %}
-                                <ul>
-                                    <li id="user-menu" class="dropdown"> <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i> </a>
-                                        <ul class="user-menu dropdown-menu" style="left: -100%" aria-labelledby="user-menu">
+                                <ul class="pull-left">
+                                    <li id="user-menu" class="dropdown">
+                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                        </a>
+                                        <ul class="user-menu dropdown-menu" aria-labelledby="user-menu">
                                             <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
                                             <li role="separator" class="divider" style="margin-bottom: 0; width: 100%"></li>
                                             {% if user.is_staff %}
@@ -172,30 +179,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     </li>
                                 </ul>
                             {% else %}
-                                <ul class="anonymous">
-                                    <a class="btn button1" href="{% url 'ikwen:sign_in' %}">{% trans "Connexion" %}</a>
-                                </ul>
+                                <a class="btn button1 login" href="{% url 'ikwen:sign_in' %}">{% trans "Login" %}</a>
                             {% endif %}
-                            <div class="dropdown cart-box {% if user.is_authenticated %}user{% endif %}">
-                                <div class="cart box_1">
-                                    <div class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <a href="{% url 'shopping:cart' %}"><i class="kkc-cart fa fa-shopping-bag"></i><span class="label label-danger simpleCart_quantity"></span></a>
-                                    </div>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="left: -450%; margin-top: 11px">
-                                        <li style="font-weight: 700;padding: 0 4px;width: 100%;text-align: center;margin-top: 20px;"> <h5><div class="total"><span class="simpleCart_total"></span></div></h5></li>
-                                        <li role="separator" class="divider" style="margin-bottom: 0; width: 100%"></li>
-                                        <li><a href="javascript:;" class="empty-cart danger" data-toggle="modal" data-target="#confirm-empty-cart"><span style="font-weight: 400">{% trans "Empty Cart" %}</span></a></li>
-                                        <li class="cart-option"><a href="{% url 'shopping:cart' %}" class="confirm-checkout">{% trans "Checkout" %}</a></li>
-{#                                        <div class="cart-details">#}
-{#                                            <a href="{% url 'shopping:cart' %}"><h5><div class="total"><span class="simpleCart_total"></span></div></h5></a>#}
-{#                                            <a href="javascript:;" class="empty-cart danger" data-toggle="modal" data-target="#confirm-empty-cart"><span style="font-weight: 400">{% trans "Empty Cart" %}</span></a>#}
-{#                                        </div>#}
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                     </div>
-
                 </nav>
                 <nav class="navbar navbar-default navbar-fixed-top header visible-xs visible-sm">
                 <div class="header-xs visible-xs">
@@ -216,11 +203,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     <div class="action dropdown" style="float: right; width: 20px">
                                         <a class="dropdown-toggle" data-toggle="dropdown" id="user-menu" aria-haspopup="true"
                                            aria-expanded="true">
-                                            <i style="cursor: pointer; font-size: 25px; padding-top: 4px;" class="fas fa-user"></i>
+                                            <i style="cursor: pointer; font-size: 25px; padding-top: 12px;" class="fas fa-user"></i>
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="user-menu" style="left: -130px">
                                             <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
-                                            <li role="separator" class="divider"></li>
+                                            <li role="separator" class="divider" style="padding: 0"></li>
                                             {% if user.is_staff %}
                                                 <li>
                                                     <a href="{% url 'ikwen:staff_router' %}">Admin</a>
@@ -421,7 +408,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 });
                 simpleCart.bind('afterAdd', function (item) {
                     $('div#added-to-cart .name').text(item.get('name'));
-                    var size = item.get('size');
+                    let size = item.get('size');
                     if (size !== '-------')
                         $('div#added-to-cart .size').text('(' + size + ')');
                     else
@@ -430,8 +417,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 });
 
                 $('body').on('click', '.value-plus1', function () {
-                    var max = $(this).data('max');
-                    var divUpd = $(this).parent().find('.value1'), newVal = parseInt(divUpd.text(), 10) + 1;
+                    let max = $(this).data('max');
+                    let divUpd = $(this).parent().find('.value1'), newVal = parseInt(divUpd.text(), 10) + 1;
                     if (newVal > max) {
                         ikwen.showFloatingNotice("{% trans "Available stock limit reached." %}", "", 3);
                         return;
@@ -463,9 +450,43 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 }).on('change', '.currency-switcher select', function() {
                     simpleCart.empty();
                     $(this).parents('.currency-switcher').submit()
+                }).on('click', '.cd-search-trigger', function () {
+                    if ($('.nav-xs').hasClass('appear')){
+                        $('.nav-xs').removeClass('appear')
+                    }
+                    $('.cd-search input').focus();
+                    $(".button-hover-handler").removeClass('active');
+
+                }).on('click', '#user-menu', function () {
+                    if ($('.nav-xs').hasClass('appear')){
+                        $('.nav-xs').removeClass('appear')
+                    }
+                    if ($('.cd-search-trigger').hasClass('search-is-visible')){
+                        $('.cd-search-trigger').removeClass('search-is-visible')
+                    }
+                    if ($('.cd-search').hasClass('is-visible')){
+                        $('.cd-search').removeClass('is-visible')
+                    }
+
+                }).on('click', '.toggle-cd-search .open', function () {
+                    $(this).hide();
+                    $('.toggle-cd-search .close2').show();
+                    $('.cd-search').addClass('reveal').show();
+                    $('.cd-search input').focus()
+                }).on('click', '.toggle-cd-search .close2', function () {
+                    $(this).hide();
+                    $('.toggle-cd-search .open').show();
+                    $('.cd-search').removeClass('reveal').show();
+                    $('.cd-search input').focus()
+                }).on('click', '#toggle-menu-xs-appearance', function () {
+                    reInitTopComponent();
+                    $('.nav-xs').toggleClass('appear')
                 });
+
                 $('#content').on('click', '.product-tile button.my-cart-b:not(.sold-out)', function () {
-                    var id = $(this).data('id'),
+                    let isMusic = $(this).data('is-music');
+                    if (isMusic) return true;
+                    let id = $(this).data('id'),
                         image = $(this).data('image'),
                         name = $(this).data('name'),
                         description = $(this).data('description'),
@@ -515,7 +536,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     }
                     $('div#product-modal-preview').modal('hide')
                 });
-
 
                 $("#hide-email-modal").click(function(){
                     reInitTopComponent();
@@ -574,26 +594,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         $('.edge-panel-left').addClass('has-shade').appendTo('.edge-swipe-overlay');
                     }
                 }));
-                var menuCount = $(".nav.navbar-nav li.horizontal").length,
+                let menuCount = $(".nav.navbar-nav li.horizontal").length,
                     subMenuCount = $(".categories-menu li.vertical").length;
                 if (subMenuCount >= menuCount) $(".dropdown.categories-menu").hide();
-                var ulWidth = $(".navbar-nav").width() + 20;
+                let ulWidth = $(".navbar-nav").width() + 20;
                 $(".nav-container .navbar-nav").css({float: 'none', margin: 'auto', width: ulWidth});
-                $('body').on('click', '.toggle-cd-search .open', function () {
-                    $(this).hide();
-                    $('.toggle-cd-search .close2').show();
-                    $('.cd-search').addClass('reveal').show();
-                    $('.cd-search input').focus()
-                }).on('click', '.toggle-cd-search .close2', function () {
-                    $(this).hide();
-                    $('.toggle-cd-search .open').show();
-                    $('.cd-search').removeClass('reveal').show();
-                    $('.cd-search input').focus()
-                }).on('click', '#toggle-menu-xs-appearance', function () {
-                    reInitTopComponent();
-                    $('.nav-xs').toggleClass('appear')
-                });
-
 
                 function reInitTopComponent() {
                     $('.header-xs .nav-xs').removeClass('appear');
@@ -601,31 +606,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     $('.header-xs .cd-search').removeClass('is-visible');
                     $('.header-xs .action.dropdown').removeClass('open')
                 }
-                $('body').on('click', '.cd-search-trigger', function () {
-                    if ($('.nav-xs').hasClass('appear')){
-                        $('.nav-xs').removeClass('appear')
-                    }
-                    $('.cd-search input').focus();
-                    $(".button-hover-handler").removeClass('active');
 
-                }).on('click', '#user-menu', function () {
-                    if ($('.nav-xs').hasClass('appear')){
-                        $('.nav-xs').removeClass('appear')
-                    }
-                    if ($('.cd-search-trigger').hasClass('search-is-visible')){
-                        $('.cd-search-trigger').removeClass('search-is-visible')
-                    }
-                    if ($('.cd-search').hasClass('is-visible')){
-                        $('.cd-search').removeClass('is-visible')
-                    }
-
-                });
-                var winWidth = $(window).width();
+                let winWidth = $(window).width();
                 if (winWidth < 768) {
 
                 }
                 $("a.action").click(function () {
-                    if($(this).parent('.button-hover-handler').hasClass('active')){
+                    if ($(this).parent('.button-hover-handler').hasClass('active')){
                          $(this).parent('.button-hover-handler').removeClass('active');
                     }else{
                         $(".button-hover-handler").removeClass('active');
@@ -667,21 +654,18 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     return false;
                 });
 
-
+                let mySwiper = new Swiper ('.xs-swiper-container', {
+                    // Optional parameters
+                    direction: 'horizontal',
+                    loop: false,
+                    spaceBetween: 10,
+                    slidePosition: 0,
+                    freeMode: true,
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                })
             })()
 		</script>
-        <script>
-            var mySwiper = new Swiper ('.xs-swiper-container', {
-                // Optional parameters
-                direction: 'horizontal',
-                loop: false,
-                spaceBetween: 10,
-                slidePosition: 0,
-                freeMode: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
-            })
-        </script>
         {% block js %}{% endblock %}
     </body>
 </html>

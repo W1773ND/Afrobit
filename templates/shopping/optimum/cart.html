@@ -255,12 +255,12 @@
                     $('.cart-item.packing .item_quantity span').text(itemsPackingQty);
                     loadCheckoutSummary();
                 }).on('click', '.value-minus1', function() {
-                    var id = $(this).data('id'),
+                    let id = $(this).data('id'),
                         item = simpleCart.find({'id': id})[0];
                     if (item.quantity() === 1) return;
                     item.decrement();
                     simpleCart.update();
-                    var packing = parseFloat(item.get('packing'));
+                    let packing = parseFloat(item.get('packing'));
                     if (packing > 0) {
                         itemsPackingQty -= 1;
                         itemsPackingCost -= packing;
@@ -271,7 +271,7 @@
                     $('.cart-item.packing .item_quantity span').text(itemsPackingQty);
                     loadCheckoutSummary();
                 }).on('click', '.close1', function() {
-                    var $cartItem = $(this).parents('.cart-item'),
+                    let $cartItem = $(this).parents('.cart-item'),
                         id = $(this).data('id'),
                         item = simpleCart.find({'id': id})[0];
                     item.remove();
@@ -281,7 +281,7 @@
                     });
                     loadCheckoutSummary();
                 }).on('click', '.apply-promo-code', function() {
-                    var code = $('.promo').find('input[type=text]').val();
+                    let code = $('.promo').find('input[type=text]').val();
                        $.getJSON("{% url 'sales:find_promo_code' %}", {code: code}, function(resp) {
                         if (resp.error) {
                             $(".invalid-code").fadeIn().show();
@@ -297,7 +297,7 @@
                 }).on('keypress', '.promo input[type=text]',function () {
                     $(".invalid-code").fadeOut().hide()
                 }).on('click', '#check-packing', function() {
-                    var buyPacking = $('#check-packing').prop('checked'),
+                    let buyPacking = $('#check-packing').prop('checked'),
                         itemsCost = parseFloat($('#items-summary').data('total')),
                         $delOpt = $('.delivery-option.active'),
                         deliveryCost = 0,
@@ -314,6 +314,19 @@
                         $('#buy-packing').val('')
                     }
                     $('.co.total .price .val').text(total.formatMoney({{ CURRENCY.precision }}, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                }).on('click', '.coupon-img', function() {
+                    let id = $(this).data('id');
+                    {#$.getJSON('http://localhost/tchopetyamo/rewarding/coupon_detail', {id: id}, function(data) {#}
+                    $.getJSON('rewarding/coupon_detail', {id: id}, function(data) {
+                        if (data.error) {
+                            ikwen.showFloatingNotice(data.error, '', 6);
+                            return;
+                        }
+                        $('div#coupon-detail .modal-title').text(data.name);
+                        $('div#coupon-detail img').prop('src', data.image_url);
+                        $('div#coupon-detail .description').html(data.description);
+                        $('#coupon-detail').modal('show');
+                    })
                 });
 
                 populateCartPanel();
@@ -322,7 +335,7 @@
                     simpleCart.load();
                     $('.cart-item:not(.tpl, .packing)').remove();
                     simpleCart.each(function(item) {
-                        var _item = item,
+                        let _item = item,
                             url = item.get('url'),
                             size = item.get('size'),
                             packingCost = item.get('packing'),
@@ -342,11 +355,13 @@
                         $cartItem.find('.item_name').text(item.get('name'));
                         if (size === '-------') $cartItem.find('.size').hide();
                         else $cartItem.find('.size').show();
+                        if (item.get('type') === 'music') $cartItem.addClass('no-qty');
                         $cartItem.find('.item_size').text(size);
                         $cartItem.find('.item_price').html(currency + ' ' + item.price().formatMoney({{ CURRENCY.precision }}, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
                         $cartItem.find('.item_quantity').text(item.quantity());
                         $cartItem.find('.subtotal').html(currency + ' ' + item.total().formatMoney({{ CURRENCY.precision }}, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
                         $cartItem.insertBefore('.cart-item.tpl');
+                        if (item.get('type') === 'music') return;
                         $.getJSON("{% url 'shopping:check_stock_single' %}", {product_id: item.id(), qty: item.quantity()}, function(resp) {
                             if (resp.insufficient) {
                                 if (resp.available > 0) {
@@ -368,7 +383,7 @@
                             }
                         });
                     });
-                    var $packageItem = $('.cart-item.packing');
+                    let $packageItem = $('.cart-item.packing');
                     $packageItem.find('.item_quantity span').text(itemsPackingQty);
                     totalPackingCost = itemsPackingCost + deliveryPackingCost;
                     $packageItem.find('.subtotal').html(currency + ' ' + totalPackingCost.formatMoney({{ CURRENCY.precision }}, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
@@ -382,7 +397,7 @@
                     loadCheckoutSummary();
                 }
                 function loadCheckoutSummary() {
-                    var itemsCount = simpleCart.quantity(),
+                    let itemsCount = simpleCart.quantity(),
                         itemsCost = simpleCart.total(),
                         couponId = $('#coupon-id').val(),
                         delOptId = $('.delivery-option.active').data('id'),
@@ -493,20 +508,6 @@
                 prevButton: '.swiper-button-prev'
             });
 
-            $('body').on('click', '.coupon-img', function() {
-                var id = $(this).data('id');
-                {#$.getJSON('http://localhost/tchopetyamo/rewarding/coupon_detail', {id: id}, function(data) {#}
-                $.getJSON('rewarding/coupon_detail', {id: id}, function(data) {
-                    if (data.error) {
-                        ikwen.showFloatingNotice(data.error, '', 6);
-                        return;
-                    }
-                    $('div#coupon-detail .modal-title').text(data.name);
-                    $('div#coupon-detail img').prop('src', data.image_url);
-                    $('div#coupon-detail .description').html(data.description);
-                    $('#coupon-detail').modal('show');
-                })
-            })
             $('.card-ul .swiper-slide').click(function () {
                 if ($(this).hasClass('use-coupon')){
                     $(this).removeClass('use-coupon')
@@ -518,7 +519,7 @@
                     var couponId = $(this).data('coupon-id')
                     $('#coupon-id').val(couponId)
                 }
-            })
+            });
 
             $('.cart-shopping').addClass('hide');
         })()

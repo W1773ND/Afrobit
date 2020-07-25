@@ -1,0 +1,40 @@
+{% extends 'shopping/optimum/base.html' %}
+{% load i18n static user_agents humanize auth_tokens %}
+
+{% block page_title %}<title>{% trans "Download your songs" %} - {{ service.project_name }}</title>{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        .download-list {margin-top: 3vh}
+        .download-list .list-group-item {border-radius: 0; border-left: none; border-right: none; padding: 5px}
+        .download-list .list-group-item a {display: block; padding: 15px 10px}
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="content container">
+        <h2 style="margin-top: 12vh">{% trans "Download your songs now" %}</h2>
+        <ul class="download-list list-group">
+            {% for song in order.song_list %}
+                <li class="list-group-item">
+                    <a href="{{ song.download_link }}">
+                        <i class="fa fa-download"></i>
+                        <strong>{{ song.title }}</strong>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('.event').click(function() {
+                let link = $(this).attr('href');
+                $.getJSON('', {action: 'log_download', order_id: '{{ order.id }}', link: link})
+            })
+        })()
+    </script>
+{% endblock %}

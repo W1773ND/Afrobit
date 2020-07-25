@@ -43,7 +43,19 @@ h2.title {padding: 2em 0.9em .5em;text-align: left;font-size: 2em;border-bottom:
 .product-about {padding-bottom: 2em}
 
 .navbar {min-height: 65px;}
-#auth.top-right ul .btn {margin-right: 20px;}
+#auth.top-right {/* margin-right: 20px; */}
+#auth.top-right.anonymous {}
+#auth.top-right .login {margin: 4px 15px 0 25px;min-width: 120px;}
+#auth .fa {font-size: 32px}
+#auth .fa.fa-user {font-size: 30px;margin-top: 7px;margin-left: 20px;}
+#auth.top-right .label-danger {margin: 13px 0 0 -10px;}
+.cart-box {float: left;margin-top: 7px}
+.cart-box .dropdown-menu {padding: 15px 0}
+.top-right .cart-box ul li {display: block;}
+.cart-box.user { top: 0!important; }
+
+.header-xs .glyphicon.glyphicon-user {font-size: 26px;margin-right: 0;margin-top: 12px;}
+
 .btn-outline {
     background-color: transparent;
     color: inherit;
@@ -97,7 +109,7 @@ a.button1 {background: #1d1d1d;color: #f4d126 !important;font-weight: 700;}
 
 .nav.navbar-nav li.horizontal {color: #f4d126;padding: 10px 7px;border-bottom: solid 5px transparent;}
 .nav.navbar-nav li.horizontal:hover {border-bottom: solid 5px #f4d126;}
-.top-right {margin-top: 45px;}
+.top-right {margin-top: 10px;}
 h2 {color: #333}
 .nav.navbar-nav li.horizontal a {color: #1d1d1d;/* padding: 26px; *//* float: left; */}
 .nav.navbar-nav li.horizontal:hover a {color: #f4d126 !important;}
@@ -106,7 +118,7 @@ h2 {color: #333}
 .label-danger {background: #f4d126;color: #1d1d1d;}
 .copy-section {background: #262626;}
 .footer-grid h4 {color: #e4e3e3;}
-.footer-grid i {color: #fff;border: 1px solid #fff;}
+.footer-grid i {color: #fff;border: none;}
 .footer-grid ul li a {color: #fff;}
 .my-cart-b {border: 1px solid #1d1d1d;border-radius: 3px;min-width: 80%;}
 .my-cart-b:not(.sold-out):hover, .my-cart-b:not(.sold-out):focus, .my-cart-b:not(.sold-out):active {background: #1d1d1d;border-color: #f4d126;color: #f4d126;}
@@ -125,14 +137,14 @@ span.price-in1 {color: #1d1d1d;}
 
 #checkout {border-radius: 3px}
 .top-right .dropdown-menu li.cart-option {width: 100%;}
-.top-right .dropdown-menu li a.confirm-checkout {border-radius: 3px;background: #1d1d1d;clear: both;color: #f4d126;display: block;font-weight: 700;text-align: center;text-transform: uppercase;transition: background-color .3s;width: 100%;}
+.top-right .dropdown-menu li a.confirm-checkout {line-height: 34px;border-radius: 3px;background: #1d1d1d;clear: both;color: #f4d126;display: block;font-weight: 700;text-align: center;text-transform: uppercase;transition: background-color .3s;width: 100%;}
 
 
 .swiper-container {margin-top: 55px;}
 
 .banner-title {color: #f5f5f5;position: absolute;top: 30vh;left: 40px;font-size: 70px;font-weight: 600;}
 
-.company-logo-container img {max-height: 130px;}
+.company-logo-container img {max-height: 42px;}
 .core-slider_item .cta {left: -40vw;margin-top: -20vh;position: relative;}
 .core-slider_item .cta a.button1 {background: #1d1d1d;}
 
@@ -175,9 +187,24 @@ section.product-agile.black-section .latest-text { color: #f4d126}
     .ban-bottom-w3l, .new-arrivals-w3agile, .product-agile, .latest-w3, .footer-w3l, .products-agileinfo, .typo-w3, .mail-w3ls, .single-wl3 {padding: 3em 0 4em;}
 }
 @media (min-width: 992px) {
-    .navbar-nav {margin-top: 45px;}
+    .navbar-nav {margin-top: 13px;}
     .modal .product-about .product-price em {color: #291705;}
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d;color: #fff}
     .mobile-cntr {margin-top: 120px;}
 }
+
+                .navbar {background: #FFF; position: fixed}
+                .top-right {float: right}
+                .nav-container {padding: 8px 0}
+                .site-summary {background: #FFF; height: 500px; margin-top: 50px; position: absolute;transition : all 0.9s ease-in;-moz-transition: all 0.9s ease-in;-webkit-transition: all 0.9s ease-in; overflow: hidden;  width: 100%; z-index: 2;}
+                .site-summary.scrolling {margin-top: -550px;}
+                .edge-swipe-overlay {z-index: 9999}
+                .navbar-default .navbar-toggle .icon-bar {background-color: #fff;}
+                .navbar-default .navbar-toggle {border: none}
+                .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {background-color: transparent}
+                .cart.box_1 a.empty-cart.danger {color: #f41416}
+
+                @media (max-width: 768px) {
+                    .navbar {background: transparent;border-bottom: none}
+                }

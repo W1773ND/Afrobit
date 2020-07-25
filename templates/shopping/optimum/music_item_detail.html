@@ -1,0 +1,187 @@
+{% extends 'shopping/optimum/base.html' %}
+{% load i18n static user_agents humanize media_from_provider currency cache %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="abstract" content="{{ product.title }} - {{ service.project_name }}"/>
+    <meta name="description" content="{{ product.artist }}"/>
+    <meta property="og:title" content="{{ product.title }} - {{ service.project_name }}"/>
+    <meta property="og:description" content="{{ product.artist }}"/>
+    <meta property="og:image" content="{{ product.artist.photo }}"/>
+    <meta property="og:site_name" content="{{ service.domain|upper }}" />
+{% endblock %}
+
+{% block page_title %}
+    <title>{{ product.title }} - {{ service.project_name }}</title>
+{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        .my-cart-b {max-width: 90%; min-width:inherit}
+    </style>
+
+{% endblock %}
+
+{% block head_js %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'kakocase/css/product-detail.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'ikwen/swiper/css/swiper.min.css' %}" type="text/css" media="screen" />
+{% endblock %}
+
+{% block header %}
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <script>window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+
+      t._e = [];
+      t.ready = function(f) {
+        t._e.push(f);
+      };
+
+      return t;
+    }(document, "script", "twitter-wjs"));</script>
+
+    <div id="top-notice-ctnr" style="display: none">
+        <span class="floating-notice has-shade" style="float: none; position: static"> Error goes here </span>
+    </div>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    {% cache 300 music_item_detail_content product.artist.slug product.slug %}
+    <div class="content">
+        <div class="single-wl3">
+            <div class="container">
+                <div class="single-grids row">
+                    <div class="col-sm-6  col-md-7  col-lg-8 single-grid">
+                        <div class="single-top">
+                            <div class="single-left">
+                                <div class="swiper-container gallery-top">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <img src="{% get_media_prefix %}{{ product.image.name }}"
+                                                 class="img-responsive">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-5 col-lg-4 mobile-cntr">
+                        <div class="single-right simpleCart_shelfItem">
+                            {% url 'music_item_detail' product.artist.slug product.slug as product_url %}
+                            <span class="hidden item_id">{{ product.id }}</span>
+                            <span class="hidden item_image">{% get_media_prefix %}{{ product.image.name }}</span>
+                            <span class="hidden item_url">{{ product_url }}</span>
+                            <span class="hidden item_type">music</span>
+                            <span class="hidden item_price">{{ product.cost|currency:CURRENCY.code }}</span>
+                            <span class="hidden item_packing_price">0</span>
+                            <span class="hidden item_quantity">1</span>
+
+                            <div class="details">
+                                <h4 class="item_name">{{ product }}</h4>
+                                <p class="price item-price-verbose">{{ CURRENCY.symbol }} {{ product.retail_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</p>
+
+                                <button data-text="Add To Cart" class="my-cart-b item_add" data-is-music="music">
+                                    {% trans "Add To Cart" %}
+                                    <div class="mask"></div>
+                                </button>
+                                <div class="social-icon hidden-xs">
+                                    <div class="fb-share-button" data-href="{{ service.url }}{{ product_uri }}{% if is_dara %}?referrer={{ user.id }}{% elif request.GET.referrer %}?referrer={{ request.GET.referrer }}{% endif %}" data-layout="button" data-mobile-iframe="true">
+                                        <a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php">{% trans "Share" %}</a>
+                                    </div>
+                                    <a class="twitter-share-button" href="https://twitter.com/intent/tweet?url={{ service.url }}{{ product_uri }}{% if is_dara %}?referrer={{ user.id }}{% elif request.GET.referrer %}?referrer={{ request.GET.referrer }}{% endif %}" data-size="small">Tweet</a>
+                                </div>
+                                <div class="row visible-xs">
+                                    <div class="col-sm-offset-2 col-sm-4 col-xs-4" data-href="{{ service.url }}{{ product_uri }}{% if is_dara %}?referrer={{ user.id }}{% elif request.GET.referrer %}?referrer={{ request.GET.referrer }}{% endif %}" data-layout="button" data-mobile-iframe="true">
+                                        <a class="product-social-share btn btn-block" target="_blank"  href="https://www.facebook.com/sharer/sharer.php?u={{ service.url }}{{ product_uri }}"  style="background: #3b5998;">
+                                            <i class="fa fa-facebook-official"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-4">
+                                        <a class="product-social-share btn btn-block" data-toggle="modal" data-target="#twitter-share" href="https://twitter.com/intent/tweet?url={{ service.url }}{{ product_uri }}{% if is_dara %}%3Freferrer={{ user.id }}{% elif request.GET.referrer %}%3Freferrer={{ request.GET.referrer }}{% endif %}" style="background: #1da1f2;">
+                                            <i class="fa fa-twitter-square"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <button class="product-social-share btn btn-block" data-toggle="modal" data-target="#whatsapp-share" style="background: #25d366;">
+                                            <i class="fa fa-whatsapp"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="tab-wl3" style="margin-top: 3em">
+                            <div class="container">
+                                <div id="suggestions" class="col-md-3 single-grid1">
+                                    <h3>{% trans "Suggestions" %}</h3>
+                                    <div class="row">
+                                        {% for product in suggestion_list  %}
+                                        {% url 'music_item_detail' product.artist.slug product.slug as product_url %}
+                                        <div class="col-sm-6 suggestion">
+                                            <div class="recent-left">
+                                                <a href="{{ product_url }}">
+                                                    <img class="img-responsive " src="{% get_media_prefix %}{{ product.image.small_name }}" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="recent-right">
+                                                <h6 class="best2">
+                                                    <a href="{{ product_url }}">
+                                                    {{ product.name }}
+                                                    </a>
+                                                </h6>
+                                                {% if config.show_prices %}
+                                                    <span class=" price-in1">{{ CURRENCY.symbol }} {{ product.retail_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="clearfix"> </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endcache %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/swiper/js/swiper.jquery.js' %}"></script>
+    <script>
+        $(function() {
+            var galleryTop = new Swiper('.gallery-top', {
+{#                nextButton: '.swiper-button-next',#}
+{#                prevButton: '.swiper-button-prev',#}
+{#                spaceBetween: 10,// If we need pagination#}
+                centeredSlides: true,
+                slidesPerView: 1,
+                pagination: {
+                el: '.swiper-pagination',
+                },
+            });
+        })
+    </script>
+    {{ config.scripts|safe }}
+{% endblock %}
