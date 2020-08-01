@@ -156,6 +156,7 @@ section.product-agile.black-section h2.title { border: none!important; color: #f
 section.product-agile.black-section .latest-text { color: #f4d126}
 /*section.product-agile { background-color: #FFF !important; }*/
 
+section.fw-section { background-size: auto 100% }
 .multiple-delivery-options .co:not(.total) .price { color: #1d1d1d!important; }
 
 .product-agile .caption {padding: 4em 0 5em!important;}
