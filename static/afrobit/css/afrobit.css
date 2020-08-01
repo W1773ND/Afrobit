@@ -1,4 +1,4 @@
-body {font-family: Helvetica,"Helvetica Neue",Arial,"Lucida Grande",sans-serif; background-color: #fff!important;}
+body {font-family: Helvetica,"Helvetica Neue",Arial,"Lucida Grande",sans-serif;background-color: #262626!important;}
 h1, h2, h3, h4, h5, h6, .cart-item-info h3 {font-family: 'Helvetica Neue Bold', sans-serif; font-weight: 700}
 
 
@@ -156,7 +156,9 @@ section.product-agile.black-section h2.title { border: none!important; color: #f
 section.product-agile.black-section .latest-text { color: #f4d126}
 /*section.product-agile { background-color: #FFF !important; }*/
 
-section.fw-section { background-size: auto 100% }
+section.fw-section { background-color: #FFF; background-size: auto 100% }
+.product-img figure .item-view {height: 250px;background-size: cover;background-repeat: no-repeat;background-position: center;}
+
 .multiple-delivery-options .co:not(.total) .price { color: #1d1d1d!important; }
 
 .product-agile .caption {padding: 4em 0 5em!important;}
@@ -185,7 +187,7 @@ section.fw-section { background-size: auto 100% }
     .modal .product-about .product-price em {color: #291705;}
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: transparent; color: #1d1d1d}
-    .ban-bottom-w3l, .new-arrivals-w3agile, .product-agile, .latest-w3, .footer-w3l, .products-agileinfo, .typo-w3, .mail-w3ls, .single-wl3 {padding: 3em 0 4em;}
+    .ban-bottom-w3l, .new-arrivals-w3agile, .product-agile, .latest-w3, .footer-w3l, .products-agileinfo, .typo-w3, .mail-w3ls, .single-wl3 {padding: 5em 0 4em;}
 }
 @media (min-width: 992px) {
     .navbar-nav {margin-top: 13px;}
