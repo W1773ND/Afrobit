@@ -1,18 +1,32 @@
 {% extends "core/base_admin.html" %}
 {% load i18n humanize staticfiles cache auth_tokens %}
 
-{% block new_menu %}
-    <ul class="dropdown-menu" style="width: 100%">
-        <li><a href="{% url 'kako:change_product' %}">{% trans "Product" %}</a></li>
-        <li><a href="{% url 'kako:change_category' %}">{% trans "Category" %}</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="{% url 'marketing:change_smart_object' 'banner' %}">{% trans "Banner" %}</a></li>
-        <li><a href="{% url 'marketing:change_smart_object' 'smartcategory' %}">{% trans "Smart Category" %}</a></li>
-    </ul>
+{% block header %}
+    {{ block.super }}
+    <div id="app-nav" class="container-fluid">
+        <strong class="cta app-logo"></strong>
+        <strong class="cta app-name">Shop</strong>
+        <ol class="breadcrumb">
+            {% url 'ikwen:staff_router' as admin_home_url %}
+            <li><a href="{{ admin_home_url }}">{{ service.project_name }}</a></li>
+            {% block breadcrumb_location %}{% endblock %}
+        </ol>
+        <a href="{% url 'home' %}" class="go-to-website pull-right" title="{% trans "Go to public website" %}">
+            <i class="glyphicon glyphicon-globe"></i>
+            <span class="hidden-xs" style="font-weight: 400">{% trans "Go to website" %}</span>
+        </a>
+    </div>
+{% endblock %}
+
+{% block header_brand %}
+<a class="navbar-brand hidden-xs" href="/" style="padding-top: 5px">
+    <img src="{% static 'afrobit/img/afrobit--logo-noir_196x100.png' %}" height="55" />
+</a>
+<strong class="navbar-brand visible-xs">Afrobit</strong>
 {% endblock %}
 
 {% block admin_nav %}
-{#    {% cache 600 sidebar user.username %}#}
+    {% cache 600 sidebar user.username %}
     <div id="admin-nav" class="edge-panel-left">
         <div class="wrapper">
             <div class="stage">
@@ -275,5 +289,5 @@
             </div>
         </div>
     </div>
-{#    {% endcache %}#}
+    {% endcache %}
 {% endblock %}
