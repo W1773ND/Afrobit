@@ -90,10 +90,11 @@
                             <span class="hidden item_price">{{ product.cost|currency:CURRENCY.code }}</span>
                             <span class="hidden item_packing_price">0</span>
                             <span class="hidden item_quantity">1</span>
+                            <span class="hidden item_size">-------</span>
 
                             <div class="details">
                                 <h4 class="item_name">{{ product }}</h4>
-                                <p class="price item-price-verbose">{{ CURRENCY.symbol }} {{ product.retail_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</p>
+                                <p class="price item-price-verbose">{{ CURRENCY.symbol }} {{ product.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</p>
 
                                 <button data-text="Add To Cart" class="my-cart-b item_add" data-is-music="music">
                                     {% trans "Add To Cart" %}

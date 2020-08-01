@@ -56,18 +56,18 @@
                     <div class="caption">
                         {% for product in row %}
                             {% url 'music_item_detail' product.artist.slug product.slug as product_url %}
-                                {% if config.theme.display == 'Comfortable' %}
-                                    <div class="col-sm-6 col-md-6 arrival-grid simpleCart_shelfItem">
-                                {% elif config.theme.display == 'Cozy'  %}
-                                    <div class="col-sm-4 col-md-4 arrival-grid simpleCart_shelfItem">
-                                {% else %}
-                                    <div class="col-sm-3 col-md-3 arrival-grid simpleCart_shelfItem">
-                                {% endif %}
+                            {% if config.theme.display == 'Comfortable' %}
+                                <div class="col-sm-6 col-md-6 arrival-grid simpleCart_shelfItem">
+                            {% elif config.theme.display == 'Cozy'  %}
+                                <div class="col-sm-4 col-md-4 arrival-grid simpleCart_shelfItem">
+                            {% else %}
+                                <div class="col-sm-3 col-md-3 arrival-grid simpleCart_shelfItem">
+                            {% endif %}
                                 <div class="product-tile">
                                     <div  class="product-img">
                                         <figure>
                                             <a href="{{ product_url }}">
-                                                <div style="background-image: url({% get_media_prefix %}{{ product.image.small_name }});" class="item-view"></div>
+                                                <div style="background-image: url({% get_media_prefix %}{{ product.image.small_name }});" class="img"></div>
                                             </a>
                                         </figure>
                                     </div>
@@ -155,7 +155,7 @@
                                         <div  class="product-img">
                                             <figure>
                                                 <a href="{{ product_url }}">
-                                                    <div style="background-image: url({% get_media_prefix %}{{ product.image.name }});" class="item-view"></div>
+                                                    <div style="background-image: url({% get_media_prefix %}{{ product.image.name }});" class="img"></div>
                                                 </a>
                                             </figure>
                                         </div>
@@ -236,7 +236,7 @@
 {#                                                    {% for photo in product.photos|slice:"1:2" %}#}
 {#                                                            <div style="background-image: url({{ photo.image|from_provider:product.provider }});" class="item-view"></div>#}
 {#                                                    {% endfor %}#}
-                                                <div style="background-image: url({{ product.image|from_provider:product.provider }});" class="item-view"></div>
+                                                <div style="background-image: url({{ product.image|from_provider:product.provider }});" class="img"></div>
                                             </a>
                                         </figure>
                                     </div>
