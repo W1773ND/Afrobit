@@ -14,7 +14,7 @@ h1, h2, h3, h4, h5, h6, .cart-item-info h3 {font-family: 'Helvetica Neue Bold', 
 .copy-section {background: #1d1d1d;}
 .footer-grid i {border: 1px solid #f0eded;}
 
-.latest-text {background: #b1777700;bottom: inherit;text-align: left;height: inherit;font-size: 16px;float: left;width: 100%;/* clear: both; */position: relative;}
+.latest-text {background: #b1777700;bottom: inherit;text-align: center;height: inherit;font-size: 20px;float: left;font-weight: 600;width: 100%;/* clear: both; */position: relative;}
 .latest-text .desc {clear: both; font-weight: 300; float: left;}
 
 .my-cart-b:not(.sold-out):hover, .my-cart-b:not(.sold-out):focus, .my-cart-b:not(.sold-out):active {background: #46280a;border-color: #2b1906;}
@@ -61,7 +61,7 @@ h2.title {padding: 2em 0.9em .5em;text-align: left;font-size: 2em;border-bottom:
     color: inherit;
     transition: all .5s;
 }
-.product-tile {box-shadow: none;-webkit-box-shadow: none;/* border: solid 1px #dcdcdc; *//* background: #fff; */border-radius: 5px;}
+.product-tile {box-shadow: none;-webkit-box-shadow: none;border-radius: 5px;}
 .btn-primary.btn-outline {
     color: #428bca;
 }
@@ -145,7 +145,7 @@ span.price-in1 {color: #1d1d1d;}
 .banner-title {color: #f5f5f5;position: absolute;top: 30vh;left: 40px;font-size: 70px;font-weight: 600;}
 
 .company-logo-container img {max-height: 42px;}
-.core-slider_item .cta {left: -40vw;margin-top: -20vh;position: relative;}
+.core-slider_item .cta {left: -40vw;margin-top: -20vh;/* position: relative; */}
 .core-slider_item .cta a.button1 {background: #1d1d1d;}
 
 .navbar-nav > li > a:hover {color: #1d1d1d !important;}
@@ -154,14 +154,29 @@ span.price-in1 {color: #1d1d1d;}
 section.product-agile.black-section { background-color: #1d1d1d !important; }
 section.product-agile.black-section h2.title { border: none!important; color: #f4d126}
 section.product-agile.black-section .latest-text { color: #f4d126}
+section.product-agile.black-section .product-tile {border: solid 2px #f4d126;border-radius: 5px;}
+section.product-agile.black-section .item_name, section.product-agile.black-section .item-price-verbose { color: #fff;}
+section.product-agile.black-section .my-cart-b:not(.sold-out) {border-color: #fff;color: #fff;}
+section.product-agile.black-section .my-cart-b:not(.sold-out):hover { border-color: #f4d126;}
+section.product-agile.black-section .my-cart-b.sold-out:hover { cursor: not-allowed}
 /*section.product-agile { background-color: #FFF !important; }*/
 
 section.fw-section { background-color: #FFF; background-size: auto 100% }
-.product-img figure .item-view {height: 250px;background-size: cover;background-repeat: no-repeat;background-position: center;}
+.product-img .img {height: 250px;background-size: cover;background-repeat: no-repeat;background-position: center;}
 
 .multiple-delivery-options .co:not(.total) .price { color: #1d1d1d!important; }
 
 .product-agile .caption {padding: 4em 0 5em!important;}
+
+.ribben {position: absolute; top: 30%; left: 2.5%; padding: 0.5em; background: #1f1137; width: 32%;}
+.ribben1 {position: absolute; top: 15%; left: -3%; padding: 0.5em; background: #c10023; width: 32%;}
+.ribben p{font-size:1em; color:#fff;  }
+.ribben1 p{font-size:1em; color:#fff;}
+.ribben:after {content: ''; position: absolute; top: 82%; right: 84%; width: 0; height: 0; border-top: 24px solid #150b27; border-right: 14px solid transparent; border-left: 3px solid transparent; transform: rotate(97deg);}
+.ribben1:after {content: ''; position: absolute; top: 82%;right: 78%;width: 0; height: 0; border-top: 24px solid #6D1107; border-right: 14px solid transparent; border-left: 3px solid transparent; transform: rotate(97deg);}
+.ribben2 p{font-size:1em; color:#fff;}
+.ribben2 {background: #0D59AF;position: absolute;top: 15%;left: -2%;padding: 0.5em;width: 42%;}
+.ribben2:after {border-top: 24px solid #04448C;border-right: 14px solid transparent;border-left: 3px solid transparent;content: '';height: 0;transform: rotate(97deg);position: absolute;top: 82%;right: 88%;width: 0;}
 
 /* Back to top button BEGIN */
 .back-to-top { font-size: 3.5vw; position: fixed; bottom: 1%; text-align: right; z-index: 1; transition: all 1s; }

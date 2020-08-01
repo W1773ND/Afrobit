@@ -26,7 +26,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <link rel="stylesheet" href="{% static 'kakocase/css/bootstrap.css' %}" />
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
             <link rel="stylesheet" href="{% static 'kakocase/swiper/css/swiper.min.css' %}">
-            <link rel="stylesheet" href="{% static 'kakocase/css/optimum.css' %}" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'kakocase/css/optimum.css' %}?V=20.08.01.21.29" type="text/css" media="all" />
             {% if request.session.theme %}
                 {% with theme=request.session.theme %}
                     <link rel='stylesheet' href="{% static 'kakocase/themes/' %}{{ theme.template_slug }}/{{ theme.slug }}.css" />
@@ -52,7 +52,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             {% endif %}
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
 
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.01.18.53" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.01.21.33" type="text/css" media="all" />
             <style>
             </style>
 		{% endblock %}
