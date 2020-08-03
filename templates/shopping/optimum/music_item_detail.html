@@ -61,7 +61,7 @@
 {% endblock %}
 
 {% block content %}
-    {% cache 300 music_item_detail_content product.artist.slug product.slug %}
+{#    {% cache 300 music_item_detail_content product.artist.slug product.slug %}#}
     <div class="content">
         <div class="single-wl3">
             <div class="container">
@@ -133,6 +133,11 @@
                             <div class="container">
                                 <div id="suggestions" class="col-md-3 single-grid1">
                                     <h3>{% trans "Suggestions" %}</h3>
+                                    <div>
+                                        <audio id="listen" controls>
+                                            <source src="{% get_media_prefix %}previews/songs/Mama.mp3" type="audio/mp3">
+                                        </audio>
+                                    </div>
                                     <div class="row">
                                         {% for product in suggestion_list  %}
                                         {% url 'music_item_detail' product.artist.slug product.slug as product_url %}
@@ -164,7 +169,7 @@
             </div>
         </div>
     </div>
-    {% endcache %}
+{#    {% endcache %}#}
 {% endblock %}
 
 {% block js %}
