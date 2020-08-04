@@ -1,9 +1,6 @@
 body {font-family: Helvetica,"Helvetica Neue",Arial,"Lucida Grande",sans-serif;background-color: #262626!important;}
 h1, h2, h3, h4, h5, h6, .cart-item-info h3 {font-family: 'Helvetica Neue Bold', sans-serif; font-weight: 700}
 
-
-
-
 .header-xs {background: #1d1d1d;}
 .nav-xs .swiper-slide {background: #1d0303;}
 .header-bottom, .header-bottom.fixed {color: #349800;}
@@ -36,6 +33,8 @@ h2.title {padding: 2em 0.9em .5em;text-align: left;font-size: 2em;border-bottom:
 .product-tile .product-img figure > a {padding: 10px}
 .checkout-header {font-weight: 400}
 .latest-grid:hover .latest-text {bottom: inherit}
+
+.content {background: #fff}
 
 .lang-switcher {position: absolute;right: 5px;margin-top: 11px;color: #999;}
 .currency-switcher select, .lang-switcher select {/* color: #fff; */}
