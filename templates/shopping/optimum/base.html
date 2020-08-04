@@ -52,7 +52,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             {% endif %}
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
 
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.01.21.33" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.04.03.30" type="text/css" media="all" />
             <style>
             </style>
 		{% endblock %}
@@ -325,10 +325,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
             {% cache template_cache_duration footer %}
             <div class="footer-w3l hidden-xs">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="footer-grids">
-                        <div class="col-sm-6 col-md-3 footer-grid">
-                            <h4>{{ service.project_name }}</h4>
+                        <div class="col-sm-6 col-md-5 footer-grid">
+                            <a href=" http://shop.afrobitproductions.com/page/a-propos/"><h4> {% trans "About" %} {{ service.project_name }}</h4></a>
+                            <p>{{ config.description|safe }}</p>
+                        </div>
+                        <div class="col-sm-6 col-md-2 col-md-offset-2 footer-grid hidden-sm">
+                            <h4>{% trans "Important Pages" %}</h4>
                             <ul>
                                 <li><a href="{% url 'shopping:home' %}">{% trans "Home" %}</a></li>
                                 {% if config.allow_shopping and config.show_prices %}
@@ -340,29 +344,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 {% if about_page %}
                                     <li><a href="{% url 'flatpage' about_page.url %}">{{ about_page.title }}</a></li>
                                 {% endif %}
-                                {% if flatpage_list %}
-                                    {% for flatpage in flatpage_list %}
-                                        <li><a href="{% url 'flatpage' flatpage.url %}">{{ flatpage.title }}</a></li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li><a href="{% url 'ikwen:sign_in' %}">{% trans "Login" %}</a></li>
-                                {% endif %}
                             </ul>
                         </div>
-                        <div class="col-sm-6 col-md-3 footer-grid hidden-sm">
-                            <h4>{% trans "Quick access" %}</h4>
-                            <ul>
-                                {% for category in quick_access_categories %}
-                                    <li>
-                                        {% url 'shopping:product_list' category.slug as product_list_url %}
-                                        <a href="{{ product_list_url }}">{{ category.name }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="col-sm-6 col-md-3 footer-grid hidden-sm">
-                            <h4>{% trans "About" %}</h4>
-                            <p>{{ config.description|truncatewords:25 }}</p>
+                        <div class="col-sm-6 col-md-2 col-md-offset-1 footer-grid hidden-sm">
+                            <h4>{% trans "Social" %}</h4>
                             <div class="social-icon">
                                 {% if config.facebook_link %}
                                     <a href="{{ config.facebook_link }}" target="_blank"><i class="fa fa-facebook-official"></i></a>
@@ -378,7 +363,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                         class="fa fa-linkedin-square"></i></a>{% endif %}
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-3 footer-grid foot">
+                        <div class="col-sm-6 col-md-2 col-md-offset-1 footer-grid foot">
                             <h4>{% trans "Contacts" %}</h4>
                             <ul>
                                 <li><i class="fa fa-map-marker" aria-hidden="true" style="font-size: 20px"></i><a href="#">{{ config.address }}</a></li>

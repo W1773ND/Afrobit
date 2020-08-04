@@ -117,7 +117,8 @@ h2 {color: #333}
 .cart.box_1 a {color: #333}
 .label-danger {background: #f4d126;color: #1d1d1d;}
 .copy-section {background: #262626;}
-.footer-grid h4 {color: #e4e3e3;}
+.footer-grid h4 {border-bottom: 2px solid #f4d126;color: #e4e3e3; padding-bottom: 5px}
+.footer-grid p {color: #ffffff}
 .footer-grid i {color: #fff;border: none;}
 .footer-grid ul li a {color: #fff;}
 .my-cart-b {border: 1px solid #1d1d1d;border-radius: 3px;min-width: 80%;}
@@ -150,6 +151,8 @@ span.price-in1 {color: #1d1d1d;}
 
 .navbar-nav > li > a:hover {color: #1d1d1d !important;}
 .navbar.active { background-color: #1d1d1d!important; color: #f4d126!important;}
+
+#content { background-color: #fff; }
 
 section.product-agile.black-section { background-color: #1d1d1d !important; }
 section.product-agile.black-section h2.title { border: none!important; color: #f4d126}
