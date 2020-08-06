@@ -2,7 +2,7 @@ body {font-family: Helvetica,"Helvetica Neue",Arial,"Lucida Grande",sans-serif;b
 h1, h2, h3, h4, h5, h6, .cart-item-info h3 {font-family: 'Helvetica Neue Bold', sans-serif; font-weight: 700}
 
 .header-xs {background: #1d1d1d;}
-.nav-xs .swiper-slide {background: #1d0303;}
+.cart-shopping .icon {background-color: #1d0303}
 .header-bottom, .header-bottom.fixed {color: #349800;}
 .header-bottom.fixed #auth.top-right .fa {color: #1d1d1d;}
 .header-bottom.fixed #auth.top-right a:not(.dropdown-menu a) {color: #FFF}
