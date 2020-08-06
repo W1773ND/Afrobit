@@ -136,7 +136,7 @@
                             {% if settings.IS_PROVIDER %}
                             {% if perms.accesscontrol.sudo %}
                                 <li role="presentation" class="delivery-options">
-                                    {% url 'kakocase:delivery_options' as delivery_options_url %}
+                                    {% url 'kakocase:deliveryoption_list' as delivery_options_url %}
                                     <a href="{{ delivery_options_url }}">{% trans "Delivery Options" %}</a>
                                 </li>
                             {% endif %}

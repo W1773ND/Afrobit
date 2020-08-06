@@ -160,12 +160,12 @@
                                             </figure>
                                         </div>
                                         {% if product.stock == 0 %}
-                                            <div class="ribben2">
+                                            <div class="ribbon ribbon-danger" >
                                                 <p>{% trans "SOLD OUT" %}</p>
                                             </div>
                                         {% else %}
                                             {% if product.badge_text %}
-                                                <div class="ribben">
+                                                <div class="ribbon ribbon-info">
                                                     <p>{{ product.badge_text }}</p>
                                                 </div>
                                             {% endif %}

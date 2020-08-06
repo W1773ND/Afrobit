@@ -24,7 +24,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		{% block page_title %}{% endblock %}
 		{% block head_style %}
             <link rel="stylesheet" href="{% static 'kakocase/css/bootstrap.css' %}" />
-            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+            <link rel="stylesheet" href="{% static 'kakocase/css/font-awesome/css/font-awesome.min.css' %}" />
             <link rel="stylesheet" href="{% static 'kakocase/swiper/css/swiper.min.css' %}">
             <link rel="stylesheet" href="{% static 'kakocase/css/optimum.css' %}?V=20.08.01.21.29" type="text/css" media="all" />
             <link rel="stylesheet" href="{% static 'ikwen/css/pwa.css' %}?v=20.5.29" type="text/css" media="all" />
@@ -53,8 +53,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             {% endif %}
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
 
-            <link rel='stylesheet' href="{% static 'kakocase/css/font-awesome.css' %}" />
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.04.03.30" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.07.00.35" type="text/css" media="all" />
 		{% endblock %}
         {% block head_js %}
             <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -185,42 +184,45 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         </div>
                     </div>
                 </nav>
-                <nav class="navbar navbar-default navbar-fixed-top header visible-xs visible-sm">
-                <div class="header-xs visible-xs">
-                        <div class="container-fluid">
-                            <div class="pull-left">
-                                <button type="button" class="navbar-toggle menu-button">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <h3 class="app-name">
-                                    <a href="{% url 'shopping:home' %}">{{ service.project_name }}</a>
-                                </h3>
-                            </div>
-                            <div class="pull-right">
-                                {% if user.is_authenticated %}
-                                    <div class="action dropdown" style="float: right; width: 20px">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" id="user-menu" aria-haspopup="true"
-                                           aria-expanded="true">
-                                            <i style="cursor: pointer; font-size: 25px; padding-top: 12px;" class="fas fa-user"></i>
-                                        </a>
-                                        <ul class="dropdown-menu" aria-labelledby="user-menu" style="left: -130px">
-                                            <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
-                                            <li role="separator" class="divider" style="padding: 0"></li>
-                                            {% if user.is_staff %}
-                                                <li>
-                                                    <a href="{% url 'ikwen:staff_router' %}">Admin</a>
-                                                </li>
-                                            {% endif %}
-                                            <li>{% url "ikwen:account_setup" as account_setup_url %}
-                                                <a href="{{ account_setup_url|ikwenize }}">{% trans "Account setup" %}</a>
+            <div class="header-xs visible-xs visible-sm">
+                <div class="container-fluid">
+                    <div class="pull-left left-content v-align">
+                        <button type="button" class="navbar-toggle menu-button v-align-center">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        {% if coupon_summary.threshold_reached and not request.COOKIES.hasPendingCoupon %}
+                            <i class="fa fa-circle coupons-notification"></i>
+                        {% endif %}
+                        <span class="app-name">
+                            <a>{{ service.project_name|truncatechars:":12" }}</a>
+                        </span>
+                    </div>
+                    <div class="pull-right v-align" style="margin-right: 6px;">
+                        <div class="xs-nav-container">
+                            {% if user.is_authenticated %}
+                                <div class="action dropdown" style="float: right; width: 20px">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" id="user-menu" aria-haspopup="true" aria-expanded="true">
+                                        <div class="button-hover-handler"><i class="fa fa-user" style=" margin-left: 11px;"></i></div>
+                                    </a>
+                                    <ul class="user-menu dropdown-menu" aria-labelledby="user-menu" style="left: -120px">
+                                        <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
+                                        <li role="separator" class="divider" style="padding: 0"></li>
+                                        {% if user.is_staff %}
+                                            <li>
+                                                <a href="{% url 'ikwen:staff_router' %}">Admin</a>
                                             </li>
-                                            <li><a href="{% url "ikwen:logout" %}">{% trans "Logout" %}</a></li>
-                                        </ul>
-                                    </div>
-                                {% else %}
+                                        {% endif %}
+                                        <li>{% url "ikwen:account_setup" as account_setup_url %}
+                                            <a href="{{ account_setup_url|ikwenize }}">{% trans "Account setup" %}</a>
+                                        </li>
+                                        <li><a href="{% url "ikwen:logout" %}">{% trans "Logout" %}</a></li>
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <div class="button-hover-handler">
                                     <a class="action" href="{% url 'ikwen:sign_in' %}">
                                         <i class="fa fa-user-circle" style="margin-right: 0"></i>
                                     </a>
@@ -234,7 +236,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                             <input name="q" type="search" placeholder="{% trans "Search" %} ...">
                         </form>
                     </div>
-                </nav>
+                </div>
+            </div>
             {% block horizontal_menu %}
             <div class="nav-xs visible-xs appear animated">
                 <!-- Additional required wrapper -->
@@ -306,7 +309,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <div class="cart-shopping animated hide subtle-shade text-center" data-color="light" style="height: 55px">
             <div class="icon">
                 <span class="label label-danger simpleCart_quantity"></span>
-                <i class="kkc-cart fa fa-shopping-bag fa-4x"></i>
+                <i class="kkc-cart fa fa-shopping-bag fa-2x"></i>
                 <div class="empty-cart animated hide fadeOutDown" data-toggle="modal" data-target="#confirm-empty-cart">
                     <i class="fa fa-trash"></i>
                 </div>
@@ -657,7 +660,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     headerBottomH = $('.header-bottom').height(),
                     lastScrollTop = 0;
                 $(window).scroll(function (e) {
-                    var scrollTop = $(this).scrollTop();
+                    {% comment %}let scrollTop = $(this).scrollTop();
                     if (scrollTop > headerTopH + headerBottomH) {
                         $('.header-bottom:not(.fixed)').addClass('fixed').animate({top: 0});
                         {#$('#auth').remove().prependTo('.header-right2')#}
@@ -665,10 +668,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         $('.header-bottom.fixed').removeClass('fixed');
                         $('.toggle-cd-search').removeClass('is_active');
                         $('#auth').remove().insertAfter('.top-left')
-                    }
+                    }{% endcomment %}
 
                     if (winWidth < 768) {
-                        var st = window.pageYOffset +1 || document.documentElement.scrollTop;
+                        let st = window.pageYOffset +1 || document.documentElement.scrollTop;
                         if (st  > lastScrollTop ){
                             if(!($(".header-xs").hasClass('is-up'))){
                                 $(".header-xs").addClass('is-up');
