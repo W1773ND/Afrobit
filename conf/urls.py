@@ -60,5 +60,5 @@ urlpatterns = patterns(
     url(r'^cart/(?P<order_id>[-\w]+)/$', Cart.as_view(), name='cart'),
     url(r'^confirm_checkout$', confirm_checkout, name='confirm_checkout'),
     url(r'^confirm_checkout/(?P<tx_id>[-\w]+)/(?P<signature>[-\w]+)$', confirm_checkout, name='confirm_checkout'),
-    url(r'^', include('ikwen_kakocase.shopping.urls', namespace='shopping')),
+    url(r'^', include('ikwen_kakocase.shopping.urls', namespace='shopping'))
 )
