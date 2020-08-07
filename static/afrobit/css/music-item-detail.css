@@ -5,6 +5,7 @@
 .my-cart-b {max-width: 100%;min-width:inherit;}
 .artist .purchase-album:first-child {margin-top: 0;}
 .artist .purchase-album {margin: 30px auto 0; float:none; height: 50px; font-size: 17px}
+.artist a.purchase-album {display: block; padding-top: 11px}
 
 .artist .profile {margin: auto; float: none;}
 .artist .profile .photo {background-size: cover; background-position: center; border-radius: 100px; height: 200px; width: 200px; margin-left: 47px;}

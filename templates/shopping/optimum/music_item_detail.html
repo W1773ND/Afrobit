@@ -73,12 +73,10 @@
                     {% endif %}
                     <div class="col-sm-6">
                         {% if not product.album and product.download_link %}
-                            <li>
-                                <a href="{{ product.download_link }}" data-text="Buy Song" class="btn btn-sm btn-deep-blue purchase-album col-xs-10 col-sm-10 col-sm-offset-2" data-is-music="music">
-                                    <i class="fa-download fa" style="margin-right: 10px"></i>{% trans "Download" %}
-                                    <div class="mask"></div>
-                                </a>
-                            </li>
+                            <a href="{{ product.download_link }}" data-text="Buy Song" class="btn btn-sm btn-deep-blue purchase-album col-xs-10 col-sm-10 col-sm-offset-2" data-is-music="music" style="display: block">
+                                <i class="fa-download fa" style="margin-right: 10px"></i>{% trans "Download" %}
+                                <div class="mask"></div>
+                            </a>
                         {% elif product.song_set %}
                             <button data-text="Buy Album" class="btn btn-sm btn-deep-blue purchase-album col-xs-10 col-sm-10 col-sm-offset-2" data-is-music="music">
                                 {% trans "Buy album" %}
