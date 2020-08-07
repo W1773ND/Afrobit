@@ -71,7 +71,7 @@
                     <div class="clearfix visible-xs"></div>
                     {% endif %}
                     <div class="col-sm-6">
-                        {% if not product.album and product.download_link %}
+                        {% if not product.song_set and product.download_link %}
                             <a href="{{ product.download_link }}" data-text="Buy Song" class="btn btn-sm btn-deep-blue purchase-album col-xs-10 col-sm-10 col-sm-offset-2" data-is-music="music" style="display: block">
                                 <i class="fa-download fa" style="margin-right: 10px"></i>{% trans "Download" %}
                                 <div class="mask"></div>
@@ -150,7 +150,7 @@
                     {% endif %}
                 </div>
                 <div class="clearfix"></div>
-                {% if not product.album %}
+                {% if product.song_set %}
                     <div class="text-center bottom-side">
                         <span>{% trans 'Album cost:' %}</span>
                         <sup>{{ CURRENCY.symbol }}</sup>
