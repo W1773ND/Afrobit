@@ -90,14 +90,22 @@
                     {% if product.song_set %}
                         <ul>
                             {% for song in product.song_set.all %}
-                                <li class="has-shade">
+                                <li class="has-shade simpleCart_shelfItem">
                                     <div class="hidden-xs col-sm-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.image }});"></div>
+                                    <span class="hidden item_id">{{ song.id }}</span>
+                                    <span class="hidden item_url">{% url 'music_item_detail' song.artist.slug song.slug %}</span>
+                                    <span class="hidden item_price">{{ song.cost|currency:CURRENCY.code }}</span>
+                                    <span class="hidden item_type">music</span>
+                                    <span class="hidden item_image">{% get_media_prefix %}{{ song.image.small_name }}</span>
+                                    <span class="hidden item_quantity">1</span>
+                                    <span class="hidden item_packing_price">0</span>
+                                    <span class="hidden item_size">-------</span>
                                     <div class="col-lg-5 col-lg-offset-1 col-sm-6 col-sm-offset-1 col-xs-12 ">
                                         <div class="title">
                                             <h4>{{ song.title|truncatechars:28 }}</h4>
                                         </div>
                                         <audio id="listen" controls controlsList="nodownload">
-                                            <source src="{% get_media_prefix %}{{ song.preview }}" type="audio/mp3">
+                                            <source src="{% get_media_prefix %}previews/{{ song.media.name }}" type="audio/mp3">
                                         </audio>
                                     </div>
                                     <div class="col-lg-2 col-lg-offset-3 col-sm-3 col-xs-12">
@@ -120,14 +128,22 @@
                     {% else %}
                         <ul>
                             {% with song=product %}
-                                <li class="has-shade">
+                                <li class="has-shade simpleCart_shelfItem">
+                                    <span class="hidden item_id">{{ song.id }}</span>
+                                    <span class="hidden item_url">{{ request.META.path }}</span>
+                                    <span class="hidden item_price">{{ song.cost|currency:CURRENCY.code }}</span>
+                                    <span class="hidden item_type">music</span>
+                                    <span class="hidden item_image">{% get_media_prefix %}{{ song.image.small_name }}</span>
+                                    <span class="hidden item_quantity">1</span>
+                                    <span class="hidden item_packing_price">0</span>
+                                    <span class="hidden item_size">-------</span>
                                     <div class="hidden-xs col-sm-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.cover }});"></div>
                                     <div class="col-lg-5 col-lg-offset-1 col-sm-6 col-sm-offset-1 col-xs-12 ">
                                         <div class="title">
                                             <h4>{{ song.title|truncatechars:28 }}</h4>
                                         </div>
                                         <audio id="listen" controls controlsList="nodownload">
-                                            <source src="{% get_media_prefix %}{{ song.preview }}" type="audio/mp3">
+                                            <source src="{% get_media_prefix %}previews/{{ song.media.name }}" type="audio/mp3">
                                         </audio>
                                     </div>
                                     <div class="col-lg-2 col-lg-offset-3 col-sm-3 col-xs-12">
@@ -170,20 +186,5 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'ikwen/swiper/js/swiper.jquery.js' %}"></script>
-    <script>
-        $(function() {
-            var galleryTop = new Swiper('.gallery-top', {
-{#                nextButton: '.swiper-button-next',#}
-{#                prevButton: '.swiper-button-prev',#}
-{#                spaceBetween: 10,// If we need pagination#}
-                centeredSlides: true,
-                slidesPerView: 1,
-                pagination: {
-                el: '.swiper-pagination',
-                },
-            });
-        })
-    </script>
     {{ config.scripts|safe }}
 {% endblock %}
