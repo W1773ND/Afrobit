@@ -40,8 +40,8 @@
     .artist .songs .actions .cost {float: none;}
     .artist .songs .actions button {float: none; margin-top: 30px}
     .artist .songs .cover-image {margin: auto}
-    .artist .songs li {height: 360px;text-align: center;}
-    .artist .songs h3, .artist .songs .actions button, .artist .songs .actions audio, .artist .songs .actions .cost {margin: 20px auto 0}
+    .artist .songs li {height: 300px; text-align: center;}
+    .artist .songs .title h4, .artist .songs .actions button, .artist .songs .actions audio, .artist .songs .actions .cost {margin: 20px auto 0}
 
     .content>.container {padding: 220px 0 300px;}
 }

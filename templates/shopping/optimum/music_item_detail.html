@@ -16,7 +16,6 @@
 {% endblock %}
 {% block head_style %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'kakocase/css/product-detail.css' %}" type="text/css" media="screen" />
     <link rel="stylesheet" href="{% static 'ikwen/swiper/css/swiper.min.css' %}" type="text/css" media="screen" />
     <link rel="stylesheet" href="{% static 'afrobit/css/music-item-detail.css' %}" type="text/css" media="screen" />
 {% endblock %}
@@ -92,16 +91,16 @@
                         <ul>
                             {% for song in product.song_set.all %}
                                 <li class="has-shade">
-                                    <div class="col-xs-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.cover }});"></div>
-                                    <div class="col-lg-3 col-lg-offset-2 col-sm-6 col-sm-offset-1 col-xs-12 ">
+                                    <div class="hidden-xs col-sm-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.cover }});"></div>
+                                    <div class="col-lg-5 col-lg-offset-1 col-sm-6 col-sm-offset-1 col-xs-12 ">
                                         <div class="title">
-                                            <h3>{{ song.title|truncatechars:30 }}</h3>
+                                            <h4>{{ song.title|truncatechars:28 }}</h4>
                                         </div>
                                         <audio id="listen" controls controlsList="nodownload">
                                             <source src="{% get_media_prefix %}{{ song.preview }}" type="audio/mp3">
                                         </audio>
                                     </div>
-                                    <div class="col-lg-2 col-lg-offset-4 col-sm-3 col-xs-12">
+                                    <div class="col-lg-2 col-lg-offset-3 col-sm-3 col-xs-12">
                                         <div class="actions">
                                             <div class="cost">
                                                 <sup>{{ CURRENCY.symbol }}</sup>
@@ -122,16 +121,16 @@
                         <ul>
                             {% with song=product %}
                                 <li class="has-shade">
-                                    <div class="col-xs-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.cover }});"></div>
-                                    <div class="col-lg-3 col-lg-offset-2 col-sm-6 col-sm-offset-1 col-xs-12 ">
+                                    <div class="hidden-xs col-sm-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.cover }});"></div>
+                                    <div class="col-lg-5 col-lg-offset-1 col-sm-6 col-sm-offset-1 col-xs-12 ">
                                         <div class="title">
-                                            <h3>{{ song.title|truncatechars:30 }}</h3>
+                                            <h4>{{ song.title|truncatechars:28 }}</h4>
                                         </div>
                                         <audio id="listen" controls controlsList="nodownload">
                                             <source src="{% get_media_prefix %}{{ song.preview }}" type="audio/mp3">
                                         </audio>
                                     </div>
-                                    <div class="col-lg-2 col-lg-offset-4 col-sm-3 col-xs-12">
+                                    <div class="col-lg-2 col-lg-offset-3 col-sm-3 col-xs-12">
                                         <div class="actions">
                                             <div class="cost">
                                                 <sup>{{ CURRENCY.symbol }}</sup>
