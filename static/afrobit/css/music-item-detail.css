@@ -1,0 +1,54 @@
+.btn-deep-blue {color: #fff;background: #007bff;border-color: #007bff;font-weight: 700;}
+.btn-deep-blue:hover {background: #006ee4;border-color: #007bff;}
+.btn-deep-blue:hover:active {background: #006ee4;border-color: #007bff;}
+
+.my-cart-b {max-width: 100%;min-width:inherit;}
+.artist .purchase-album:first-child {margin-top: 0;}
+.artist .purchase-album {margin: 30px auto 0; float:none; height: 50px; font-size: 17px}
+
+.artist .profile {margin: auto; float: none;}
+.artist .profile .photo {background-size: cover; background-position: center; border-radius: 100px; height: 200px; width: 200px; margin-left: 47px;}
+.artist .name {margin-top:20px}
+
+.artist .personal-detail {margin-top: 50px; margin-bottom: 50px;}
+
+.artist .songs li {height: 130px; padding: 20px; margin: 20px}
+.artist .songs li div:last-of-type {padding-right: 0}
+.artist .songs .actions .cost {float: right}
+.artist .songs .actions button {float: right;}
+.artist .songs audio {margin-top: 15px; margin-left: -12px}
+.artist .songs .cover-image {background-size: cover;background-position: center;border-radius: 50px;height: 90px;width: 90px;}
+
+.artist .bottom-side {margin-top: 40px}
+.artist .bottom-side span {font-size: 25px}
+.artist .personal-detail .cost strong, .artist .bottom-side strong {font-size: 30px;}
+.artist .songs .cost strong {font-size: 25px}
+.artist .songs li > div:nth-child(3) button {clear: both}
+.artist .personal-detail .cost sup, .artist .songs .cost sup, .artist .bottom-side sup {top:-1.3em; margin-left: 12px}
+
+.content>.container {padding: 150px 0 300px;}
+
+@media (max-width: 767px) {
+    .artist .profile .photo {border-radius: 80px; height: 150px; width: 150px; margin-left: -30px}
+    .artist .purchase-album:first-child {margin-top: 30px;}
+    .artist .songs .cover-image{border-radius: 40px; height: 50px; width: 50px;}
+
+    .artist .personal-detail {text-align: center}
+    .artist .songs .cover-image {display: block; float: none;}
+    .artist .songs audio {width: -webkit-fill-available}
+    .artist .songs .actions .cost {float: none;}
+    .artist .songs .actions button {float: none; margin-top: 30px}
+    .artist .songs .cover-image {margin: auto}
+    .artist .songs li {height: 360px;text-align: center;}
+    .artist .songs h3, .artist .songs .actions button, .artist .songs .actions audio, .artist .songs .actions .cost {margin: 20px auto 0}
+
+    .content>.container {padding: 220px 0 300px;}
+}
+@media (max-width: 1024px) and (min-width:426px) {
+    .artist .profile .photo {margin-left: 0}
+}
+
+@media (min-width: 1024px) and (max-width: 1300px) {
+    .artist .songs li > div:nth-child(3) {padding-right: 0;}
+    .artist .songs li > div:nth-child(3) {width: 30%!important;}
+}

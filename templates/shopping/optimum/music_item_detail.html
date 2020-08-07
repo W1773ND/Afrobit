@@ -16,16 +16,9 @@
 {% endblock %}
 {% block head_style %}
     {{ block.super }}
-    <style>
-        .my-cart-b {max-width: 90%; min-width:inherit}
-    </style>
-
-{% endblock %}
-
-{% block head_js %}
-    {{ block.super }}
     <link rel="stylesheet" href="{% static 'kakocase/css/product-detail.css' %}" type="text/css" media="screen" />
     <link rel="stylesheet" href="{% static 'ikwen/swiper/css/swiper.min.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'afrobit/css/music-item-detail.css' %}" type="text/css" media="screen" />
 {% endblock %}
 
 {% block header %}
@@ -63,109 +56,115 @@
 {% block content %}
 {#    {% cache 300 music_item_detail_content product.artist.slug product.slug %}#}
     <div class="content">
-        <div class="single-wl3">
-            <div class="container">
-                <div class="single-grids row">
-                    <div class="col-sm-6  col-md-7  col-lg-8 single-grid">
-                        <div class="single-top">
-                            <div class="single-left">
-                                <div class="swiper-container gallery-top">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <img src="{% get_media_prefix %}{{ product.image.name }}"
-                                                 class="img-responsive">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-5 col-lg-4 mobile-cntr">
-                        <div class="single-right simpleCart_shelfItem">
-                            {% url 'music_item_detail' product.artist.slug product.slug as product_url %}
-                            <span class="hidden item_id">{{ product.id }}</span>
-                            <span class="hidden item_image">{% get_media_prefix %}{{ product.image.name }}</span>
-                            <span class="hidden item_url">{{ product_url }}</span>
-                            <span class="hidden item_type">music</span>
-                            <span class="hidden item_price">{{ product.cost|currency:CURRENCY.code }}</span>
-                            <span class="hidden item_packing_price">0</span>
-                            <span class="hidden item_quantity">1</span>
-                            <span class="hidden item_size">-------</span>
-
-                            <div class="details">
-                                <h4 class="item_name">{{ product }}</h4>
-                                <p class="price item-price-verbose">{{ CURRENCY.symbol }} {{ product.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</p>
-
-                                <button data-text="Add To Cart" class="my-cart-b item_add" data-is-music="music">
-                                    {% trans "Add To Cart" %}
-                                    <div class="mask"></div>
-                                </button>
-                                <div class="social-icon hidden-xs">
-                                    <div class="fb-share-button" data-href="{{ service.url }}{{ product_uri }}{% if is_dara %}?referrer={{ user.id }}{% elif request.GET.referrer %}?referrer={{ request.GET.referrer }}{% endif %}" data-layout="button" data-mobile-iframe="true">
-                                        <a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php">{% trans "Share" %}</a>
-                                    </div>
-                                    <a class="twitter-share-button" href="https://twitter.com/intent/tweet?url={{ service.url }}{{ product_uri }}{% if is_dara %}?referrer={{ user.id }}{% elif request.GET.referrer %}?referrer={{ request.GET.referrer }}{% endif %}" data-size="small">Tweet</a>
-                                </div>
-                                <div class="row visible-xs">
-                                    <div class="col-sm-offset-2 col-sm-4 col-xs-4" data-href="{{ service.url }}{{ product_uri }}{% if is_dara %}?referrer={{ user.id }}{% elif request.GET.referrer %}?referrer={{ request.GET.referrer }}{% endif %}" data-layout="button" data-mobile-iframe="true">
-                                        <a class="product-social-share btn btn-block" target="_blank"  href="https://www.facebook.com/sharer/sharer.php?u={{ service.url }}{{ product_uri }}"  style="background: #3b5998;">
-                                            <i class="fa fa-facebook-official"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-xs-4">
-                                        <a class="product-social-share btn btn-block" data-toggle="modal" data-target="#twitter-share" href="https://twitter.com/intent/tweet?url={{ service.url }}{{ product_uri }}{% if is_dara %}%3Freferrer={{ user.id }}{% elif request.GET.referrer %}%3Freferrer={{ request.GET.referrer }}{% endif %}" style="background: #1da1f2;">
-                                            <i class="fa fa-twitter-square"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <button class="product-social-share btn btn-block" data-toggle="modal" data-target="#whatsapp-share" style="background: #25d366;">
-                                            <i class="fa fa-whatsapp"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clearfix"> </div>
-                    </div>
+        <div class="container">
+            <div class="artist">
+                <div class="recent-left profile">
+                    <div class="photo" style="background-image: url({% get_media_prefix %}{{ product.image.small_name }});"></div>
+                    <div class="clearfix"></div>
                 </div>
-                <div class="row">
-                    <div class="tab-wl3" style="margin-top: 3em">
-                            <div class="container">
-                                <div id="suggestions" class="col-md-3 single-grid1">
-                                    <h3>{% trans "Suggestions" %}</h3>
-                                    <div>
-                                        <audio id="listen" controls>
-                                            <source src="{% get_media_prefix %}previews/songs/Mama.mp3" type="audio/mp3">
+                <h4 class="name text-center">{{ product.artist }}</h4>
+                <div class="col-sm-offset-2 col-sm-8 personal-detail">
+                    {% if product.download_link or product.song_set %}
+                        <ul class="col-sm-6">
+                            <li><h1>{{ product.title }}</h1></li>
+                            <li class="cost"><sup>{{ CURRENCY.symbol }}</sup><strong>{{ product.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</strong></li>
+                        </ul>
+                    <div class="clearfix visible-xs"></div>
+                    {% endif %}
+                    <div class="col-sm-6">
+                        {% if not product.album and product.download_link %}
+                            <li>
+                                <a href="{{ product.download_link }}" data-text="Buy Song" class="btn btn-sm btn-deep-blue purchase-album col-xs-10 col-sm-10 col-sm-offset-2" data-is-music="music">
+                                    <i class="fa-download fa" style="margin-right: 10px"></i>{% trans "Download" %}
+                                    <div class="mask"></div>
+                                </a>
+                            </li>
+                        {% elif product.song_set %}
+                            <button data-text="Buy Album" class="btn btn-sm btn-deep-blue purchase-album col-xs-10 col-sm-10 col-sm-offset-2" data-is-music="music">
+                                {% trans "Buy album" %}
+                                <div class="mask"></div>
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="songs">
+                    {% if product.song_set %}
+                        <ul>
+                            {% for song in product.song_set.all %}
+                                <li class="has-shade">
+                                    <div class="col-xs-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.cover }});"></div>
+                                    <div class="col-lg-3 col-lg-offset-2 col-sm-6 col-sm-offset-1 col-xs-12 ">
+                                        <div class="title">
+                                            <h3>{{ song.title|truncatechars:30 }}</h3>
+                                        </div>
+                                        <audio id="listen" controls controlsList="nodownload">
+                                            <source src="{% get_media_prefix %}{{ song.preview }}" type="audio/mp3">
                                         </audio>
                                     </div>
-                                    <div class="row">
-                                        {% for product in suggestion_list  %}
-                                        {% url 'music_item_detail' product.artist.slug product.slug as product_url %}
-                                        <div class="col-sm-6 suggestion">
-                                            <div class="recent-left">
-                                                <a href="{{ product_url }}">
-                                                    <img class="img-responsive " src="{% get_media_prefix %}{{ product.image.small_name }}" alt="">
-                                                </a>
+                                    <div class="col-lg-2 col-lg-offset-4 col-sm-3 col-xs-12">
+                                        <div class="actions">
+                                            <div class="cost">
+                                                <sup>{{ CURRENCY.symbol }}</sup>
+                                                <strong>{{ song.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</strong>
+                                                <div class="clearfix"></div>
                                             </div>
-                                            <div class="recent-right">
-                                                <h6 class="best2">
-                                                    <a href="{{ product_url }}">
-                                                    {{ product.name }}
-                                                    </a>
-                                                </h6>
-                                                {% if config.show_prices %}
-                                                    <span class=" price-in1">{{ CURRENCY.symbol }} {{ product.retail_price|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</span>
-                                                {% endif %}
-                                            </div>
-                                            <div class="clearfix"> </div>
+                                            <button data-text="Add To Cart" class="my-cart-b item_add" data-is-music="music">
+                                                {% trans "Add To Cart" %}
+                                                <div class="mask"></div>
+                                            </button>
                                         </div>
-                                        {% endfor %}
                                     </div>
-                                </div>
-                            </div>
-                            <div class="clearfix"> </div>
-                        </div>
+                                    <div class="clearfix"></div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <ul>
+                            {% with song=product %}
+                                <li class="has-shade">
+                                    <div class="col-xs-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.cover }});"></div>
+                                    <div class="col-lg-3 col-lg-offset-2 col-sm-6 col-sm-offset-1 col-xs-12 ">
+                                        <div class="title">
+                                            <h3>{{ song.title|truncatechars:30 }}</h3>
+                                        </div>
+                                        <audio id="listen" controls controlsList="nodownload">
+                                            <source src="{% get_media_prefix %}{{ song.preview }}" type="audio/mp3">
+                                        </audio>
+                                    </div>
+                                    <div class="col-lg-2 col-lg-offset-4 col-sm-3 col-xs-12">
+                                        <div class="actions">
+                                            <div class="cost">
+                                                <sup>{{ CURRENCY.symbol }}</sup>
+                                                <strong>{{ song.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</strong>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <button data-text="Add To Cart" class="my-cart-b item_add" data-is-music="music">
+                                                {% trans "Add To Cart" %}
+                                                <div class="mask"></div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </li>
+                            {% endwith %}
+                        </ul>
+                    {% endif %}
                 </div>
+                <div class="clearfix"></div>
+                {% if not product.album %}
+                    <div class="text-center bottom-side">
+                        <span>{% trans 'Album cost:' %}</span>
+                        <sup>{{ CURRENCY.symbol }}</sup>
+                        <strong>{{ product.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</strong>
+                        <div class="clearfix"></div>
+                        <button data-text="Buy Album" class="btn btn-sm btn-deep-blue purchase-album col-xs-10 col-sm-6 col-md-4" data-is-music="music">
+                            {% trans "Buy album" %}
+                            <div class="mask"></div>
+                        </button>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
