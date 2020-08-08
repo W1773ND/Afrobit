@@ -81,12 +81,12 @@
     <script>
         (function() {
             $('section.product-agile').css('background', '#ffffff');
-            $('section.product-agile:not(:first)').each(function(i) {
+            {% comment %}$('section.product-agile:not(:first)').each(function(i) {
                 {#if ((i%2) !== 1) $(this).css('background', '#1d1d1d');#}
                 if ((i%2) !== 1) {
                     $(this).addClass('black-section');
                 }
-            });
+            });{% endcomment %}
             $(".modal-dialog .save").click(function () {
                 var email = $('input#email').val()
                 if (!email) return false
