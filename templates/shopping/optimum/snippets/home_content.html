@@ -1,50 +1,80 @@
 {% load i18n static humanize user_agents media_from_provider currency %}
-<div id="banner-top" class="banner-w3">
-    <div class="demo-1">
-        <div class="swiper-container">
-            <!-- Additional required wrapper -->
-            <div class="swiper-wrapper">
-                <!-- Slides -->
-                {% for slide in slideshow %}
-                    <div class="swiper-slide">
-                    {% if slide.image.name %}
-                        <div class="core-slider_item">
-                            {% if request|is_mobile %}
-                                <div class="slide" style="background-image: url({% get_media_prefix %}{{ slide.image.name }})">
-                                    {% if slide.cta %}
-                                        <div class="cta">
-                                            <a href="{% url 'shopping:smart_object_detail' slide.slug %}" class="button1 has-shade">{{ slide.cta }}</a>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            {% else %}
-                                <img src="{% get_media_prefix %}{{ slide.image.name }}" class="img-responsive" alt="">
-                            {% endif %}
-                            {% if slide.title %}
-                                <h2 class="banner-title">{{ slide.title|safe }}</h2>
-                            {% endif %}
-                            {% if slide.cta %}
-                                <div class="cta">
-                                    <a href="{% url 'shopping:smart_object_detail' slide.slug %}" class="button1">{{ slide.cta }}</a>
-                                </div>
+<div class="pre-content" {% comment %}style="background: #fff"{% endcomment %}>
+    <div id="banner-top-pc" class="banner-w3 hidden-sm hidden-xs">
+        <div class="demo-1">
+            <div class="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    {% for slide in slideshow %}
+                        <div class="swiper-slide">
+                        {% if slide.image.name %}
+                            <div class="core-slider_item">
+                                {% if request|is_mobile %}
+                                    <div class="slide" style="background-image: url({% get_media_prefix %}{{ slide.image.name }})">
+                                        {% if slide.cta %}
+                                            <div class="cta">
+                                                <a href="{% url 'shopping:smart_object_detail' slide.slug %}" class="button1 has-shade">{{ slide.cta }}</a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <img src="{% get_media_prefix %}{{ slide.image.name }}" class="img-responsive" alt="">
+                                {% endif %}
+                                {% if slide.title %}
+                                    <h2 class="banner-title">{{ slide.title|safe }}</h2>
+                                {% endif %}
+                                {% if slide.cta %}
+                                    <div class="cta">
+                                        <a href="{% url 'shopping:smart_object_detail' slide.slug %}" class="button1">{{ slide.cta }}</a>
+                                    </div>
+                                {% endif %}
+                            </div>
                             {% endif %}
                         </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="banner-top-mobil" class="banner-w3 visible-sm visible-xs">
+        <div class="demo-1">
+            <div class="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    {% for slide in slideshow %}
+                        <div class="swiper-slide">
+                        {% if slide.image.name %}
+                            <div class="core-slider_item">
+                                <a href=" {% if slide.cta %} {% url 'shopping:smart_object_detail' slide.slug %}{% else %}{% endif %}">
+                                    <img src="{% get_media_prefix %}{{ slide.image.name }}" class="img-responsive" alt="">
+                                </a>
+                            </div>
                         {% endif %}
-                    </div>
-                {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <div id="content">
     {% if fw_section and fw_section.image.name %}
-        <section class="fw-section" style="background-image: url({% get_media_prefix %}{{ fw_section.image.name }})">
+        <section class="fw-section hidden-sm hidden-xs" style="background-image: url({% get_media_prefix %}{{ fw_section.image.name }})">
             <div class="container-fluid">
                 <div class="button" style="float: right">{% url 'shopping:smart_object_detail' fw_section.slug as smart_object_detail_url %}
                     <a href="{{ smart_object_detail_url }}" class="button1 cta" style="border: none">
                         {{ fw_section.cta }}
                     </a>
                 </div>
+            </div>
+        </section>
+        <section class="fw-section visible-sm visible-xs">
+            <div class="container-fluid">
+                {% url 'shopping:smart_object_detail' fw_section.slug as smart_object_detail_url %}
+                <a href="{{ smart_object_detail_url }}"><img class="img-responsive" src="{% get_media_prefix %}{{ fw_section.image.name }}"></a>
             </div>
         </section>
     {% endif %}
@@ -170,7 +200,7 @@
                                                 </div>
                                             {% endif %}
                                             {% if config.auto_manage_sales and product.on_sale %}
-                                                <div class="ribben1">
+                                                <div class="ribbon">
                                                     <p>{% trans "SALE" context 'Sale on a product' %}</p>
                                                 </div>
                                             {% endif %}
@@ -241,17 +271,17 @@
                                         </figure>
                                     </div>
                                     {% if product.stock == 0 %}
-                                        <div class="ribben2">
+                                        <div class="ribbon ribbon-danger" >
                                             <p>{% trans "SOLD OUT" %}</p>
                                         </div>
                                     {% else %}
                                         {% if product.badge_text %}
-                                            <div class="ribben">
+                                            <div class="ribbon ribbon-info">
                                                 <p>{{ product.badge_text }}</p>
                                             </div>
                                         {% endif %}
                                         {% if config.auto_manage_sales and product.on_sale %}
-                                            <div class="ribben1">
+                                            <div class="ribbon">
                                                 <p>{% trans "SALE" context 'Sale on a product' %}</p>
                                             </div>
                                         {% endif %}

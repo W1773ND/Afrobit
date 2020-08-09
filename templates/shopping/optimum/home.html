@@ -14,6 +14,7 @@
 
 {% block page_title %}
     <title>{{ service.project_name }} - Home</title>
+    <div id="top"></div>
 {% endblock %}
 
 {% block head_style %}
@@ -48,7 +49,6 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div id="top"></div>
     {% if user.is_staff %}
         {% include 'shopping/optimum/snippets/home_content.html' %}
     {% else %}

@@ -125,7 +125,7 @@ h2 {color: #333}
 .my-cart-b:not(.sold-out):hover, .my-cart-b:not(.sold-out):focus, .my-cart-b:not(.sold-out):active {background: #1d1d1d;border-color: #f4d126;color: #f4d126;}
 .product-about h6 a {color: #202120;}
 .recent-right a:hover {color: #1d1d1d}
-.price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d}
+.price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d; color: #f4d126}
 .ui-widget-header {background: #1d1d1d;}
 p.price {color: #1d1d1d;}
 .left-tab > li > a {background-color: #1d1d1d;color: #f4d126;}
@@ -141,7 +141,7 @@ span.price-in1 {color: #1d1d1d;}
 .top-right .dropdown-menu li a.confirm-checkout {line-height: 34px;border-radius: 3px;background: #1d1d1d;clear: both;color: #f4d126;display: block;font-weight: 700;text-align: center;text-transform: uppercase;transition: background-color .3s;width: 100%;}
 
 
-.swiper-container {margin-top: 55px;}
+.swiper-container {/* padding-top: 0px; */}
 
 .banner-title {color: #f5f5f5;position: absolute;top: 30vh;left: 40px;font-size: 70px;font-weight: 600;}
 
@@ -186,12 +186,13 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
 @media (max-width: 767px) {
     .back-to-top {font-size: 10vw;}
     .banner-title {display: none!important;}
-    .banner-w3 {margin-top: 0!important;}
+    .banner-w3 {/* margin-top: 0!important; */padding-top: 175px;}
     .core-slider_item .cta {left: 0vw;}
     .core-slider_item .cta a.button1 {padding: 15px 0;}
     .checkout-header {margin-top: 170px !important;}
     .header-xs h3 { margin-left: 25px; margin-top: -27px }
     .ribbon {right: -6%}
+    .swiper-container {/* padding-top: 175px; */}
 }
 
 
@@ -209,18 +210,3 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
     .price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d;color: #fff}
     .mobile-cntr {margin-top: 120px;}
 }
-
-                .navbar {background: #FFF; position: fixed}
-                .top-right {float: right}
-                .nav-container {padding: 8px 0}
-                .site-summary {background: #FFF; height: 500px; margin-top: 50px; position: absolute;transition : all 0.9s ease-in;-moz-transition: all 0.9s ease-in;-webkit-transition: all 0.9s ease-in; overflow: hidden;  width: 100%; z-index: 2;}
-                .site-summary.scrolling {margin-top: -550px;}
-                .edge-swipe-overlay {z-index: 9999}
-                .navbar-default .navbar-toggle .icon-bar {background-color: #fff;}
-                .navbar-default .navbar-toggle {border: none}
-                .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {background-color: transparent}
-                .cart.box_1 a.empty-cart.danger {color: #f41416}
-
-                @media (max-width: 768px) {
-                    .navbar {background: transparent;border-bottom: none}
-                }
