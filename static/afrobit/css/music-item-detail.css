@@ -9,7 +9,7 @@
 
 .artist .profile {margin: auto; float: none;}
 .artist .profile .photo {background-size: cover; background-position: center; border-radius: 100px; height: 200px; width: 200px; margin-left: 47px;}
-.artist .name {margin-top:20px}
+.artist .name {margin:20px 0 40px}
 
 .artist .personal-detail {margin-top: 50px; margin-bottom: 50px;}
 
@@ -27,7 +27,7 @@
 .artist .songs li > div:nth-child(3) button {clear: both}
 .artist .personal-detail .cost sup, .artist .songs .cost sup, .artist .bottom-side sup {top:-1.3em; margin-left: 12px}
 
-.content>.container {padding: 150px 0 300px;}
+.content>.container {padding: 100px 0 50px;}
 
 @media (max-width: 767px) {
     .artist .profile .photo {border-radius: 80px; height: 150px; width: 150px; margin-left: -30px}

@@ -17,7 +17,7 @@
 {% block head_style %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'ikwen/swiper/css/swiper.min.css' %}" type="text/css" media="screen" />
-    <link rel="stylesheet" href="{% static 'afrobit/css/music-item-detail.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'afrobit/css/music-item-detail.css' %}?v=20.08.11" type="text/css" media="screen" />
 {% endblock %}
 
 {% block header %}
@@ -62,13 +62,13 @@
                     <div class="clearfix"></div>
                 </div>
                 <h4 class="name text-center">{{ product.artist }}</h4>
-                <div class="col-sm-offset-2 col-sm-8 personal-detail">
-                    {% if product.download_link or product.song_set %}
+                <div class="col-sm-offset-2 col-sm-8 personal-detail" style="{% if not product.song_set and not product.download_link %}display: none{% endif %}">
+                    {% if product.song_set or product.download_link %}
                         <ul class="col-sm-6">
                             <li><h1>{{ product.title }}</h1></li>
                             <li class="cost"><sup>{{ CURRENCY.symbol }}</sup><strong>{{ product.cost|currency:CURRENCY.code|floatformat:CURRENCY.precision|intcomma }}</strong></li>
                         </ul>
-                    <div class="clearfix visible-xs"></div>
+                        <div class="clearfix visible-xs"></div>
                     {% endif %}
                     <div class="col-sm-6">
                         {% if not product.song_set and product.download_link %}
@@ -85,7 +85,7 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="clearfix"></div>
+                <div class="clearfix" style="{% if not product.song_set and not product.download_link %}display: none{% endif %}"></div>
                 <div class="songs">
                     {% if product.song_set %}
                         <ul>
