@@ -11,6 +11,7 @@ h1, h2, h3, h4, h5, h6, .cart-item-info h3 {font-family: 'Helvetica Neue Bold', 
 .footer-w3l {background: #262626;}
 .copy-section {background: #1d1d1d;}
 .footer-grid i {border: 1px solid #f0eded;}
+.footer-grid {font-size: 12px}
 
 .latest-text {background: #b1777700;bottom: inherit;text-align: center;height: inherit;font-size: 20px;float: left;font-weight: 600;width: 100%;/* clear: both; */position: relative;}
 .latest-text .desc {clear: both; font-weight: 300; float: left;}
@@ -141,7 +142,9 @@ span.price-in1 {color: #1d1d1d;}
 .top-right .dropdown-menu li a.confirm-checkout {line-height: 34px;border-radius: 3px;background: #1d1d1d;clear: both;color: #f4d126;display: block;font-weight: 700;text-align: center;text-transform: uppercase;transition: background-color .3s;width: 100%;}
 
 
-.swiper-container {/* padding-top: 0px; */}
+.swiper-pagination-bullet-active { background: #f4d126; opacity: 1 !important; }
+.swiper-pagination-bullet { height: 20px; opacity: .7; width: 20px }
+.swiper-pagination { text-align: right }
 
 .banner-title {color: #f5f5f5;position: absolute;top: 30vh;left: 40px;font-size: 70px;font-weight: 600;}
 
@@ -201,7 +204,7 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
     .modal .product-about .product-price em {color: #291705;}
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: transparent; color: #1d1d1d}
-    .ban-bottom-w3l, .new-arrivals-w3agile, .product-agile, .latest-w3, .footer-w3l, .products-agileinfo, .typo-w3, .mail-w3ls, .single-wl3 {padding: 5em 0 4em;}
+    .ban-bottom-w3l, .new-arrivals-w3agile, .product-agile, .latest-w3, .footer-w3l, .products-agileinfo, .typo-w3, .mail-w3ls, .single-wl3 {padding: 6em 0 1em;}
 }
 @media (min-width: 992px) {
     .navbar-nav {margin-top: 13px;}

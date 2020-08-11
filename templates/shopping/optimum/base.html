@@ -53,7 +53,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             {% endif %}
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
 
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.09.07.01" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.11.21.51" type="text/css" media="all" />
 		{% endblock %}
         {% block head_js %}
             <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -382,8 +382,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="copy-section">
-                <div class="container">
-                    <div class="copy-left">
+                <div class="container-fluid">
+                    <div class="copy-left" style="padding-left: 15px">
                         <p>&copy; {{ year }} <a href="{{ service.url}}" style="text-decoration: none"><strong>{{ config.company_name }}</strong></a>.
                             <span>{% trans "All rights reserved" %}</span>
                             - <a href="{{ settings.LEGAL_MENTIONS_URL }}" style="text-decoration: none">{% trans "Legal mentions" %}</a>
@@ -656,11 +656,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 //Check simpleCart_items : END
 
 
-                let headerTopH = $('.header-top').height(),
-                    headerBottomH = $('.header-bottom').height(),
-                    lastScrollTop = 0;
+
+                let lastScrollTop = 0;
                 $(window).scroll(function (e) {
-                        let scrollTop = $(window).scrollTop();
+                        let scrollTop = $(this).scrollTop();
                         let docHeight = $(document).height();
                         let winHeight = $(window).height();
                         let scrollPercent = (scrollTop) / (docHeight - winHeight);
@@ -766,9 +765,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     $('.header-xs .action.dropdown').removeClass('open')
                 }
 
-                if (winWidth < 768) {
-
-                }
                 $("a.action").click(function () {
                     if($(this).parent('.button-hover-handler').hasClass('active')){
                          $(this).parent('.button-hover-handler').removeClass('active');
@@ -789,7 +785,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     $('#no-logo').css('background', color)
                 }
                 ran_col();
-                let mySwiper = new Swiper ('.xs-swiper-container', {
+                let mobileSwiper = new Swiper ('.xs-swiper-container', {
                     // Optional parameters
                     direction: 'horizontal',
                     loop: true,

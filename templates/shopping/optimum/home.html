@@ -49,6 +49,9 @@
     </style>
 {% endblock %}
 {% block content %}
+    {% if not request.COOKIES.install_revoked %}
+        {% include 'core/snippets/pwa_promotion/banner.html' %}
+    {% endif %}
     {% if user.is_staff %}
         {% include 'shopping/optimum/snippets/home_content.html' %}
     {% else %}
@@ -65,10 +68,13 @@
     {{ block.super }}
     <script>
         (() => {
-            let mySwiper = new Swiper ('.swiper-container', {
-                direction: 'horizontal',
+            var mySwiper = new Swiper ('.swiper-container', {
+                slidesPerVieaw: 1,
+                spaceBetwen: 30,
                 loop: true,
-                autoplay: 4000
+                autoplay: 4000,
+                pagination:'.swiper-pagination',
+
             });
 
             $('.swiper-container').on('mouseenter', () =>{

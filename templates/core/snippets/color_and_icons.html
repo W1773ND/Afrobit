@@ -1,5 +1,5 @@
 {% load static %}
-<meta name="theme-color" content="{% if config.brand_color %}{{ config.brand_color }}{% else %}#1d1d1d{% endif %}">
+<meta name="theme-color" content="{% comment %}{% if config.brand_color %}{{ config.brand_color }}{% else %}{% endcomment %}#1d1d1d{% comment %}{% endif %}{% endcomment %}">
 
 <meta name="msapplication-TileColor" content="{% if config.brand_color %}{{ config.brand_color }}{% else %}#1d1d1d{% endif %}">
 <meta name="msapplication-navbutton-color" content="{% if config.brand_color %}{{ config.brand_color }}{% else %}#1d1d1d{% endif %}">
