@@ -53,7 +53,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             {% endif %}
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
 
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.11.21.51" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.16.00.25" type="text/css" media="all" />
 		{% endblock %}
         {% block head_js %}
             <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -91,96 +91,122 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 </h1>
                             </div>
                         </div>
-                        <div class="navigator col-sm-7">
+                        <div class="navigator col-sm-10">
                             <ul class="nav navbar-nav">
                                 <!-- Mega Menu -->
                                 {% for smart_category in smart_categories_level2 %}
-                                    <li class="dropdown level2 horizontal">
-                                        <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
+                                    <li class="dropdown level2 horizontal visible-md visible-lg">
+                                        <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ smart_category.title }} <b class="caret"></b></a>
+                                        <div class="dropdown-menu full-width">
+                                            <div class="col-md-3">
+                                                <div class="card">
+                                                    <div class="row card-body">
+                                                        <img class="col-sm-6" src="{% get_media_prefix %}{{ smart_category.image.name }}" alt="" style="margin-top: 2em"/>
+                                                        <div class="col-sm-6">
+                                                            <h3 class="card-title title">{{ smart_category.title }}</h3>
+                                                            <ul class="card-text">
+                                                            {% for category in smart_category.get_category_queryset %}
+                                                                <li><a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a></li>
+                                                            {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                 {% endfor %}
                                 {% for smart_category in smart_categories_level1 %}
-                                    <li class="dropdown horizontal">
-                                        <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
+                                    <li class="dropdown horizontal visible-md visible-lg">
+                                        <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ smart_category.title }} <b class="caret"></b></a>
+                                        <div class="dropdown-menu full-width">
+                                           <div class="col-md-3">
+                                               <h3 class="title">{{ smart_category.title }} <span class="pull-right cta"><a href="{% url 'shopping:smart_object_detail' smart_category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h3>
+                                           </div>
+                                            <div class="clearfix"></div>
+                                            {% for category in smart_category.get_product_queryset %}
+                                                {% if forloop.counter < 7 %}
+                                                    <div class="card col-md-2">
+                                                        {% url 'shopping:product_detail' smart_category.slug category.slug as product_url %}
+                                                        <a href="{{ product_url }}"><img class="card-img-top" src= "{% get_media_prefix %}{{ category.image.name }}"></a>
+                                                        <div class="card-body">
+                                                            <h4 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ category.name }}</a></h4>
+                                                            {{ category.description | safe }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     </li>
                                 {% endfor %}
                                 {% for category in menu_categories %}
-                                    <li class="dropdown horizontal">
-                                        <a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a>
+                                    <li class="dropdown horizontal visible-md visible-lg">
+                                        <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ category.name }} <b class="caret"></b></a>
+                                        <div class="dropdown-menu full-width">
+                                            <div class="col-md-3">
+                                                <h3 class="title">{{ category.name }} <span class="pull-right cta"><a href="{% url 'shopping:product_list' category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h3>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            {% for product in category.get_visible_products %}
+                                                {% if forloop.counter < 7 %}
+                                                    <div class="card col-md-2">
+                                                        {% url 'shopping:product_detail' category.slug product.slug as product_url %}
+                                                        <a href="{{ product_url }}"><img class="card-img-top" src= "{% get_media_prefix %}{{ product.image.name }}"></a>
+                                                        <div class="card-body">
+                                                            <h4 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ category.name }}</a></h4>
+                                                            <p class="card-text text-muted">{{ product.description }}</p>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     </li>
                                 {% endfor %}
-                                <li class="dropdown categories-menu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'See more ...' %} <span class="fa fa-sort-down pull-right"></span></a>
-                                    <ul class="dropdown-menu categories-menu">
-                                        {% for smart_category in smart_categories_level2 %}
-                                        <li class="dropdown vertical">
-                                            <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        {% endfor %}
-                                        {% for smart_category in smart_categories_level1 %}
-                                            <li class="dropdown vertical">
-                                                <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
-                                            </li>
-                                            <li class="divider"></li>
-                                        {% endfor %}
-                                        {% for category in menu_categories %}
-                                            <li class="dropdown vertical">
-                                                <a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a>
-                                            </li>
-                                            <li class="divider"></li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
                             </ul>
-                        </div>
-                        <div id="auth" class="nav navbar-nav navbar-right top-right{% if user.is_anonymous %} anonymous{% endif %}">
-                            <div class="dropdown cart-box">
-                                <div class="cart box_1">
-                                    <div class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <a href="{% url 'shopping:cart' %}"><i class="kkc-cart fa fa-shopping-bag"></i><span class="label label-danger simpleCart_quantity"></span></a>
-                                    </div>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="margin-top: 11px; min-width: 240px">
-                                        <li style="padding: 5px 15px" >
-                                            <div class="pull-left">
-                                                <span class="pull-left text-muted" style="font-size: 12px"></span>
-                                                <span class="simpleCart_total pull-left" style="font-size: 21px"></span>
-                                            </div>
-                                            <i class="pull-right text-danger fa fa-trash" data-toggle="modal" data-target="#confirm-empty-cart"
-                                               style="cursor: pointer; font-size: 18px" title="{% trans "Empty Cart" %}"></i>
-                                        </li>
-                                        <li class="cart-option" style="clear: both;padding-top: 35px">
-                                            <a href="{% url 'shopping:cart' %}" class="btn btn-block confirm-checkout">{% trans "Checkout" %}</a>
-                                        </li>
-{#                                        <div class="cart-details">#}
-{#                                            <a href="{% url 'shopping:cart' %}"><h5><div class="total"><span class="simpleCart_total"></span></div></h5></a>#}
-{#                                            <a href="javascript:;" class="empty-cart danger" data-toggle="modal" data-target="#confirm-empty-cart"><span style="font-weight: 400">{% trans "Empty Cart" %}</span></a>#}
-{#                                        </div>#}
-                                    </ul>
-                                </div>
-                            </div>
-                            {% if user.is_authenticated %}
-                                <ul class="pull-left">
-                                    <li id="user-menu" class="dropdown">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fa fa-user" aria-hidden="true"></i>
-                                        </a>
-                                        <ul class="user-menu dropdown-menu" aria-labelledby="user-menu">
-                                            <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
-                                            <li role="separator" class="divider" style="margin-bottom: 0; width: 100%"></li>
-                                            {% if user.is_staff %}
-                                                <li><a href="{% url 'ikwen:staff_router' %}">Admin</a></li>
-                                            {% endif %}
-                                            <li>{% url "ikwen:account_setup" as account_setup_url %}
-                                                <a href="{{ account_setup_url }}">{% trans "Account setup" %}</a>
+                            <div id="auth" class="nav navbar-nav navbar-right top-right{% if user.is_anonymous %} anonymous{% endif %}">
+                                <div class="dropdown cart-box">
+                                    <div class="cart box_1">
+                                        <div class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <a href="{% url 'shopping:cart' %}"><i class="kkc-cart fa fa-shopping-bag"></i><span class="label label-danger simpleCart_quantity"></span></a>
+                                        </div>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="margin-top: 11px; min-width: 240px">
+                                            <li style="padding: 5px 15px" >
+                                                <div class="pull-left">
+                                                    <span class="pull-left text-muted" style="font-size: 12px"></span>
+                                                    <span class="simpleCart_total pull-left" style="font-size: 21px"></span>
+                                                </div>
+                                                <i class="pull-right text-danger fa fa-trash" data-toggle="modal" data-target="#confirm-empty-cart"
+                                                   style="cursor: pointer; font-size: 18px" title="{% trans "Empty Cart" %}"></i>
                                             </li>
-                                            <li><a href="{% url "ikwen:logout" %}">{% trans "Logout" %}</a></li>
+                                            <li class="cart-option" style="clear: both;padding-top: 35px">
+                                                <a href="{% url 'shopping:cart' %}" class="btn btn-block confirm-checkout">{% trans "Checkout" %}</a>
+                                            </li>
                                         </ul>
-                                    </li>
-                                </ul>
-                            {% else %}
-                                <a class="btn button1 login" href="{% url 'ikwen:sign_in' %}">{% trans "Login" %}</a>
-                            {% endif %}
+                                    </div>
+                                </div>
+                                {% if user.is_authenticated %}
+                                    <ul class="pull-left">
+                                        <li id="user-menu" class="dropdown">
+                                            <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-user" aria-hidden="true"></i>
+                                            </a>
+                                            <ul class="user-menu dropdown-menu" aria-labelledby="user-menu">
+                                                <li style="padding: 3px 20px"> {{ user.get_short_name }} </li>
+                                                <li role="separator" class="divider" style="margin-bottom: 0; width: 100%"></li>
+                                                {% if user.is_staff %}
+                                                    <li><a href="{% url 'ikwen:staff_router' %}">Admin</a></li>
+                                                {% endif %}
+                                                <li>{% url "ikwen:account_setup" as account_setup_url %}
+                                                    <a href="{{ account_setup_url }}">{% trans "Account setup" %}</a>
+                                                </li>
+                                                <li><a href="{% url "ikwen:logout" %}">{% trans "Logout" %}</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                {% else %}
+                                    <a class="btn button1 login" href="{% url 'ikwen:sign_in' %}">{% trans "Login" %}</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -238,68 +264,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     </div>
                 </div>
             </div>
-            {% block horizontal_menu %}
-            <div class="nav-xs visible-xs appear animated">
-                <!-- Additional required wrapper -->
-                <div class="xs-swiper-container">
-                    <ul class="nav swiper-wrapper">
-                         {% for smart_category in smart_categories_level2 %}
-                         <li class="swiper-slide level2">
-                         {% if smart_category.image.name != '' %}
-                             <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">
-                                 <img src="{% get_media_prefix %}{{ smart_category.image.name }}" class="img-circle has-shade" style=""  alt="">
-                                 <span class="menu-label">{{ smart_category.title | truncatechars:10  }}</span>
-                             </a>
-                         </li>
-                         {% endif %}
-                         {% endfor %}
-                         {% for smart_category in smart_categories_level1 %}
-                         {% if smart_category.image.name != '' %}
-                         <li class="swiper-slide level1">
-                             <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">
-                                 <img src="{% get_media_prefix %}{{ smart_category.image.name }}" class="img-circle has-shade" style=""  alt="">
-                                 <span class="menu-label">{{ smart_category.title | truncatechars:10  }}</span>
-                             </a>
-                         </li>
-                         {% endif %}
-                         {% endfor %}
-                         {% for category in menu_categories %}
-                         {% if category.image.name != '' %}
-                         <li class="swiper-slide">
-                             <a href="{% url 'shopping:product_list' category.slug %}">
-                                 <img src="{% get_media_prefix %}{{ category.image.name }}" class="img-circle has-shade" style=""  alt="">
-                                 <span class="menu-label">{{ category.name | truncatechars:10 }}</span>
-                             </a>
-                         </li>
-                         {% endif %}
-                         {% endfor %}
-                         {% for category in menu_categories %}
-                         {% if category.image.name != '' %}
-                         <li class="swiper-slide">
-                             <a href="{% url 'shopping:product_list' category.slug %}">
-                                 <img src="{% get_media_prefix %}{{ category.image.name }}" class="img-circle has-shade" style=""  alt="">
-                                 <span class="menu-label">{{ category.name | truncatechars:10 }}</span>
-                             </a>
-                         </li>
-                         {% endif %}
-                         {% endfor %}
-                         {% for category in quick_access_categories %}
-                         {% if category.image.name != '' %}
-                         <li class="swiper-slide">
-                             <a href="{% url 'shopping:product_list' category.slug %}">
-                                 <img src="{% get_media_prefix %}{{ category.image.name }}" class="img-circle has-shade" style=""  alt="">
-                                 <span class="menu-label">{{ category.name | truncatechars:10 }}</span>
-                             </a>
-                         </li>
-                         {% endif %}
-                         {% endfor %}
-                    </ul>
-                {% if config.can_manage_currencies %}
-                    {% include 'shopping/snippets/currency_switcher.html' %}
-                {% endif %}
-                </div>
-            </div>
-            {% endblock horizontal_menu %}
             {% endcache %}
         {% endblock %}
         {% block banner %}{% endblock %}
@@ -658,12 +622,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
                 let lastScrollTop = 0;
-                $(window).scroll(function (e) {
+                $(window).scroll(function () {
                         let scrollTop = $(this).scrollTop();
                         let docHeight = $(document).height();
                         let winHeight = $(window).height();
                         let scrollPercent = (scrollTop) / (docHeight - winHeight);
                         let scrollPercentRounded = Math.round(scrollPercent*100);
+                        if (scrollPercentRounded !== 0) {
+                            $('.dropdown-menu.full-width').addClass('scrolled')
+                        }
                         if (scrollPercentRounded >= 12) {
                             $('.back-to-top').removeClass('hiding').addClass('showing')
                         } else {
@@ -671,19 +638,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         }
 
                     if (winWidth < 768) {
-                        let st = window.pageYOffset +1 || document.documentElement.scrollTop;
-                        if (st  > lastScrollTop ){
+                        if (scrollTop  > lastScrollTop ){
                             if(!($(".header-xs").hasClass('is-up'))){
                                 $(".header-xs").addClass('is-up');
-                                $('.nav-xs.animated').addClass('is-up');
                             }
                         } else {
                             if($(".header-xs").hasClass('is-up')){
                                 $(".header-xs").removeClass('is-up');
-                                $('.nav-xs.animated').removeClass('is-up');
                             }
                         }
-                        lastScrollTop = st;
+                        lastScrollTop = scrollTop;
                     }
                 });
                 $('.js-scrollTo').on('click', function() {
@@ -794,7 +758,19 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     freeMode: true,
                     centeredSlides: true,
                     slidesPerView: 'auto',
-                })
+                });
+
+                $('.navbar .dropdown').hover(function() {
+                    $(this).find('.dropdown-menu').first().removeClass('scrolled').stop(true, true).fadeIn(150);
+                    }, function() {
+                    $(this).find('.dropdown-menu').first().stop(true, true).fadeOut(105)
+                }).on('click', function (e) {
+                    e.stopPropagation();
+                });
+
+                // force text muted description on dropdown full-width
+                $('.dropdown-menu.full-width .card-body').find('p').addClass('text-muted')
+
             })()
 		</script>
         {% block js %}{% endblock %}
