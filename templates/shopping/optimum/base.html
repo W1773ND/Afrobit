@@ -128,10 +128,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                                 {% if forloop.counter < 7 %}
                                                     <div class="card col-md-2">
                                                         {% url 'shopping:product_detail' obj.category.slug obj.slug as product_url %}
-                                                        <a href="{{ product_url }}"><img class="card-img-top" src= "{% get_media_prefix %}{{ category.image.name }}"></a>
+                                                        <a href="{{ product_url }}"><img class="card-img-top" src= "{% get_media_prefix %}{{ obj.image.name }}"></a>
                                                         <div class="card-body">
-                                                            <h4 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ category.name }}</a></h4>
-                                                            {{ category.description | safe }}
+                                                            <h4 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ obj.name }}</a></h4>
+                                                            {{ obj.description | safe }}
                                                         </div>
                                                     </div>
                                                 {% endif %}
