@@ -105,8 +105,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                                         <div class="col-sm-6">
                                                             <h3 class="card-title title">{{ smart_category.title }}</h3>
                                                             <ul class="card-text">
-                                                            {% for category in smart_category.get_category_queryset %}
-                                                                <li><a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a></li>
+                                                            {% for obj in smart_category.get_category_queryset %}
+                                                                <li><a href="{% url 'shopping:product_list' obj.slug %}">{{ obj.name }}</a></li>
                                                             {% endfor %}
                                                             </ul>
                                                         </div>
@@ -124,10 +124,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                                <h3 class="title">{{ smart_category.title }} <span class="pull-right cta"><a href="{% url 'shopping:smart_object_detail' smart_category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h3>
                                            </div>
                                             <div class="clearfix"></div>
-                                            {% for category in smart_category.get_product_queryset %}
+                                            {% for obj in smart_category.get_product_queryset %}
                                                 {% if forloop.counter < 7 %}
                                                     <div class="card col-md-2">
-                                                        {% url 'shopping:product_detail' smart_category.slug category.slug as product_url %}
+                                                        {% url 'shopping:product_detail' obj.category.slug obj.slug as product_url %}
                                                         <a href="{{ product_url }}"><img class="card-img-top" src= "{% get_media_prefix %}{{ category.image.name }}"></a>
                                                         <div class="card-body">
                                                             <h4 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ category.name }}</a></h4>
