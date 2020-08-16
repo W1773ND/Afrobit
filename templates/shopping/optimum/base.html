@@ -95,7 +95,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                             <ul class="nav navbar-nav">
                                 <!-- Mega Menu -->
                                 {% for smart_category in smart_categories_level2 %}
-                                    <li class="dropdown level2 horizontal visible-md visible-lg">
+                                    <li class="dropdown level2 horizontal">
                                         <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ smart_category.title }} <b class="caret"></b></a>
                                         <div class="dropdown-menu full-width">
                                             <div class="col-md-3">
@@ -117,7 +117,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     </li>
                                 {% endfor %}
                                 {% for smart_category in smart_categories_level1 %}
-                                    <li class="dropdown horizontal visible-md visible-lg">
+                                    <li class="dropdown horizontal">
                                         <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ smart_category.title }} <b class="caret"></b></a>
                                         <div class="dropdown-menu full-width">
                                            <div class="col-md-3">
@@ -140,7 +140,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     </li>
                                 {% endfor %}
                                 {% for category in menu_categories %}
-                                    <li class="dropdown horizontal visible-md visible-lg">
+                                    <li class="dropdown horizontal">
                                         <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ category.name }} <b class="caret"></b></a>
                                         <div class="dropdown-menu full-width">
                                             <div class="col-md-3">
