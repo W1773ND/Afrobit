@@ -19,9 +19,14 @@ li.dropdown.horizontal > a {color: #1d1d1d;}
 li.dropdown.horizontal > a:hover {color: #f4d126!important;}
 
 .dropdown-menu.full-width.scrolled { display: none!important;}
-.dropdown-menu.full-width { position: fixed;top: 72px;width: 100vw;height: 60vh; transition: opacity 0.3s ease-in-out}
-.dropdown-menu.full-width li > * { color: #fff; font-size: 16px }
+.dropdown-menu.full-width {background: #1d1d1d;padding-top: 4vh;position: fixed;top: 72px;width: 100vw;height: 50vh;transition: opacity 0.3s ease-in-out;}
+.dropdown-menu.full-width li > * { color: #fff; font-size: 16px; font-weight: 600;}
 .dropdown-menu.full-width li > a:hover { color: #f4d126; }
+.dropdown-menu.full-width h4.title {margin: 0.5em 0; padding-bottom: 0.3em; border-bottom: 4px solid #444}
+.dropdown-menu.full-width h4.title, .dropdown-menu.full-width a {color: #ffffff;}
+.dropdown-menu.full-width span.cta .btn-outline-success {border-color: transparent; margin-top: -0.3em}
+.dropdown-menu.full-width a:hover {color: #f4d126;}
+.dropdown-menu.full-width img.card-img-top {max-width: 50%;padding-top: 1em;}
 
 .top-right {margin-top: 10px;}
 .footer-w3l {background: #262626;}
@@ -30,6 +35,7 @@ li.dropdown.horizontal > a:hover {color: #f4d126!important;}
 .footer-grid {font-size: 12px}
 .latest-text {background: #b1777700;bottom: inherit;text-align: center;height: inherit;font-size: 20px;float: left;font-weight: 600;width: 100%;/* clear: both; */position: relative;}
 .latest-text .desc {clear: both; font-weight: 300; float: left;}
+.latest-grid .title{ margin: 3vh 0 5vh }
 
 .my-cart-b:not(.sold-out):hover, .my-cart-b:not(.sold-out):focus, .my-cart-b:not(.sold-out):active {background: #46280a;border-color: #2b1906;}
 em.item_price {color: #1d1d1d;}
@@ -38,6 +44,7 @@ p.price {color: #349800;}
 .product-about h6 a {color: #349800;}
 span.price-in1 {color: #1d1d1d;}
 .navbar-nav > li > a:hover {color: #ebf0e9;}
+
 .left-tab > li > a {background: #371313;}
 .left-tab > li.active > a, .left-tab > li.active > a:hover, .left-tab > li.active > a:focus {background-color: #1d1d1d;}
 #reviews input[type="submit"] {border: solid 2px #037d09;font-weight: 700;background: none;color: #037d09;}
@@ -47,16 +54,9 @@ span.price-in1 {color: #1d1d1d;}
 ul.dropdown-menu.user-menu  li{color: #222222;}
 .footer-grid ul li a {color: #371111;}
 h2.title {padding: 2em 0.9em .5em;text-align: left;font-size: 2em;border-bottom: 4px solid;}
-.dropdown-menu.full-width {background: #1d1d1d}
-.dropdown-menu.full-width h3.title {margin: 0.5em 0; padding-bottom: 0.3em; border-bottom: 2px solid #ffffff}
-.dropdown-menu.full-width h3.title, .dropdown-menu.full-width a {color: #ffffff;}
-.dropdown-menu.full-width span.cta .btn-outline-success {border-color: transparent;}
-.dropdown-menu.full-width a:hover {color: #f4d126;}
-.dropdown-menu.full-width img.card-img-top {max-width: 50%;padding-top: 1em;}
 .product-tile .product-img figure > a {padding: 10px}
 .checkout-header {font-weight: 400}
 .latest-grid:hover .latest-text {bottom: inherit}
-
 .content {background: #fff}
 
 .lang-switcher {position: absolute;right: 5px;margin-top: 11px;color: #999;}
@@ -65,6 +65,7 @@ h2.title {padding: 2em 0.9em .5em;text-align: left;font-size: 2em;border-bottom:
 .product-about {padding-bottom: 2em}
 
 .navbar {min-height: 65px;}
+.navbar-nav > li > a { font-size: 16px}
 #auth.top-right {/* margin-right: 20px; */}
 #auth.top-right.anonymous {}
 #auth.top-right .login {margin: 4px 15px 0 25px;min-width: 120px;}

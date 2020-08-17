@@ -84,7 +84,7 @@
                                                 {% url 'shopping:product_list' category.slug as product_list_url %}
                                                 <a href="{{ product_list_url }}" class="category-tile">
                                                     <img src="{% get_media_prefix %}{{ category.image.name }}" class="img-responsive"  alt="">
-                                                    <div class="latest-text">
+                                                    <div class="title">
                                                         <h4>{{ category.name }}</h4>
                                                     </div>
                                                     {% if category.badge_text %}
@@ -235,13 +235,13 @@
 
             $(".top-filter .filter").click(function () {
                 if ($(this).hasClass('is-active')){
-                    $(this).removeClass("is-active")
+                    $(this).removeClass("is-active");
                     $(".filter-container .price-filter").addClass('is-off')
                 }else {
-                    $(this).addClass("is-active")
+                    $(this).addClass("is-active");
                     $(".filter-container .price-filter").removeClass('is-off')
                 }
-            })
+            });
         })()
     </script>
     {{ config.scripts|safe }}

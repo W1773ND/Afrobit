@@ -53,7 +53,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             {% endif %}
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
 
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.16.00.25" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.17.15.29" type="text/css" media="all" />
 		{% endblock %}
         {% block head_js %}
             <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -103,15 +103,37 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                                     <div class="row card-body">
                                                         <img class="col-sm-6" src="{% get_media_prefix %}{{ smart_category.image.name }}" alt="" style="margin-top: 2em"/>
                                                         <div class="col-sm-6">
-                                                            <h3 class="card-title title">{{ smart_category.title }}</h3>
+                                                            <h4 class="card-title title">{{ smart_category.title }}</h4>
                                                             <ul class="card-text">
                                                             {% for obj in smart_category.get_category_queryset %}
-                                                                <li><a href="{% url 'shopping:product_list' obj.slug %}">{{ obj.name }}</a></li>
+                                                                {% if forloop.counter < 10 %}
+                                                                    <li><a href="{% url 'shopping:product_list' obj.slug %}">{{ obj.name }}</a></li>
+                                                                {% endif %}
+                                                                {% if forloop.counter0 > 10 %}
+                                                                    {% if forloop.last %}
+                                                                        <li style="border-top: 3px dotted #464646; margin-top: 2vh; padding-top: 1vh"><a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{% trans "Show all..." %}</a></li>
+                                                                    {% endif %}
+                                                                {% endif %}
                                                             {% endfor %}
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-7 col-md-offset-1">
+                                                <h4 class="card-title title">{% trans "Featured" %}</h4>
+                                                {% for obj in smart_category.get_category_queryset %}
+                                                    {% if forloop.counter < 4 %}
+                                                        <div class="card col-md-4">
+                                                            {% url 'shopping:product_list' obj.slug as product_url %}
+                                                            <a href="{{ product_url }}"><img class="card-img-top" style="max-width: 100%" src= "{% get_media_prefix %}{{ obj.image.name }}"></a>
+                                                            <div class="card-body text-center">
+                                                                <h5 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ obj.name }}</a></h5>
+                                                                <p>{{ obj.description | safe }}</p>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
                                             </div>
                                         </div>
                                     </li>
@@ -121,7 +143,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                         <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ smart_category.title }} <b class="caret"></b></a>
                                         <div class="dropdown-menu full-width">
                                            <div class="col-md-3">
-                                               <h3 class="title">{{ smart_category.title }} <span class="pull-right cta"><a href="{% url 'shopping:smart_object_detail' smart_category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h3>
+                                               <h4 class="title">{{ smart_category.title }} <span class="pull-right cta"><a href="{% url 'shopping:smart_object_detail' smart_category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h4>
                                            </div>
                                             <div class="clearfix"></div>
                                             {% for obj in smart_category.get_product_queryset %}
@@ -130,7 +152,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                                         {% url 'shopping:product_detail' obj.category.slug obj.slug as product_url %}
                                                         <a href="{{ product_url }}"><img class="card-img-top" src= "{% get_media_prefix %}{{ obj.image.name }}"></a>
                                                         <div class="card-body">
-                                                            <h4 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ obj.name }}</a></h4>
+                                                            <h5 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ obj.name }}</a></h5>
                                                             {{ obj.description | safe }}
                                                         </div>
                                                     </div>
@@ -144,7 +166,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                         <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ category.name }} <b class="caret"></b></a>
                                         <div class="dropdown-menu full-width">
                                             <div class="col-md-3">
-                                                <h3 class="title">{{ category.name }} <span class="pull-right cta"><a href="{% url 'shopping:product_list' category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h3>
+                                                <h4 class="title">{{ category.name }} <span class="pull-right cta"><a href="{% url 'shopping:product_list' category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h4>
                                             </div>
                                             <div class="clearfix"></div>
                                             {% for product in category.get_visible_products %}
@@ -153,7 +175,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                                         {% url 'shopping:product_detail' category.slug product.slug as product_url %}
                                                         <a href="{{ product_url }}"><img class="card-img-top" src= "{% get_media_prefix %}{{ product.image.name }}"></a>
                                                         <div class="card-body">
-                                                            <h4 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ category.name }}</a></h4>
+                                                            <h5 class="card-title title" style="margin-top: 1em; margin-bottom: 0.3em"><a href="{{ product_url }}">{{ category.name }}</a></h5>
                                                             <p class="card-text text-muted">{{ product.description }}</p>
                                                         </div>
                                                     </div>
