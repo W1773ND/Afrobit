@@ -1,0 +1,10 @@
+/**
+    Document   : music-shop
+    Created on : August 14, 2020, 15:47
+    Author     : Kom Sihon
+    Description:
+        Additional basic display rules for music shop part of Afrobit
+*/
+
+.product-about {margin-top: 15px}
+.nav-xs {display: none !important}

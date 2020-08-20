@@ -17,7 +17,7 @@
 {% block head_style %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'ikwen/swiper/css/swiper.min.css' %}" type="text/css" media="screen" />
-    <link rel="stylesheet" href="{% static 'afrobit/css/music-item-detail.css' %}?v=20.08.11" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'afrobit/css/music-item-detail.css' %}?v=20.8.19" type="text/css" media="screen" />
 {% endblock %}
 
 {% block header %}
@@ -91,7 +91,7 @@
                         <ul>
                             {% for song in product.song_set.all %}
                                 <li class="has-shade simpleCart_shelfItem">
-                                    <div class="hidden-xs col-sm-12 cover-image" style="background-image: url({% get_media_prefix %}{{ song.image }});"></div>
+                                    <div class="hidden-xs cover-image" style="background-image: url({% get_media_prefix %}{{ song.image }});"></div>
                                     <span class="hidden item_id">{{ song.id }}</span>
                                     <span class="hidden item_url">{% url 'music_item_detail' song.artist.slug song.slug %}</span>
                                     <span class="hidden item_price">{{ song.cost|currency:CURRENCY.code }}</span>

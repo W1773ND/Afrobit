@@ -12,7 +12,8 @@ from ikwen_kakocase.shopping.views import FlatPageView
 from ikwen_kakocase.trade.provider.views import ProviderDashboard, CCMDashboard
 from ikwen_kakocase.kakocase.views import AdminHome, Welcome, GuardPage, FirstTime
 
-from afrobit.views import MusicItemDetail, SongList, AfrobitHome, confirm_checkout, Cart
+from afrobit.views import MusicItemDetail, SongList, AfrobitHome, confirm_checkout
+from mediashop.views import Cart
 
 admin.autodiscover()
 
@@ -29,6 +30,7 @@ urlpatterns = patterns(
     url(r'^sales/', include('ikwen_kakocase.sales.urls', namespace='sales')),
     url(r'^musicstore/', include('mediastore.urls', namespace='mediastore')),
     url(r'^music/', include('mediashop.urls', namespace='mediashop')),
+    url(r'^music/cart$', Cart.as_view(), name='song_list'),
     url(r'^music/songs$', SongList.as_view(), name='song_list'),
     url(r'^music/songs/(?P<slug>[-\w]+)$', SongList.as_view(), name='song_list'),
     url(r'^music/(?P<artist_slug>[-\w]+)/(?P<item_slug>[-\w]+)$', MusicItemDetail.as_view(), name='music_item_detail'),
