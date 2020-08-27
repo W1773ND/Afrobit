@@ -140,32 +140,6 @@
                                     <a href="{{ delivery_options_url }}">{% trans "Delivery Options" %}</a>
                                 </li>
                             {% endif %}
-                            <div class="divider"></div>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li role="presentation" class="music-store">
-                                    <a href="javascript:;" data-toggle="collapse" data-target="#music-store"
-                                       aria-expanded="true" style="padding-right: 0;">
-                                        {% trans "Music Store" %}
-                                        <i class="fa fa-fw fa-caret-down"></i>
-                                    </a>
-                                    <ul id="music-store" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
-                                        style="padding-left: 15px">
-                                        <li role="presentation" class="artists">
-                                            {% url 'mediastore:artist_list' as transaction_log_url %}
-                                            <a href="{{ transaction_log_url }}">{% trans "Artists" %}</a>
-                                        </li>
-                                        <li role="presentation" class="albums">
-                                            <a href="{% url 'mediastore:album_list' %}">
-                                                {% trans "Albums" %}
-                                            </a>
-                                        </li>
-                                        <li role="presentation" class="songs">
-                                            {% url 'mediastore:song_list' as songlist_url %}
-                                            <a href="{{ songlist_url }}">{% trans "Songs" %}</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
                             {% comment %}{% if perms.rewarding.ik_manage_rewarding %}
                                 <li role="presentation" class="continuous-rewarding">
                                     {% url 'rewarding:configuration' as rewarding_configuration_url %}

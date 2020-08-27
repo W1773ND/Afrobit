@@ -28,32 +28,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <link rel="stylesheet" href="{% static 'kakocase/swiper/css/swiper.min.css' %}">
             <link rel="stylesheet" href="{% static 'kakocase/css/optimum.css' %}?V=20.08.09.07.01" type="text/css" media="all" />
             <link rel="stylesheet" href="{% static 'ikwen/css/pwa.css' %}?v=20.5.29" type="text/css" media="all" />
-            {% if request.session.theme %}
-                {% with theme=request.session.theme %}
-                    <link rel='stylesheet' href="{% static 'kakocase/themes/' %}{{ theme.template_slug }}/{{ theme.slug }}.css" />
-                {% endwith %}
-                <style>
-                    .apply-theme-band {
-                        background-color: rgba(0, 0, 0, 0.6); bottom: 0; color: #FFFFFF; height: 15vh;
-                        padding: 10px 0; position: fixed; width: 100%;
-                    }
-                    .apply-theme-band p {margin-bottom: 10px; text-align: center}
-                    @media (min-width: 768px) {
-                        .apply-theme-band {height: 12vh}
-                        .apply-theme-band p {font-size: 15px; text-align: left}
-                    }
-                </style>
-            {% elif config.theme %}
-                {% with theme=config.theme %}
-                    <link rel='stylesheet' href="{% static 'kakocase/themes/' %}{{ theme.template.slug }}/{{ theme.slug }}.css" />
-                {% endwith %}
-            {% else %}
-                <link href="https://fonts.googleapis.com/css?family=Cagliostro" rel="stylesheet">
-                <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic,300" rel="stylesheet">
-            {% endif %}
+            <link href="https://fonts.googleapis.com/css?family=Cagliostro" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic,300" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
-
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?V=20.08.17.15.29" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?v=20.8.26" type="text/css" media="all" />
 		{% endblock %}
         {% block head_js %}
             <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -184,21 +162,29 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                         </div>
                                     </li>
                                 {% endfor %}
+                                <li class="dropdown horizontal">
+                                    <a href="http://music.afrobitproductions.com">Music</a>
+                                </li>
                             </ul>
                             <div id="auth" class="nav navbar-nav navbar-right top-right{% if user.is_anonymous %} anonymous{% endif %}">
                                 <div class="dropdown cart-box">
                                     <div class="cart box_1">
                                         <div class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                            <a href="{% url 'shopping:cart' %}"><i class="kkc-cart fa fa-shopping-bag"></i><span class="label label-danger simpleCart_quantity"></span></a>
+                                            <a href="{% url 'shopping:cart' %}">
+                                                <i class="kkc-cart fa fa-shopping-bag"></i>
+                                                <span class="label label-danger simpleCart_quantity"></span>
+                                            </a>
                                         </div>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="margin-top: 11px; min-width: 240px">
-                                            <li style="padding: 5px 15px" >
+                                            <li style="padding: 5px 15px">
                                                 <div class="pull-left">
                                                     <span class="pull-left text-muted" style="font-size: 12px"></span>
                                                     <span class="simpleCart_total pull-left" style="font-size: 21px"></span>
                                                 </div>
-                                                <i class="pull-right text-danger fa fa-trash" data-toggle="modal" data-target="#confirm-empty-cart"
-                                                   style="cursor: pointer; font-size: 18px" title="{% trans "Empty Cart" %}"></i>
+                                                <div class="empty-cart pull-right" data-toggle="modal" data-target="#confirm-empty-cart">
+                                                    <i class="text-danger fa fa-trash"
+                                                       style="cursor: pointer; font-size: 18px" title="{% trans "Empty Cart" %}"></i>
+                                                </div>
                                             </li>
                                             <li class="cart-option" style="clear: both;padding-top: 35px">
                                                 <a href="{% url 'shopping:cart' %}" class="btn btn-block confirm-checkout">{% trans "Checkout" %}</a>
@@ -325,9 +311,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                             <h4>{% trans "Important Pages" %}</h4>
                             <ul>
                                 <li><a href="{% url 'shopping:home' %}">{% trans "Home" %}</a></li>
-                                {% if config.allow_shopping and config.show_prices %}
-                                    <li><a href="{% url 'shopping:cart' %}">{% trans "Checkout" %}</a></li>
-                                {% endif %}
+                                <li><a href="{% url 'shopping:cart' %}">{% trans "Checkout" %}</a></li>
+                                <li><a href="http://music.afrobitproductions.com">Afrobit Music</a></li>
                                 {% if agreement_page %}
                                     <li><a href="{% url 'flatpage' agreement_page.url %}">{{ agreement_page.title }}</a></li>
                                 {% endif %}
@@ -580,6 +565,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     $('.toggle-cd-search .open').show();
                     $('.cd-search').removeClass('reveal').show();
                     $('.cd-search input').focus()
+                }).on('click', '.empty-cart', function () {
+                    $('#confirm-empty-cart').modal('show');
                 });
                 $('#content').on('click', '.product-tile button.my-cart-b:not(.sold-out)', function () {
                     let id = $(this).data('id'),

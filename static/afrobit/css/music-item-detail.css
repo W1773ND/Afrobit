@@ -18,7 +18,7 @@
 .artist .songs .actions .cost {float: right}
 .artist .songs .actions button {float: right;}
 .artist .songs audio {margin-top: 15px; margin-left: -12px}
-.artist .songs .cover-image {background-size: cover;background-position: center;border-radius: 50px;height: 90px;width: 90px;}
+.artist .songs .cover-image {background-size: cover;background-position: center;border-radius: 50px;height: 90px;width: 90px;float: left;}
 
 .artist .bottom-side {margin-top: 40px}
 .artist .bottom-side span {font-size: 25px}
@@ -40,10 +40,10 @@
     .artist .songs .actions .cost {float: none;}
     .artist .songs .actions button {float: none; margin-top: 30px}
     .artist .songs .cover-image {margin: auto}
-    .artist .songs li {height: 300px;padding: 10px;text-align: center;}
+    .artist .songs li {height: 270px;padding: 10px;text-align: center;}
     .artist .songs .title h4, .artist .songs .actions button, .artist .songs .actions audio, .artist .songs .actions .cost {margin: 20px auto 0}
 
-    .content>.container {padding: 220px 0 300px;}
+    .content>.container {padding: 75px 0 300px;}
 }
 @media (max-width: 1024px) and (min-width:426px) {
     .artist .profile .photo {margin-left: 0}

@@ -49,28 +49,8 @@
                                 <a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a>
                             </li>
                         {% endfor %}
-                        <li class="dropdown categories-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'See more ...' %} <span class="fa fa-sort-down pull-right"></span></a>
-                            <ul class="dropdown-menu categories-menu">
-                                {% for smart_category in smart_categories_level2 %}
-                                <li class="dropdown vertical">
-                                    <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
-                                </li>
-                                <li class="divider"></li>
-                                {% endfor %}
-                                {% for smart_category in smart_categories_level1 %}
-                                    <li class="dropdown vertical">
-                                        <a href="{% url 'shopping:smart_object_detail' smart_category.slug %}">{{ smart_category.title }}</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                {% endfor %}
-                                {% for category in menu_categories %}
-                                    <li class="dropdown vertical">
-                                        <a href="{% url 'shopping:product_list' category.slug %}">{{ category.name }}</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                {% endfor %}
-                            </ul>
+                        <li class="dropdown vertical">
+                            <a href="http://music.afrobitproductions.com">Music</a>
                         </li>
                         <li class="divider"></li>
                         {% if agreement_page %}
