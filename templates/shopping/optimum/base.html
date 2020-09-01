@@ -163,7 +163,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     </li>
                                 {% endfor %}
                                 <li class="dropdown horizontal">
-                                    <a href="http://music.afrobitproductions.com">Music</a>
+                                    <a href="http://music.afrobitproductions.com" target="_blank">{% trans "MUSIC" %}</a>
                                 </li>
                             </ul>
                             <div id="auth" class="nav navbar-nav navbar-right top-right{% if user.is_anonymous %} anonymous{% endif %}">
@@ -312,7 +312,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                             <ul>
                                 <li><a href="{% url 'shopping:home' %}">{% trans "Home" %}</a></li>
                                 <li><a href="{% url 'shopping:cart' %}">{% trans "Checkout" %}</a></li>
-                                <li><a href="http://music.afrobitproductions.com">Afrobit Music</a></li>
+                                <li><a href="http://music.afrobitproductions.com" target="_blank">Afrobit Music</a></li>
                                 {% if agreement_page %}
                                     <li><a href="{% url 'flatpage' agreement_page.url %}">{{ agreement_page.title }}</a></li>
                                 {% endif %}

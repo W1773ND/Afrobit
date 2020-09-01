@@ -1,0 +1,59 @@
+{% extends 'shopping/optimum/base.html' %}
+{% load i18n static humanize user_agents auth_tokens media_from_provider currency cache %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="abstract" content="{{ service.project_name }} - {{ config.slogan }}" />
+    <meta name="description" content="{{ config.description }}" />
+    <meta property="og:title" content="{{ service.project_name }}" />
+    <meta property="og:image" content="{% get_media_prefix %}{{ config.logo.name }}" />
+    <meta property="og:description" content="{{ config.description }}" />
+    <meta property="og:url" content="{{ service.url }}" />
+    <meta property="og:site_name" content="{{ service.domain|upper }}" />
+{% endblock %}
+
+{% block page_title %}
+    <title>{{ service.project_name }} - Home</title>
+    <div id="top"></div>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        .navbar {display: none}
+        #main {background: #fff; padding: 50px 0 100px; min-height: 450px}
+        #accessories, #music {height: 450px; background: center no-repeat; background-size: cover}
+        #accessories .btn, #music .btn {background: #fff; float: left; margin-top: 395px; width: 180px}
+        #accessories .btn {float: right}
+        @media (max-width: 767px) {
+            #accessories, #music {height: 300px}
+            #accessories .btn, #music .btn {float: none; margin: 245px auto 0;}
+        }
+        @media (min-width: 768px) and (max-width: 991px) {
+            #accessories, #music {height: 360px}
+            #accessories .btn, #music .btn {margin-top: 305px;}
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div id="main">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 30px">
+                <img src="{% static 'afrobit/img/afrobit-logo-transparent.png' %}" width="150" />
+            </div>
+            <div>
+                <div id="accessories" class="col-sm-6" style="background-image: url({% static 'afrobit/img/image-homepage-afrobitshop-accessoires.jpg' %})">
+                    <a href="{% url 'home' %}" class="btn btn-lg">{% trans "Goodies" %}</a>
+                </div>
+                <div id="music" class="col-sm-6" style="background-image: url({% static 'afrobit/img/image-homepage-afrobitshop-musique.jpg' %})">
+                    <a href="https://music.afrobitproductions.com" class="btn btn-lg">{% trans "Music" %}</a>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    {{ config.scripts|safe }}
+{% endblock %}

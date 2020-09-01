@@ -6,15 +6,30 @@ from django.contrib.auth.decorators import permission_required, user_passes_test
 
 from ikwen.core.views import Offline
 from ikwen.core.analytics import analytics
+from ikwen.accesscontrol.views import SignIn
 from ikwen.accesscontrol.utils import is_staff, update_push_subscription
-from ikwen_kakocase.shopping.views import FlatPageView
 
 from ikwen_kakocase.trade.provider.views import ProviderDashboard, CCMDashboard
-from ikwen_kakocase.kakocase.views import AdminHome, Welcome, GuardPage, FirstTime
-
-from afrobit.views import MusicItemDetail, SongList, AfrobitHome, confirm_checkout
+from ikwen_kakocase.trade.views import RetailerDashboard, LogicomDashboard
+from ikwen_kakocase.kakocase.views import AdminHome, MerchantList, Welcome, GuardPage, FirstTime
+from ikwen_kakocase.shopping.views import Home, FlatPageView
+from afrobit.views import GuardPage as AfrobitGuardPage
 
 admin.autodiscover()
+
+if getattr(settings, 'IS_RETAILER', False):
+    Dashboard = RetailerDashboard
+elif getattr(settings, 'IS_PROVIDER', False):
+    Dashboard = ProviderDashboard
+else:
+    Dashboard = LogicomDashboard
+
+if getattr(settings, 'IS_IKWEN', False):
+    LandingPage = MerchantList
+elif getattr(settings, 'IS_DELIVERY_COMPANY', False) or getattr(settings, 'IS_BANK', False):
+    LandingPage = SignIn
+else:
+    LandingPage = Home
 
 urlpatterns = patterns(
     '',
@@ -27,11 +42,6 @@ urlpatterns = patterns(
     url(r'^revival/', include('ikwen.revival.urls', namespace='revival')),
     url(r'^marketing/', include('ikwen_kakocase.commarketing.urls', namespace='marketing')),
     url(r'^sales/', include('ikwen_kakocase.sales.urls', namespace='sales')),
-    url(r'^musicstore/', include('mediastore.urls', namespace='mediastore')),
-    url(r'^music/', include('mediashop.urls', namespace='mediashop')),
-    url(r'^music/songs$', SongList.as_view(), name='song_list'),
-    url(r'^music/songs/(?P<slug>[-\w]+)$', SongList.as_view(), name='song_list'),
-    url(r'^music/(?P<artist_slug>[-\w]+)/(?P<item_slug>[-\w]+)$', MusicItemDetail.as_view(), name='music_item_detail'),
 
     url(r'^echo/', include('echo.urls', namespace='echo')),
     url(r'^daraja/', include('daraja.urls', namespace='daraja')),
@@ -40,7 +50,7 @@ urlpatterns = patterns(
     url(r'^currencies/', include('currencies.urls')),
 
     url(r'^ikwen/home/$', user_passes_test(is_staff)(AdminHome.as_view()), name='admin_home'),
-    url(r'^ikwen/dashboard/$', permission_required('trade.ik_view_dashboard')(ProviderDashboard.as_view()), name='dashboard'),
+    url(r'^ikwen/dashboard/$', permission_required('trade.ik_view_dashboard')(Dashboard.as_view()), name='dashboard'),
     url(r'^ikwen/CCMDashboard/$', permission_required('trade.ik_view_dashboard')(CCMDashboard.as_view()), name='ccm_dashboard'),
     url(r'^ikwen/theming/', include('ikwen.theming.urls', namespace='theming')),
     url(r'^ikwen/cashout/', include('ikwen.cashout.urls', namespace='cashout')),
@@ -54,7 +64,9 @@ urlpatterns = patterns(
     url(r'^guardPage/$', GuardPage.as_view(), name='guard_page'),
 
     url(r'^page/(?P<url>[-\w]+)/$', FlatPageView.as_view(), name='flatpage'),
+    url(r'^$', AfrobitGuardPage.as_view(), name='afrobit_guard_page'),
+    url(r'^home$', LandingPage.as_view(), name='home'),
     url(r'^offline.html$', Offline.as_view(), name='offline'),
-    url(r'^$', AfrobitHome.as_view(), name='home'),
-    url(r'^', include('ikwen_kakocase.shopping.urls', namespace='shopping'))
+    url(r'^', include('ikwen_kakocase.shopping.urls', namespace='shopping')),
 )
+
