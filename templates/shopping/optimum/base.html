@@ -31,7 +31,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <link href="https://fonts.googleapis.com/css?family=Cagliostro" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic,300" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
-            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?v=20.8.26" type="text/css" media="all" />
+            <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?v=20.9.7" type="text/css" media="all" />
 		{% endblock %}
         {% block head_js %}
             <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -40,10 +40,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
               <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
               <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
             <![endif]-->
+            <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+            <script src="{% static 'kakocase/js/jquery.min.js' %}"></script>
+            <script src="{% static 'kakocase/js/main.js' %}"></script>
         {% endblock %}
-        <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-        <script src="{% static 'kakocase/js/jquery.min.js' %}"></script>
-        <script src="{% static 'kakocase/js/main.js' %}"></script>
     </head>
     <body>
         <div id="top-notice-ctnr" style="display: none">
@@ -117,11 +117,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     </li>
                                 {% endfor %}
                                 {% for smart_category in smart_categories_level1 %}
+                                    {% url 'shopping:smart_object_detail' smart_category.slug as smart_category_url %}
                                     <li class="dropdown horizontal">
-                                        <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ smart_category.title }} <b class="caret"></b></a>
+                                        <a href="{{ smart_category_url }}" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ smart_category.title }} <b class="caret"></b></a>
                                         <div class="dropdown-menu full-width">
                                            <div class="col-md-3">
-                                               <h4 class="title">{{ smart_category.title }} <span class="pull-right cta"><a href="{% url 'shopping:smart_object_detail' smart_category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h4>
+                                               <h4 class="title">{{ smart_category.title }} <span class="pull-right cta"><a href="{{ smart_category_url }}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h4>
                                            </div>
                                             <div class="clearfix"></div>
                                             {% for obj in smart_category.get_product_queryset %}
@@ -140,11 +141,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     </li>
                                 {% endfor %}
                                 {% for category in menu_categories %}
+                                    {% url 'shopping:product_list' category.slug as category_url %}
                                     <li class="dropdown horizontal">
-                                        <a href="" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ category.name }} <b class="caret"></b></a>
+                                        <a href="{{ category_url }}" class="dropdown-toggle nav-menu" data-toggle="dropdown">{{ category.name }} <b class="caret"></b></a>
                                         <div class="dropdown-menu full-width">
                                             <div class="col-md-3">
-                                                <h4 class="title">{{ category.name }} <span class="pull-right cta"><a href="{% url 'shopping:product_list' category.slug %}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h4>
+                                                <h4 class="title">{{ category.name }} <span class="pull-right cta"><a href="{{ category_url }}" class="btn btn-outline-success">{% trans "Browse all..." %}</a></span></h4>
                                             </div>
                                             <div class="clearfix"></div>
                                             {% for product in category.get_visible_products %}

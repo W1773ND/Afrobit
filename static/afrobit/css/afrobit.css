@@ -217,18 +217,34 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
     #side-nav .panel-top .cover .company .name { float: left }
 }
 
-
-@media (min-width: 768px){
+@media (min-width: 768px) {
     .modal-content .my-cart-b {min-width: 80%; max-width: inherit;}
     .modal .product-about .product-price em {color: #291705;}
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: transparent; color: #1d1d1d}
     .ban-bottom-w3l, .new-arrivals-w3agile, .product-agile, .latest-w3, .footer-w3l, .products-agileinfo, .typo-w3, .mail-w3ls, .single-wl3 {padding: 6em 0 1em;}
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .product-about h6 {font-size: 15px}
+}
+
 @media (min-width: 992px) {
     .navbar-nav {margin-top: 13px;}
     .modal .product-about .product-price em {color: #291705;}
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d;color: #fff}
     .mobile-cntr {margin-top: 120px;}
+    .main-search {float: left; margin-top: 20px; width: 400px}
+    .main-search input {border: none;border-radius:5px;background: #f6f6f6;height: 40px;padding: 0 15px;width: 100%;}
+    .main-search input:focus {outline: none}
+}
+
+@media (min-width: 1200px) {
+    .navbar-nav {margin-top: 13px;}
+    .modal .product-about .product-price em {color: #291705;}
+    .toggle-cd-search .fa {color: #1d1d1d;}
+    .price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d;color: #fff}
+    .mobile-cntr {margin-top: 120px;}
+    .main-search {float: left;margin-top: 20px;width: 500px;}
 }
