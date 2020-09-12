@@ -1,0 +1,66 @@
+{% load i18n static %}
+<div class="modal fade" id="payment-methods" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-info">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{% trans "Pay now" %}</h4>
+            </div>
+            <div class="modal-body">
+                <form id="payment-start-flow" method="post">{% csrf_token %}
+                    <input type="hidden" id="payment-product-id" name="product_id" />
+                    <input type="hidden" id="amount" name="amount" />
+                    <input type="hidden" name="payment_conf" value="{% if payment_conf %}{{ payment_conf }}{% else %}default{% endif %}" />
+                    <ul class="row" style="padding-left: 0">
+                        <li class="col-sm-4 payment-method"
+                            {% if mtn_momo %}data-action-url="{% url mtn_momo.action_url_name %}"{% endif %}>
+                            <a class="logo" style="background: #ffca06" title="{% trans "Pay with MTN Mobile Money" %}">
+                                <img src="{% static 'ikwen/img/logo_mtn_mobile_money.jpg' %}" height="90"/>
+                            </a>
+                        </li>
+                        <li class="col-sm-4 payment-method om"
+                            {% if om %}data-action-url="{% url om.action_url_name %}?mean=orange-money"{% endif %}>
+                            <a class="logo" style="background: #15171e" title="{% trans "Pay with Orange Money" %}">
+                                <img src="{% static 'ikwen/img/logo-OM-200x166.png' %}" height="90" />
+                            </a>
+                        </li>
+                        {% if config.is_pro_version and paypal %}
+                            <li class="col-sm-4 payment-method" data-action-url="{% url paypal.action_url_name %}?mean=paypal">
+                                <a class="logo" href="#" style="border: 1px solid #eee">
+                                    <img src="{% static 'ikwen/img/payment-logo.jpg' %}" height="90" style="width: 100%"/>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="col-sm-4 payment-method yup"
+                            {% comment %}{% if om %}data-action-url="{% url om.action_url_name %}?mean=orange-money"{% endif %}{% endcomment %}>
+                            <span class="logo" style="background: #e60028" title="{% trans "Pay with YUP" %}">
+                                <img src="{% static 'econnect/img/logo_yup.png' %}" height="90" />
+                            </span>
+                        </li>
+                    </ul>
+                </form>
+                {% include 'core/snippets/spinner.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% if not payment_cancel_default %}
+<script>
+    (function() {
+        $('body').on('click', '.payment-start', function() {
+            let productId = $(this).data('product-id');
+            $('#payment-product-id').val(productId);
+            $('#payment-methods').modal('show');
+        }).on('click', '.payment-method:not(.processing)', function() {
+            if ($(this).hasClass('momo') || $(this).hasClass('yup')) {
+                ikwen.showFloatingNotice("{% trans "Unavailable for now" %}");
+                return;
+            }
+            let actionURL = $(this).data('action-url');
+            $('.payment-method').addClass('processing');
+            $('#payment-methods .spinner').show();
+            $('form#payment-start-flow').prop('action', actionURL).submit()
+        });
+    })()
+</script>
+{% endif %}

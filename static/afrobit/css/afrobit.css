@@ -15,6 +15,20 @@ h1, h2, h3, h4, h5, h6, .cart-item-info h3 {font-family: 'Helvetica Neue Bold', 
 .nav.navbar-nav > li.horizontal:hover {border-bottom: solid 5px #f4d126;}
 .filter-container { padding-top: 0; }
 
+#main-search .hide-search {color: #bbb;float: left;font-size: 35px;margin-top: 10px;margin-right: 30px;position: absolute;}
+#main-search input {border: none;height: 100%;width: 100%;}
+#main-search form {float: left; height: 100%; width: 100%}
+
+.navbar-results {clear: both}
+.navbar-results .stage {background: #fff; max-height: 300px;overflow: auto;padding-bottom: 10px;}
+.navbar-results .ik-li {border-bottom: 1px solid #eee; padding: 3px 0;}
+.navbar-results .ik-li .image {background: no-repeat center;background-size: cover;border-radius: 23px;float: left;height: 45px;width: 45px;}
+.navbar-results .ik-li .full_name {text-transform: capitalize;color: #666;font-weight: 700;}
+.navbar-results .ik-li .info {margin-left: 10px;max-width: 220px;float: left;}
+.navbar-results .ik-li .title {margin-top: 0;}
+.navbar-results .ik-li .type {text-transform: capitalize}
+.navbar-results .ik-li .about {height: 25px;margin-bottom: 0;overflow: hidden;}
+
 li.dropdown.horizontal > a {color: #1d1d1d;}
 li.dropdown.horizontal > a:hover {color: #f4d126!important;}
 
@@ -217,12 +231,60 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
     #side-nav .panel-top .cover .company .name { float: left }
 }
 
-@media (min-width: 768px) {
+@media (max-width: 991px) {
+    #main-search {
+        display: none;
+        background: #fff;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .15);
+        height: 55px;
+        margin-left: -15px;
+        position: fixed;
+        padding: 0;
+        top: 0;
+        width: 100%;
+        z-index: 1001;
+    }
+    #main-search input {padding: 10px 0 10px 40px;color: #545454;}
+    .navbar-results {border-top: 1px solid #eee}
+    .navbar-results .stage {padding-top: 10px;}
+    .navbar-results .ik-li {padding: 3px 10px;}
+    .navbar-results .ik-li .title {color: #545454;line-height: 10px;margin-top: 5px;}
+}
+
+@media (min-width: 992px) {
     .modal-content .my-cart-b {min-width: 80%; max-width: inherit;}
     .modal .product-about .product-price em {color: #291705;}
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: transparent; color: #1d1d1d}
     .ban-bottom-w3l, .new-arrivals-w3agile, .product-agile, .latest-w3, .footer-w3l, .products-agileinfo, .typo-w3, .mail-w3ls, .single-wl3 {padding: 6em 0 1em;}
+
+    #navbar .glyphicon.glyphicon-search {color: #d2d2d2;font-size: 15px;margin: 25px 0 0 10px;position: absolute;}
+    #main-search {
+        background: transparent;
+        display: block;
+        margin: 0;
+        padding-left: 0;
+        padding-right: 0;
+        position: static !important;
+        box-shadow: none;
+    }
+    #main-search input {
+        float: right;
+        width: 100%;
+        padding-left: 35px;
+    }
+
+    #main-search .glyphicon-search {color: #888;margin: 32px 0 0 10px;position: absolute}
+
+    form#search .spinner {
+        margin: 0 0 0 280px;
+    }
+
+    #navbar {height: 65px;}
+    .navbar-results {margin-top: 1px;float: left; width: 100%}
+    .navbar-results .stage {background: #fff;box-shadow: 1px 1px 9px 4px rgba(0, 0, 0, .1)}
+    .navbar-results .ik-li {padding: 3px}
+    #navbar .glyphicon {font-size: 21px}
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -235,9 +297,14 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d;color: #fff}
     .mobile-cntr {margin-top: 120px;}
-    .main-search {float: left; margin-top: 20px; width: 400px}
-    .main-search input {border: none;border-radius:5px;background: #f6f6f6;height: 40px;padding: 0 15px;width: 100%;}
-    .main-search input:focus {outline: none}
+    #main-search {float: left;height: 40px; margin-top: 20px; width: 400px}
+    #main-search input {border-radius:5px;background: #f6f6f6;padding: 0 0 0 35px;}
+    #main-search input:focus {outline: none}
+    
+    .navbar-results {box-sizing: content-box;margin-top: 0;margin-left: -45px;padding: 1px 45px 45px;}
+    .navbar-results .ik-li a {cursor: pointer; padding: 7px;}
+    .navbar-results .ik-li .info {margin-left: 15px;max-width: 265px;}
+    .navbar-results .ik-li .about {max-width: 240px;}
 }
 
 @media (min-width: 1200px) {
@@ -246,5 +313,10 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
     .toggle-cd-search .fa {color: #1d1d1d;}
     .price h3, .top-rates h3, .brand-w3l h3 {background: #1d1d1d;color: #fff}
     .mobile-cntr {margin-top: 120px;}
-    .main-search {float: left;margin-top: 20px;width: 500px;}
+    #main-search {float: left;margin-top: 20px;width: 500px;}
+    
+    .navbar-results .ik-li .info {max-width: 340px;}
+    .navbar-results .ik-li .about {max-width: 330px;}
+    #item-detail .navbar-results .ik-li .info {max-width: 305px}
+    #item-detail .navbar-results .ik-li .about {max-width: 310px;}
 }
