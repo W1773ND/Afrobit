@@ -73,7 +73,8 @@ h2.title {padding: 2em 0.9em .5em;text-align: left;font-size: 2em;border-bottom:
 .latest-grid:hover .latest-text {bottom: inherit}
 .content {background: #fff}
 
-.lang-switcher {position: absolute;right: 5px;margin-top: 11px;color: #999;}
+.lang-switcher {/* position: absolute; *//* right: 5px; *//* margin-top: 11px; *//* color: #999; */}
+.edge-panel-left-container {position: absolute; z-index: 1001}
 .currency-switcher select, .lang-switcher select {/* color: #fff; */}
 .product-tile .product-img figure > a .grid-img img {border-radius: 7px;}
 .product-about {padding-bottom: 2em}
@@ -249,6 +250,13 @@ section.fw-section { background-color: #FFF; background-size: auto 100% }
     .navbar-results .stage {padding-top: 10px;}
     .navbar-results .ik-li {padding: 3px 10px;}
     .navbar-results .ik-li .title {color: #545454;line-height: 10px;margin-top: 5px;}
+    .bottom-cntr {
+        margin-top: 160px;
+        position: absolute;
+        right: 10px;
+    }
+    .lang-switcher {margin-top: 0}
+    .top-edge-panel .currency-switcher i.fa {display: none !important;}
 }
 
 @media (min-width: 992px) {
