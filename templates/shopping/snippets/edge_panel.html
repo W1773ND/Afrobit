@@ -22,10 +22,8 @@
                                 {% if config.contact_email %}<div class="email"><i class="fa fa-envelope" aria-hidden="true"></i>{{ config.contact_email }}</div>{% endif %}
                             </div>
                             <div class="bottom-cntr">
-                                    {% include 'shopping/snippets/language_switcher.html' %}
-                                {% if config.can_manage_currencies %}
-                                    {% include 'shopping/snippets/currency_switcher.html' %}
-                                {% endif %}
+                                {% include 'core/snippets/currency_switcher.html' %}
+                                {% include 'shopping/snippets/language_switcher.html' %}
                             </div>
                         </div>
                     </div>

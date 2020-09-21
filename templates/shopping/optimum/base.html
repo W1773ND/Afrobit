@@ -33,6 +33,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <link href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700|Poppins:300,300i,400,700&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="{% static 'afrobit/css/afrobit.css' %}?v=20.9.16" type="text/css" media="all" />
 		{% endblock %}
+        <script>
+            navigator.serviceWorker.getRegistrations().then(
+                function(registrations) {
+                    for(let registration of registrations) {
+                        if (registration.active.scriptURL.indexOf('sw.js') > 0) registration.unregister();
+                    }
+            });
+        </script>
         {% block head_js %}
             <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
             <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -365,6 +373,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <div class="push-right hidden-sm hidden-xs">
                         {% include 'shopping/snippets/language_switcher.html' %}
                     </div>
+                    <div class="pull-right hidden-sm hidden-xs">
+                        {% include 'core/snippets/currency_switcher.html' %}
+                    </div>
 {#                    <div class="copy-right">#}
 {#                        <img src="{% static 'kakocase/img/card.png' %}" alt=""/>#}
 {#                    </div>#}
@@ -432,9 +443,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             </div>
         </div>
         {# modal END #}
-        {% if service.is_pwa_ready %}
-            <script src="{% static 'ikwen/js/pwa-main.js' %}"></script>
-        {% endif %}
+{#        {% if service.is_pwa_ready %}#}
+{#            <script src="{% static 'ikwen/js/pwa-main.js' %}"></script>#}
+{#        {% endif %}#}
         <script src="{% static 'kakocase/js/bootstrap-3.1.1.min.js' %}"></script>
         <script src="{% static 'kakocase/js/simpleCart.min.js' %}"></script>
         <script src="{% static 'kakocase/swiper/js/swiper.min.js' %}"></script>
